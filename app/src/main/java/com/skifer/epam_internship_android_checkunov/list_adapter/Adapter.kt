@@ -6,11 +6,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.model.MealModel
 
-class Adapter (private val items: List<MealModel>): RecyclerView.Adapter<DishViewHolder>() {
+class Adapter (private val items: List<MealModel>, val itemListener: Adapter.onItemListener):
+        RecyclerView.Adapter<DishViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DishViewHolder {
         return DishViewHolder(
                 LayoutInflater.from(parent.context)
-                .inflate(R.layout.recyclerview_item, parent, false)
+                .inflate(R.layout.recyclerview_item, parent, false),
+                itemListener
         )
     }
 
@@ -20,4 +23,8 @@ class Adapter (private val items: List<MealModel>): RecyclerView.Adapter<DishVie
     }
 
     override fun getItemCount(): Int = items.size
+
+    interface onItemListener {
+        fun onItemClick(position: Int)
+    }
 }

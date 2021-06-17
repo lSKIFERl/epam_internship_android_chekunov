@@ -1,6 +1,10 @@
 package com.skifer.epam_internship_android_checkunov.food_types
 
-enum class KitchenCountry (val country: String) {
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+enum class KitchenCountry (val country: String) : Parcelable {
     ITALIAN("Итальянская"),
     FRENCH("Французская"),
     GERMAN("Немецкая"),

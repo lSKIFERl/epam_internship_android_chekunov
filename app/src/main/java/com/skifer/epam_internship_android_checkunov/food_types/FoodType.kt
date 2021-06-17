@@ -1,6 +1,10 @@
 package com.skifer.epam_internship_android_checkunov.food_types
 
-enum class FoodType(val title: String?){
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+enum class FoodType(val title: String?) : Parcelable {
 
     SOUP("Суп"),
     MEAT("Мясо"),

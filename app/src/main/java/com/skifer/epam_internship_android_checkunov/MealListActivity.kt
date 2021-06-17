@@ -11,16 +11,18 @@ import com.skifer.epam_internship_android_checkunov.food_types.KitchenCountry
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.MealModel
 
-class MealListActivity : AppCompatActivity() {
+class MealListActivity : AppCompatActivity(), Adapter.onItemListener {
 
     lateinit var dishListView: RecyclerView
+    val dishes = someDishes()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.meal_list_activity)
         dishListView = findViewById(R.id.dishListView)
         dishListView.layoutManager = LinearLayoutManager(this)
-        dishListView.adapter = Adapter(someDishes())
+        dishListView.adapter = Adapter(dishes, this)
+
     }
 
     fun someDishes(): List<MealModel> {
@@ -54,4 +56,9 @@ class MealListActivity : AppCompatActivity() {
         )
         return dishes
     }
+
+    override fun onItemClick(position: Int) {
+        startActivity(MealDetailsActivity.getIntent(this, meal = dishes[position]))
+    }
+
 }
