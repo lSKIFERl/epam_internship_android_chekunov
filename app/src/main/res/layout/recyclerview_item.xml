@@ -7,23 +7,20 @@
 
     <ImageView
         android:id="@+id/dishImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="12dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="12dp"
-        app:srcCompat="@android:drawable/btn_dialog" />
+        android:layout_width="@dimen/item_image_width"
+        android:layout_height="@dimen/item_height"
+        android:layout_marginLeft="@dimen/detail_margin"
+        android:layout_marginTop="@dimen/detail_margin"
+        app:srcCompat="@android:drawable/btn_dialog"
+        android:layout_marginStart="@dimen/detail_margin" />
 
     <TextView
         android:id="@+id/dishLabel"
-        android:layout_width="208dp"
-        android:layout_height="100dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="12dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="12dp"
-        android:lineSpacingExtra="3sp"
+        android:layout_width="@dimen/item_text_width"
+        android:layout_height="@dimen/item_height"
+        android:layout_marginLeft="@dimen/detail_margin"
+        android:layout_marginTop="@dimen/detail_margin"
+        android:lineSpacingExtra="@dimen/item_spacing"
         android:gravity="center_horizontal|center_vertical"
-        />
+        android:layout_marginStart="@dimen/detail_margin" />
 </LinearLayout>
