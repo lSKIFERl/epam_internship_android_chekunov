@@ -57,8 +57,8 @@ class MealListActivity : AppCompatActivity(), Adapter.onItemListener {
         return dishes
     }
 
-    override fun onItemClick(position: Int) {
-        startActivity(MealDetailsActivity.getIntent(this, meal = dishes[position]))
+    override fun onItemClick(meal: MealModel) {
+        startActivity(MealDetailsActivity.getIntent(this, meal = meal))
     }
 
 }

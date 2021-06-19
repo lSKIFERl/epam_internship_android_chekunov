@@ -14,17 +14,18 @@ class Adapter (private val items: List<MealModel>, val itemListener: Adapter.onI
                 LayoutInflater.from(parent.context)
                 .inflate(R.layout.recyclerview_item, parent, false),
                 itemListener
-        )
+                )
     }
 
     override fun onBindViewHolder(holder: DishViewHolder, position: Int) {
         holder.dishLabel?.text = items[position].name
         holder.dishImage?.setImageResource(items[position].picture)
+        holder.meal = items[position]
     }
 
     override fun getItemCount(): Int = items.size
 
     interface onItemListener {
-        fun onItemClick(position: Int)
+        fun onItemClick(meal: MealModel)
     }
 }
