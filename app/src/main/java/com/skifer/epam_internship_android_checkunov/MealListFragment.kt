@@ -1,9 +1,9 @@
 package com.skifer.epam_internship_android_checkunov
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.skifer.epam_internship_android_checkunov.food_types.FoodType
@@ -11,18 +11,17 @@ import com.skifer.epam_internship_android_checkunov.food_types.KitchenCountry
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.MealModel
 
-class MealListActivity : AppCompatActivity(), Adapter.onItemListener {
+class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemListener {
 
     lateinit var dishListView: RecyclerView
-    val dishes = someDishes()
+    lateinit var dishes: List<MealModel>
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.meal_list_activity)
-        dishListView = findViewById(R.id.dishListView)
-        dishListView.layoutManager = LinearLayoutManager(this)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        dishes = someDishes()
+        dishListView = view.findViewById(R.id.dishListView)
+        dishListView.layoutManager = LinearLayoutManager(context)
         dishListView.adapter = Adapter(dishes, this)
-
     }
 
     fun someDishes(): List<MealModel> {
@@ -58,7 +57,16 @@ class MealListActivity : AppCompatActivity(), Adapter.onItemListener {
     }
 
     override fun onItemClick(meal: MealModel) {
-        startActivity(MealDetailsActivity.getIntent(this, meal = meal))
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_in_right)
+            .replace(
+                R.id.containerHost,
+                MealDetailsFragment.
+                newInstance(meal)
+            )
+            .addToBackStack(null)
+            .commit()
     }
 
 }
