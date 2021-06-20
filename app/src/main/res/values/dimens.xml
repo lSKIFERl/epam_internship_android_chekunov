@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="detail_image_height">200dp</dimen>
+    <dimen name="detail_margin">16dp</dimen>
+    <dimen name="detail_title2">18sp</dimen>
+    <dimen name="detail_title1">24sp</dimen>
+    <dimen name="item_height">100dp</dimen>
+    <dimen name="item_image_width">100dp</dimen>
+    <dimen name="item_text_width">250dp</dimen>
+    <dimen name="item_spacing">4sp</dimen>
+</resources>
