@@ -9,14 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Epaminternshipandroidcheckunov">
-        <activity android:name=".MealListActivity">
+        <activity android:name=".HostActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MealDetailsActivity"></activity>>
+        <activity android:name=".MealDetailsFragment" />
+        <activity android:name=".MealListFragment" />
     </application>
 
 </manifest>
