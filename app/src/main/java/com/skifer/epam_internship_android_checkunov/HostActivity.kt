@@ -11,7 +11,11 @@ class HostActivity: AppCompatActivity() {
 
         supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.containerHost, HostFragment())
+                .replace(
+                        R.id.containerHost,
+                        HostFragment.
+                        newInstance()
+                )
                 .commit()
     }
 }

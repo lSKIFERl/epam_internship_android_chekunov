@@ -3,6 +3,7 @@ package com.skifer.epam_internship_android_checkunov
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -67,6 +68,13 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
             )
             .addToBackStack(null)
             .commit()
+    }
+
+    companion object {
+        private const val MEAL_LIST = "MEAL_LIST"
+        fun newInstance() = MealListFragment().apply {
+            //arguments = bundleOf(MEAL_LIST to ...) then get arguments somewhere
+        }
     }
 
 }
