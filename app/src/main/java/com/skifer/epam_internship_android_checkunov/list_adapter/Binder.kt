@@ -1,7 +1,10 @@
 package com.skifer.epam_internship_android_checkunov.list_adapter
 
 import androidx.recyclerview.widget.RecyclerView
+import com.skifer.epam_internship_android_checkunov.list_adapter.holders.DishViewHolder
+import com.skifer.epam_internship_android_checkunov.list_adapter.holders.TypeViewHolder
 import com.skifer.epam_internship_android_checkunov.model.MealModel
+import com.skifer.epam_internship_android_checkunov.model.TypeModel
 
 /**
  * Class for binding
@@ -18,7 +21,13 @@ object Binder {
                 item as MealModel
                 holder.dishLabel?.text = item.title
                 holder.dishImage?.setImageResource(item.picture)
-                holder.meal = item}
+                holder.meal = item
+            }
+            is TypeViewHolder -> {
+                item as TypeModel
+                holder.typeImage.setImageResource(item.picture)
+                holder.type = item
+            }
         }
     }
 }

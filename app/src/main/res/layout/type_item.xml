@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/typeBox"
+    android:layout_width="@dimen/detail_types"
+    android:layout_height="@dimen/detail_types"
+    android:layout_marginRight="@dimen/detail_margin"
+    android:background="@drawable/round_corner_selector"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/typeImage"
+        android:layout_width="@dimen/type_image_wh"
+        android:layout_height="@dimen/type_image_wh"
+        android:layout_margin="@dimen/type_image_margin"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/heheboi"
+        app:shapeAppearanceOverlay="@style/roundedImage" />
+</FrameLayout>

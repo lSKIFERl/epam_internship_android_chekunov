@@ -11,9 +11,9 @@ import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.MealModel
 
 /**
- * Displays a list of dishes
+ * Class of food displayed on the screen
  */
-class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemListener {
+class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemListener<MealModel> {
 
     /**The dishes list on the screen*/
     private lateinit var dishListView: RecyclerView
@@ -74,17 +74,17 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
     }
 
     /**
-     * Starts new fragment the [MealDetailsFragment] with [meal] model
-     * @param meal dish model
+     * Starts new fragment the [MealDetailsFragment] with [item] model
+     * @param item dish model
      */
-    override fun onItemClick(meal: MealModel) {
+    override fun onItemClick(item: MealModel) {
         requireActivity().supportFragmentManager
             .beginTransaction()
                 .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_in_right)
             .replace(
                 R.id.containerHost,
                 MealDetailsFragment.
-                newInstance(meal)
+                newInstance(item)
             )
             .addToBackStack(null)
             .commit()
