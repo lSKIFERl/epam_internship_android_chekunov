@@ -9,7 +9,11 @@ import androidx.fragment.app.Fragment
  */
 class HostFragment : Fragment(R.layout.fragment_host) {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         setHasOptionsMenu(true);
         return super.onCreateView(inflater, container, savedInstanceState)
     }
@@ -28,16 +32,18 @@ class HostFragment : Fragment(R.layout.fragment_host) {
         parentFragmentManager
                 .beginTransaction()
                 .replace(
-                        R.id.type_list_container,
-                        TypeListFragment
-                                .newInstance())
+                    R.id.type_list_container,
+                    TypeListFragment
+                        .newInstance()
+                )
                 .commit()
         parentFragmentManager
                 .beginTransaction()
                 .add(
-                        R.id.meal_list_container,
-                        MealListFragment
-                                .newInstance())
+                    R.id.meal_list_container,
+                    MealListFragment
+                        .newInstance()
+                )
                 .commit()
     }
 

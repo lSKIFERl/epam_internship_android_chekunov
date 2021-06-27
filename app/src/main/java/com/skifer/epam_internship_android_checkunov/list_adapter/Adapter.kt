@@ -4,9 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.skifer.epam_internship_android_checkunov.R
+import com.skifer.epam_internship_android_checkunov.food_types.FoodType
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter.onItemListener
 import com.skifer.epam_internship_android_checkunov.list_adapter.holders.DishViewHolder
+import com.skifer.epam_internship_android_checkunov.list_adapter.holders.FoodTypeHolder
+import com.skifer.epam_internship_android_checkunov.list_adapter.holders.IngredientsViewHolder
 import com.skifer.epam_internship_android_checkunov.list_adapter.holders.TypeViewHolder
+import com.skifer.epam_internship_android_checkunov.model.Ingredient
 import com.skifer.epam_internship_android_checkunov.model.MealModel
 import com.skifer.epam_internship_android_checkunov.model.TypeModel
 
@@ -42,6 +46,20 @@ class Adapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                             parent,
                             false),
                     itemListener as onItemListener<TypeModel>
+                    )
+            is FoodType -> holder = FoodTypeHolder(
+                LayoutInflater.from(parent.context).inflate(
+                    R.layout.item_food_type,
+                    parent,
+                    false
+                )
+            )
+            is Ingredient -> holder = IngredientsViewHolder (
+                LayoutInflater.from(parent.context).inflate(
+                    R.layout.ingredient_item,
+                    parent,
+                    false
+                )
                     )
         }
         return holder!!

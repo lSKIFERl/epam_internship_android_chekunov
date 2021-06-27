@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.skifer.epam_internship_android_checkunov.food_types.Cuisine
 import com.skifer.epam_internship_android_checkunov.food_types.FoodType
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
+import com.skifer.epam_internship_android_checkunov.model.Ingredient
 import com.skifer.epam_internship_android_checkunov.model.MealModel
 
 /**
@@ -47,8 +48,28 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
                 MealModel(
                         id = 0,
                         title = "Soy-Glazed Meatloaves with Wasabi Mashed Potatoes & Roasted Carrots",
-                        type = FoodType.MEAT,
+                        type = listOf(FoodType.MEAT, FoodType.BAKERY),
                         country = Cuisine.EAST,
+                        ingredients = listOf(
+                            Ingredient(
+                                id = 0,
+                                name = "ingredient1",
+                                count = 1,
+                                measure = "cups"
+                            ),
+                            Ingredient(
+                                id = 0,
+                                name = "ingredient2",
+                                count = 5,
+                                measure = "cups"
+                            ),
+                            Ingredient(
+                                id = 0,
+                                name = "ingredient3",
+                                count = 6,
+                                measure = "cups"
+                            )
+                        ),
                         picture = R.drawable.soy_glazed_meatloaves
                 )
         )
@@ -56,8 +77,28 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
                 MealModel(
                         id = 1,
                         title = "Steak Diane",
-                        type = FoodType.MEAT,
+                        type = listOf(FoodType.MEAT, FoodType.BAKERY),
                         country = Cuisine.USA,
+                    ingredients = listOf(
+                        Ingredient(
+                            id = 0,
+                            name = "ingredient1",
+                            count = 1,
+                            measure = "cups"
+                        ),
+                        Ingredient(
+                            id = 0,
+                            name = "ingredient2",
+                            count = 5,
+                            measure = "cups"
+                        ),
+                        Ingredient(
+                            id = 0,
+                            name = "ingredient3",
+                            count = 6,
+                            measure = "cups"
+                        )
+                    ),
                         picture = R.drawable.steak_diane
                 )
         )
@@ -65,8 +106,28 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
                 MealModel(
                         id = 2,
                         title = "Nice and hot spicy meat",
-                        type = FoodType.MEAT,
+                        type = listOf(FoodType.MEAT),
                         country = Cuisine.JAMAICAN,
+                    ingredients = listOf(
+                        Ingredient(
+                            id = 0,
+                            name = "ingredient1",
+                            count = 1,
+                            measure = "cups"
+                        ),
+                        Ingredient(
+                            id = 0,
+                            name = "ingredient2",
+                            count = 5,
+                            measure = "cups"
+                        ),
+                        Ingredient(
+                            id = 0,
+                            name = "ingredient3",
+                            count = 6,
+                            measure = "cups"
+                        )
+                    ),
                         picture = R.drawable.heheboi
                 )
         )

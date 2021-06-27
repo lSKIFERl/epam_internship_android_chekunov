@@ -8,7 +8,7 @@ import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.TypeModel
 
 /**
- * Holder for types of food
+ * Holder for types of food in list fragment
  *
  * Provides logic to display for each list item
  * @param itemView view of list item on the screen that was clicked
