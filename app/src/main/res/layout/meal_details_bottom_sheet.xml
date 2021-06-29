@@ -53,9 +53,7 @@
             android:layout_marginBottom="@dimen/details_margin_bottom"
             android:layout_width="match_parent"
             android:layout_height="@dimen/details_types_list_height"
-            tools:listitem="@layout/item_food_type" >
-
-        </androidx.recyclerview.widget.RecyclerView>
+            tools:listitem="@layout/item_food_type"/>
 
         <View
             android:id="@+id/divider"
