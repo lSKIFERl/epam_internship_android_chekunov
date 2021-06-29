@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HostFragment"/>
+    android:orientation="vertical"
+    tools:context=".HostFragment" >
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/type_list_container"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginStart="@dimen/detail_types_list_margin_left"
+        android:layout_marginLeft="@dimen/detail_types_list_margin_left"
+        android:layout_marginTop="@dimen/detail_margin_top"/>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/meal_list_container"
+        android:layout_marginTop="@dimen/detail_margin_top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

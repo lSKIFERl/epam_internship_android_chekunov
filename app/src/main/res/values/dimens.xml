@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="detail_image_height">200dp</dimen>
-    <dimen name="detail_margin">16dp</dimen>
-    <dimen name="detail_title2">18sp</dimen>
-    <dimen name="detail_title1">24sp</dimen>
+    <dimen name="detail_margin">20dp</dimen>
+    <dimen name="small_font_size">12sp</dimen>
+    <dimen name="medium_font_size">18sp</dimen>
+    <dimen name="large_font_size">24sp</dimen>
+    <dimen name="detail_margin_top">20dp</dimen>
+    <dimen name="detail_types_list_margin_left">8dp</dimen>
+    <dimen name="detail_types">64dp</dimen>
     <dimen name="item_height">100dp</dimen>
     <dimen name="item_image_width">100dp</dimen>
     <dimen name="item_text_width">250dp</dimen>
     <dimen name="item_spacing">4sp</dimen>
+    <dimen name="corners_radius">18dp</dimen>
+    <dimen name="type_image_wh">48dp</dimen>
+    <dimen name="type_image_margin">8dp</dimen>
+    <dimen name="meal_detail_small_margin">4dp</dimen>
+    <dimen name="details_margin_top">24dp</dimen>
+    <dimen name="details_margin_bottom">24dp</dimen>
+    <dimen name="details_marin_top_small">10dp</dimen>
+    <dimen name="details_types_list_height">24dp</dimen>
+    <dimen name="corner_radius_small">4dp</dimen>
+    <dimen name="pick_stick_width">30dp</dimen>
+    <dimen name="pick_stick_height">6dp</dimen>
+    <dimen name="details_types_item_width">96dp</dimen>
+    <dimen name="image_height_large">600dp</dimen>
 </resources>
