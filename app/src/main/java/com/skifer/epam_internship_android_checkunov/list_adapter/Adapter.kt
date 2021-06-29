@@ -68,7 +68,13 @@ class Adapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 )
                     )
         }
-        return holder!!
+        return holder?: error(
+                Toast.makeText(
+                    context,
+                    "Error: unknown type",
+                    Toast.LENGTH_LONG
+            ).show()
+        )
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
