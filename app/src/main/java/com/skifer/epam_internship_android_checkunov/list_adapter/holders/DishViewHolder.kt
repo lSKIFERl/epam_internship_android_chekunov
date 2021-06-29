@@ -39,6 +39,16 @@ class DishViewHolder(itemView: View, onItemListener: Adapter.onItemListener<Meal
     }
 
     /**
+     * Binds this holder with [MealModel] item
+     * @param meal Model bound to this holder
+     */
+    fun bind(meal: MealModel) {
+        this.meal = meal
+        dishLabel?.text = meal.title
+        dishImage?.setImageResource(meal.picture)
+    }
+
+    /**
      * Called when a view has been clicked.
      *
      * @param v The view that was clicked.

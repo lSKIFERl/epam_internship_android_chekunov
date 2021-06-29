@@ -24,4 +24,13 @@ class IngredientsViewHolder(itemView: View)
     init {
         text = itemView.findViewById(R.id.ingredient_item)
     }
+
+    /**
+     * Binds this holder with [Ingredient] item
+     * @param ingredient Model bound to this holder
+     */
+    fun bind(ingredient: Ingredient) {
+        this.ingredient = ingredient
+        text.text = StringBuilder("${ingredient.name} - ${ingredient.count} ${ingredient.measure}")
+    }
 }

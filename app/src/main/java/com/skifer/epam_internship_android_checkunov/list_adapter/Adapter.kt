@@ -78,10 +78,27 @@ class Adapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        Binder.bind(holder, items.elementAtOrNull(position))
+        holder.bind(items.elementAtOrNull(position))
     }
 
     override fun getItemCount(): Int = items.size
+
+    /**
+     * Binds some holders with item
+     *
+     * holder can be one of the following:
+     * [DishViewHolder], [TypeViewHolder], [FoodTypeHolder], [IngredientsViewHolder]
+     * @param item item that can be connected to the specific Holder:
+     * [MealModel], [TypeModel], [FoodType], [Ingredient]
+     */
+    private fun <T> RecyclerView.ViewHolder.bind(item: T?) {
+        when(this) {
+            is DishViewHolder -> (item as? MealModel)?.let{ bind(it) }
+            is TypeViewHolder -> (item as? TypeModel)?.let{ bind(it) }
+            is FoodTypeHolder -> (item as? FoodType)?.let { bind(it) }
+            is IngredientsViewHolder -> (item as? Ingredient)?.let { bind(it) }
+        }
+    }
 
     /**
      * Sets list of items

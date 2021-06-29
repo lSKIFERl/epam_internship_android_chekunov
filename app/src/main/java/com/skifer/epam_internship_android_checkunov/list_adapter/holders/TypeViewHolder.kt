@@ -34,6 +34,16 @@ class TypeViewHolder(itemView: View, onItemListener: Adapter.onItemListener<Type
     }
 
     /**
+     * Binds this holder with [TypeModel] item
+     * @param type Model bound to this holder
+     */
+    fun bind(type: TypeModel) {
+        this.type = type
+        typeImage.setImageResource(type.picture)
+    }
+
+
+    /**
      * Called when a view has been clicked.
      *
      * @param v The view that was clicked.
