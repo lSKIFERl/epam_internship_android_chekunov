@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.ActionBar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +20,7 @@ import com.skifer.epam_internship_android_checkunov.model.MealModel
 class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
 
     /**Model containing information to display*/
-    private lateinit var meal: MealModel
+    private var meal: MealModel? = null
 
     /**food types list adapter*/
     private lateinit var adapter: Adapter<FoodType>
@@ -35,17 +34,17 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
     @SuppressLint("CutPasteId")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        meal = arguments?.getParcelable(DETAIL_INTENT)!!
+        meal = arguments?.getParcelable(DETAIL_INTENT)
         adapter = Adapter()
-        adapter.setList(meal.type)
+        adapter.setList(meal?.type)
 
         ingredientAdapter = Adapter()
-        ingredientAdapter.setList(meal.ingredients)
+        ingredientAdapter.setList(meal?.ingredients)
 
         with(view) {
-            findViewById<ImageView>(R.id.detailMealImage).setImageResource(meal.picture)
-            findViewById<TextView>(R.id.detailTitle).text = meal.title
-            findViewById<TextView>(R.id.Cuisine).text = meal.country?.name ?: "Unknown"
+            findViewById<ImageView>(R.id.detailMealImage).setImageResource(meal?.picture?: R.drawable.heheboi)
+            findViewById<TextView>(R.id.detailTitle).text = meal?.title ?: "Unknown"
+            findViewById<TextView>(R.id.Cuisine).text = meal?.country?.name ?: "Unknown"
             findViewById<RecyclerView>(R.id.tag).layoutManager = LinearLayoutManager(
                 context,
                 LinearLayoutManager.HORIZONTAL,
@@ -57,9 +56,6 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
             )
             findViewById<RecyclerView>(R.id.ingredients_list).adapter = ingredientAdapter
         }
-
-
-
     }
 
 

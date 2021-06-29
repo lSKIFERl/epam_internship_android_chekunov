@@ -1,7 +1,9 @@
 package com.skifer.epam_internship_android_checkunov.list_adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.food_types.FoodType
@@ -30,25 +32,29 @@ class Adapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     /**List of items on the screen */
     private var items: MutableSet<T> = mutableSetOf()
 
+    /**Callable view context*/
+    private lateinit var context: Context
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         var holder: RecyclerView.ViewHolder? = null
+        context = parent.context
         when(items.elementAtOrNull(0)) {
             is MealModel -> holder = DishViewHolder(
-                    LayoutInflater.from(parent.context).inflate(
+                    LayoutInflater.from(context).inflate(
                             R.layout.recyclerview_item,
                             parent,
                             false),
                     itemListener as onItemListener<MealModel>
             )
             is TypeModel -> holder = TypeViewHolder(
-                    LayoutInflater.from(parent.context).inflate(
+                    LayoutInflater.from(context).inflate(
                             R.layout.type_item,
                             parent,
                             false),
                     itemListener as onItemListener<TypeModel>
                     )
             is FoodType -> holder = FoodTypeHolder(
-                LayoutInflater.from(parent.context).inflate(
+                LayoutInflater.from(context).inflate(
                     R.layout.item_food_type,
                     parent,
                     false
@@ -74,8 +80,16 @@ class Adapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     /**
      * Sets list of items
      */
-    fun setList(list: List<T>) {
-        items.addAll(list)
+    fun setList(list: List<T>?) {
+        if (list != null) {
+            items.addAll(list)
+        } else {
+            Toast.makeText(
+                    context,
+                    "Error while updating the list",
+                    Toast.LENGTH_LONG
+            ).show()
+        }
         notifyDataSetChanged()
     }
 
