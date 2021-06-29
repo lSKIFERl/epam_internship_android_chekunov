@@ -36,9 +36,6 @@ class HostFragment : Fragment(R.layout.fragment_host) {
                     TypeListFragment
                         .newInstance()
                 )
-                .commit()
-        parentFragmentManager
-                .beginTransaction()
                 .add(
                     R.id.meal_list_container,
                     MealListFragment
