@@ -18,12 +18,6 @@ import com.skifer.epam_internship_android_checkunov.model.MealModel
 class DishViewHolder(itemView: View, onItemListener: Adapter.onItemListener<MealModel>)
     : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
-    /**label with name of the dish for list*/
-    var dishLabel: TextView? = null
-
-    /**simple icon of the dish for list*/
-    var dishImage: ImageView? = null
-
     /**model of containment dish*/
     lateinit var meal: MealModel
 
@@ -31,9 +25,6 @@ class DishViewHolder(itemView: View, onItemListener: Adapter.onItemListener<Meal
     val onItemListener: Adapter.onItemListener<MealModel>
 
     init {
-        dishLabel = itemView.findViewById(R.id.dishLabel)
-        dishImage = itemView.findViewById(R.id.dishImage)
-
         this.onItemListener = onItemListener
         itemView.setOnClickListener(this)
     }
@@ -44,8 +35,8 @@ class DishViewHolder(itemView: View, onItemListener: Adapter.onItemListener<Meal
      */
     fun bind(meal: MealModel) {
         this.meal = meal
-        dishLabel?.text = meal.title
-        dishImage?.setImageResource(meal.picture)
+        itemView.findViewById<TextView>(R.id.dishLabel).text = meal.title
+        itemView.findViewById<ImageView>(R.id.dishImage).setImageResource(meal.picture)
     }
 
     /**

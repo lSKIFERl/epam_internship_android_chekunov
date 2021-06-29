@@ -18,19 +18,12 @@ class FoodTypeHolder (itemView: View)
     /**Held model*/
     lateinit var foodType: FoodType
 
-    /**Displayed text*/
-    val type: TextView
-
-    init {
-        type = itemView.findViewById(R.id.small_type_item)
-    }
-
     /**
      * Binds this holder with [FoodType] item
      * @param foodType Model bound to this holder
      */
     fun bind(foodType: FoodType) {
         this.foodType = foodType
-        type.text = foodType.name
+        itemView.findViewById<TextView>(R.id.small_type_item).text = foodType.name
     }
 }

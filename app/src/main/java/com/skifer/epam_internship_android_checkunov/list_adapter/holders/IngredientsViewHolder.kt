@@ -18,19 +18,12 @@ class IngredientsViewHolder(itemView: View)
     /**Held item*/
     lateinit var ingredient: Ingredient
 
-    /**ingredient description*/
-    val text: TextView
-
-    init {
-        text = itemView.findViewById(R.id.ingredient_item)
-    }
-
     /**
      * Binds this holder with [Ingredient] item
      * @param ingredient Model bound to this holder
      */
     fun bind(ingredient: Ingredient) {
         this.ingredient = ingredient
-        text.text = StringBuilder("${ingredient.name} - ${ingredient.count} ${ingredient.measure}")
+        itemView.findViewById<TextView>(R.id.ingredient_item).text = StringBuilder("${ingredient.name} - ${ingredient.count} ${ingredient.measure}")
     }
 }

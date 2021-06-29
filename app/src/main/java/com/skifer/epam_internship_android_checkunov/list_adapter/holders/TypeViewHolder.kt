@@ -17,9 +17,6 @@ import com.skifer.epam_internship_android_checkunov.model.TypeModel
 class TypeViewHolder(itemView: View, onItemListener: Adapter.onItemListener<TypeModel>)
     : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
-    /**Icon of the list item*/
-    val typeImage: ImageView
-
     /**Contained model*/
     lateinit var type: TypeModel
 
@@ -27,8 +24,6 @@ class TypeViewHolder(itemView: View, onItemListener: Adapter.onItemListener<Type
     val onItemListener: Adapter.onItemListener<TypeModel>
 
     init{
-        typeImage = itemView.findViewById(R.id.typeImage)
-
         this.onItemListener = onItemListener
         itemView.setOnClickListener(this)
     }
@@ -39,9 +34,8 @@ class TypeViewHolder(itemView: View, onItemListener: Adapter.onItemListener<Type
      */
     fun bind(type: TypeModel) {
         this.type = type
-        typeImage.setImageResource(type.picture)
+        itemView.findViewById<ImageView>(R.id.typeImage).setImageResource(type.picture)
     }
-
 
     /**
      * Called when a view has been clicked.
