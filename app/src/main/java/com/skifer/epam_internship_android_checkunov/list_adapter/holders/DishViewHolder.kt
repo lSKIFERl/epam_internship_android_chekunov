@@ -1,9 +1,9 @@
 package com.skifer.epam_internship_android_checkunov.list_adapter.holders
 
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.MealModel
@@ -35,8 +35,11 @@ class DishViewHolder(itemView: View, onItemListener: Adapter.onItemListener<Meal
      */
     fun bind(meal: MealModel) {
         this.meal = meal
-        itemView.findViewById<TextView>(R.id.dishLabel).text = meal.title
-        itemView.findViewById<ImageView>(R.id.dishImage).setImageResource(meal.picture)
+        itemView.findViewById<TextView>(R.id.dishLabel).text = meal.strMeal
+        Glide
+            .with(itemView)
+            .load(meal.strMealThumb)
+            .into(itemView.findViewById(R.id.dishImage))
     }
 
     /**

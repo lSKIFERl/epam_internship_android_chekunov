@@ -4,7 +4,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.skifer.epam_internship_android_checkunov.R
-import com.skifer.epam_internship_android_checkunov.food_types.FoodType
 
 /**
  * Holder for types of food in details fragment
@@ -15,15 +14,11 @@ import com.skifer.epam_internship_android_checkunov.food_types.FoodType
 class FoodTypeHolder (itemView: View)
     : RecyclerView.ViewHolder(itemView) {
 
-    /**Held model*/
-    lateinit var foodType: FoodType
-
     /**
-     * Binds this holder with [FoodType] item
-     * @param foodType Model bound to this holder
+     * Binds this holder with String item
+     * @param tag Model bound to this holder
      */
-    fun bind(foodType: FoodType) {
-        this.foodType = foodType
-        itemView.findViewById<TextView>(R.id.small_type_item).text = foodType.name
+    fun bind(tag: String) {
+        itemView.findViewById<TextView>(R.id.small_tag_item).text = tag
     }
 }

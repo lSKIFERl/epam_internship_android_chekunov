@@ -3,13 +3,12 @@ package com.skifer.epam_internship_android_checkunov
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.skifer.epam_internship_android_checkunov.food_types.FoodType
+import com.bumptech.glide.Glide
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.Ingredient
 import com.skifer.epam_internship_android_checkunov.model.MealModel
@@ -22,10 +21,10 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
     /**Model containing information to display*/
     private var meal: MealModel? = null
 
-    /**food types list adapter*/
-    private lateinit var adapter: Adapter<FoodType>
+    /**food types list tagsAdapter*/
+    private lateinit var tagsAdapter: Adapter<String>
 
-    /**ingredients list adapter*/
+    /**ingredients list tagsAdapter*/
     private lateinit var ingredientAdapter: Adapter<Ingredient>
 
     /**
@@ -35,22 +34,26 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         meal = arguments?.getParcelable(DETAIL_INTENT)
-        adapter = Adapter()
-        adapter.setList(meal?.type)
+        tagsAdapter = Adapter()
+        tagsAdapter.setList(meal?.strTags)
 
         ingredientAdapter = Adapter()
         ingredientAdapter.setList(meal?.ingredients)
 
         with(view) {
-            findViewById<ImageView>(R.id.detailMealImage).setImageResource(meal?.picture?: R.drawable.heheboi)
-            findViewById<TextView>(R.id.detailTitle).text = meal?.title ?: "Unknown"
-            findViewById<TextView>(R.id.Cuisine).text = meal?.country?.name ?: "Unknown"
+            Glide
+                .with(this)
+                .load(meal?.strMealThumb?: R.drawable.heheboi)
+                .into(findViewById(R.id.detailMealImage))
+            findViewById<TextView>(R.id.detailTitle).text = meal?.strMeal ?: "Unknown"
+            findViewById<TextView>(R.id.Cuisine).text = meal?.strArea?: "Unknown"
+            findViewById<TextView>(R.id.instructions).text = meal?.strInstructions?: "No instructions"
             findViewById<RecyclerView>(R.id.tag).layoutManager = LinearLayoutManager(
                 context,
                 LinearLayoutManager.HORIZONTAL,
                 false
             )
-            findViewById<RecyclerView>(R.id.tag).adapter = adapter
+            findViewById<RecyclerView>(R.id.tag).adapter = tagsAdapter
             findViewById<RecyclerView>(R.id.ingredients_list).layoutManager = LinearLayoutManager(
                 context
             )

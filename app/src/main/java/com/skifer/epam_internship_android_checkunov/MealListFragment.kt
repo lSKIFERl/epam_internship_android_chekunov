@@ -5,10 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.skifer.epam_internship_android_checkunov.food_types.Cuisine
-import com.skifer.epam_internship_android_checkunov.food_types.FoodType
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
-import com.skifer.epam_internship_android_checkunov.model.Ingredient
 import com.skifer.epam_internship_android_checkunov.model.MealModel
 
 /**
@@ -20,7 +17,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
     private lateinit var dishListView: RecyclerView
 
     /**The items list that should be on the screen. Contained in [dishListView] */
-    private var dishes: List<MealModel> = someDishes()
+    private lateinit var dishes: List<MealModel>
 
     /**[dishListView] custom adapter*/
     private lateinit var adapter: Adapter<MealModel>
@@ -37,101 +34,6 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
         dishListView = view.findViewById(R.id.dishListView)
         dishListView.layoutManager = LinearLayoutManager(context)
         dishListView.adapter = adapter
-    }
-
-    /**
-     * Generates test list. Will be removed... someday
-     */
-    private fun someDishes(): List<MealModel> {
-        val dishes = mutableListOf<MealModel>()
-        dishes.add(
-                MealModel(
-                        id = 0,
-                        title = "Soy-Glazed Meatloaves with Wasabi Mashed Potatoes & Roasted Carrots",
-                        type = listOf(FoodType.MEAT, FoodType.BAKERY),
-                        country = Cuisine.EAST,
-                        ingredients = listOf(
-                            Ingredient(
-                                id = 0,
-                                name = "ingredient1",
-                                count = 1,
-                                measure = "cups"
-                            ),
-                            Ingredient(
-                                id = 0,
-                                name = "ingredient2",
-                                count = 5,
-                                measure = "cups"
-                            ),
-                            Ingredient(
-                                id = 0,
-                                name = "ingredient3",
-                                count = 6,
-                                measure = "cups"
-                            )
-                        ),
-                        picture = R.drawable.soy_glazed_meatloaves
-                )
-        )
-        dishes.add(
-                MealModel(
-                        id = 1,
-                        title = "Steak Diane",
-                        type = listOf(FoodType.MEAT, FoodType.BAKERY),
-                        country = Cuisine.USA,
-                    ingredients = listOf(
-                        Ingredient(
-                            id = 0,
-                            name = "ingredient1",
-                            count = 1,
-                            measure = "cups"
-                        ),
-                        Ingredient(
-                            id = 0,
-                            name = "ingredient2",
-                            count = 5,
-                            measure = "cups"
-                        ),
-                        Ingredient(
-                            id = 0,
-                            name = "ingredient3",
-                            count = 6,
-                            measure = "cups"
-                        )
-                    ),
-                        picture = R.drawable.steak_diane
-                )
-        )
-        dishes.add(
-                MealModel(
-                        id = 2,
-                        title = "Nice and hot spicy meat",
-                        type = listOf(FoodType.MEAT),
-                        country = Cuisine.JAMAICAN,
-                    ingredients = listOf(
-                        Ingredient(
-                            id = 0,
-                            name = "ingredient1",
-                            count = 1,
-                            measure = "cups"
-                        ),
-                        Ingredient(
-                            id = 0,
-                            name = "ingredient2",
-                            count = 5,
-                            measure = "cups"
-                        ),
-                        Ingredient(
-                            id = 0,
-                            name = "ingredient3",
-                            count = 6,
-                            measure = "cups"
-                        )
-                    ),
-                        picture = R.drawable.heheboi
-                )
-        )
-        return dishes
     }
 
     /**

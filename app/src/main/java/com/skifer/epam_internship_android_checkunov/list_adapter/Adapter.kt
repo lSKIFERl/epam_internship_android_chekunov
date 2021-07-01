@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.skifer.epam_internship_android_checkunov.R
-import com.skifer.epam_internship_android_checkunov.food_types.FoodType
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter.onItemListener
 import com.skifer.epam_internship_android_checkunov.list_adapter.holders.DishViewHolder
 import com.skifer.epam_internship_android_checkunov.list_adapter.holders.FoodTypeHolder
@@ -53,9 +52,9 @@ class Adapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                             false),
                     itemListener as onItemListener<TypeModel>
                     )
-            is FoodType -> holder = FoodTypeHolder(
+            is String -> holder = FoodTypeHolder(
                 LayoutInflater.from(context).inflate(
-                    R.layout.item_food_type,
+                    R.layout.item_tag,
                     parent,
                     false
                 )
@@ -66,12 +65,12 @@ class Adapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     parent,
                     false
                 )
-                    )
+            )
         }
         return holder?: error(
                 Toast.makeText(
                     context,
-                    "Error: unknown type",
+                    "Error: unknown holder type",
                     Toast.LENGTH_LONG
             ).show()
         )
@@ -95,7 +94,7 @@ class Adapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         when(this) {
             is DishViewHolder -> (item as? MealModel)?.let{ bind(it) }
             is TypeViewHolder -> (item as? TypeModel)?.let{ bind(it) }
-            is FoodTypeHolder -> (item as? FoodType)?.let { bind(it) }
+            is FoodTypeHolder -> (item as? String)?.let { bind(it) }
             is IngredientsViewHolder -> (item as? Ingredient)?.let { bind(it) }
         }
     }

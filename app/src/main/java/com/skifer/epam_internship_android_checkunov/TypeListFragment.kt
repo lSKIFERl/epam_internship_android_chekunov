@@ -17,7 +17,7 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
     private lateinit var typeListView: RecyclerView
 
     /**The items list that should be on the screen. Contained in [typeListView] */
-    private var types: List<TypeModel> = someTypes()
+    private lateinit var types: List<TypeModel>
 
     /**[typeListView] custom adapter*/
     private lateinit var adapter: Adapter<TypeModel>
@@ -32,7 +32,11 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
         adapter.setItemListener(this)
 
         typeListView = view.findViewById(R.id.typesListView)
-        typeListView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        typeListView.layoutManager = LinearLayoutManager(
+            context,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
         typeListView.adapter = adapter
     }
 
@@ -43,32 +47,6 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
     override fun onItemClick(item: TypeModel) {
         //TODO: do smth logic in the future
     }
-
-    /**
-     * Builds a list of types. May be removed in the future
-     */
-    private fun someTypes() = listOf(
-            TypeModel(
-                    picture = R.drawable.type_meat,
-                    selected = true
-            ),
-            TypeModel(
-                    picture = R.drawable.type_cakes,
-                    selected = false
-            ),
-            TypeModel(
-                    picture = R.drawable.type_pasta,
-                    selected = false
-            ),
-            TypeModel(
-                    picture = R.drawable.type_burito,
-                    selected = false
-            ),
-            TypeModel(
-                    picture = R.drawable.type_another_meat,
-                    selected = false
-            )
-    )
 
     companion object {
         private const val TYPE_LIST = "TYPE_LIST"
