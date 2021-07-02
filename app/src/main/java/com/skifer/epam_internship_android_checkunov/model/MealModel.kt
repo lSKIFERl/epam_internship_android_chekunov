@@ -29,12 +29,22 @@ data class MealModel(
         @SerializedName("strArea")
         val strArea: String?,
         @SerializedName("strMealThumb")
-        val strMealThumb: String,
+        val strMealThumb: String?,
         @SerializedName("strYoutube")
         val strYoutube: String?,
         val ingredients: List<Ingredient>?,
         @SerializedName("strInstructions")
         val strInstructions: String?
+) : Parcelable
+
+@Parcelize
+data class MealModelListItem(
+        @SerializedName("idMeal")
+        val idMeal: Int,
+        @SerializedName("strMeal")
+        val strMeal: String?,
+        @SerializedName("strMealThumb")
+        val strMealThumb: String?
 ) : Parcelable
 
 /**
