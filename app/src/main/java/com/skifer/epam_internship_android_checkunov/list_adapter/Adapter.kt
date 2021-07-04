@@ -13,6 +13,7 @@ import com.skifer.epam_internship_android_checkunov.list_adapter.holders.Ingredi
 import com.skifer.epam_internship_android_checkunov.list_adapter.holders.TypeViewHolder
 import com.skifer.epam_internship_android_checkunov.model.Ingredient
 import com.skifer.epam_internship_android_checkunov.model.MealModel
+import com.skifer.epam_internship_android_checkunov.model.MealModelListItem
 import com.skifer.epam_internship_android_checkunov.model.TypeModel
 
 /**
@@ -38,12 +39,12 @@ class Adapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var holder: RecyclerView.ViewHolder? = null
         context = parent.context
         when(items.elementAtOrNull(0)) {
-            is MealModel -> holder = DishViewHolder(
+            is MealModelListItem -> holder = DishViewHolder(
                     LayoutInflater.from(context).inflate(
                             R.layout.recyclerview_item,
                             parent,
                             false),
-                    itemListener as onItemListener<MealModel>
+                    itemListener as onItemListener<MealModelListItem>
             )
             is TypeModel -> holder = TypeViewHolder(
                     LayoutInflater.from(context).inflate(
@@ -92,7 +93,7 @@ class Adapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
      */
     private fun <T> RecyclerView.ViewHolder.bind(item: T?) {
         when(this) {
-            is DishViewHolder -> (item as? MealModel)?.let{ bind(it) }
+            is DishViewHolder -> (item as? MealModelListItem)?.let{ bind(it) }
             is TypeViewHolder -> (item as? TypeModel)?.let{ bind(it) }
             is FoodTypeHolder -> (item as? String)?.let { bind(it) }
             is IngredientsViewHolder -> (item as? Ingredient)?.let { bind(it) }

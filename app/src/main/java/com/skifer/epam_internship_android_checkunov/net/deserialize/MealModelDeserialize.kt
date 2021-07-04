@@ -5,16 +5,17 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.skifer.epam_internship_android_checkunov.model.Ingredient
 import com.skifer.epam_internship_android_checkunov.model.MealModel
+import com.skifer.epam_internship_android_checkunov.model.modellists.ListMealModel
 import java.lang.reflect.Type
 
-class MealModelDeserialize: JsonDeserializer<List<MealModel>> {
+class MealModelDeserialize: JsonDeserializer<ListMealModel> {
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,
         context: JsonDeserializationContext?
-    ): List<MealModel> {
-        val jsonItems = json?.asJsonArray
-        val meals = mutableListOf<MealModel>()
+    ): ListMealModel {
+        val jsonItems = json?.asJsonObject?.get("meals")?.asJsonArray
+        var meals: ListMealModel? = null
         jsonItems?.forEach {
             with(it.asJsonObject) {
                 val ingredients = mutableListOf<Ingredient>()
@@ -29,8 +30,8 @@ class MealModelDeserialize: JsonDeserializer<List<MealModel>> {
                         )
                     }
                 }
-                meals.add(
-                    MealModel(
+                meals = ListMealModel(listOf(
+                        MealModel(
                         get("idMeal").asInt,
                         get("strMeal").asString,
                         get("strCategory").asString,
@@ -40,10 +41,9 @@ class MealModelDeserialize: JsonDeserializer<List<MealModel>> {
                         get("strYoutube").asString,
                         ingredients,
                         get("strInstructions").asString
-                    )
-                )
+                )))
             }
         }
-        return meals
+        return meals?: error("Error: Can't bind dish details info")
     }
 }

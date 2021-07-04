@@ -2,28 +2,30 @@ package com.skifer.epam_internship_android_checkunov.net.repository
 
 import com.skifer.epam_internship_android_checkunov.model.MealModel
 import com.skifer.epam_internship_android_checkunov.model.MealModelListItem
+import com.skifer.epam_internship_android_checkunov.model.modellists.ListMealModel
+import com.skifer.epam_internship_android_checkunov.model.modellists.ListMealModelNet
 import com.skifer.epam_internship_android_checkunov.net.Network
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MealModelRepository {
+object MealModelRepository {
     fun createDishList(
         category: String,
         caseComplete: (List<MealModelListItem>?) -> Unit,
         caseError: (Throwable) -> Unit
     ) {
         Network.dishApiService.getDishByCategory(category).enqueue(
-            object: Callback<List<MealModelListItem>> {
+            object: Callback<ListMealModelNet> {
 
                 override fun onResponse(
-                    call: Call<List<MealModelListItem>>,
-                    response: Response<List<MealModelListItem>>
+                    call: Call<ListMealModelNet>,
+                    response: Response<ListMealModelNet>
                 ) {
-                    caseComplete(response.body())
+                    caseComplete(response.body()?.listMealModel)
                 }
 
-                override fun onFailure(call: Call<List<MealModelListItem>>, t: Throwable) = caseError(t)
+                override fun onFailure(call: Call<ListMealModelNet>, t: Throwable) = caseError(t)
 
             }
         )
@@ -35,15 +37,15 @@ class MealModelRepository {
         caseError: (Throwable) -> Unit
     ) {
         Network.dishDetailsApiService.getDetailsDish(id).enqueue(
-            object: Callback<List<MealModel>> {
+            object: Callback<ListMealModel> {
                 override fun onResponse(
-                    call: Call<List<MealModel>>,
-                    response: Response<List<MealModel>>
+                    call: Call<ListMealModel>,
+                    response: Response<ListMealModel>
                 ) {
-                    caseComplete(response.body()?.first())
+                    caseComplete(response.body()?.listMealModel?.first())
                 }
 
-                override fun onFailure(call: Call<List<MealModel>>, t: Throwable) = caseError(t)
+                override fun onFailure(call: Call<ListMealModel>, t: Throwable) = caseError(t)
 
             }
         )

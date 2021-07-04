@@ -1,6 +1,7 @@
 package com.skifer.epam_internship_android_checkunov
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 
@@ -36,12 +37,8 @@ class HostFragment : Fragment(R.layout.fragment_host) {
                     TypeListFragment
                         .newInstance()
                 )
-                .add(
-                    R.id.meal_list_container,
-                    MealListFragment
-                        .newInstance()
-                )
                 .commit()
+        Log.i("Net", "Loading types List")
     }
 
     companion object {
