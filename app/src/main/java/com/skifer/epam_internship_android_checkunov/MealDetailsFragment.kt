@@ -8,7 +8,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
@@ -21,71 +20,75 @@ import com.skifer.epam_internship_android_checkunov.net.repository.MealModelRepo
  */
 class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
 
-    /**Model containing information to display*/
-    private var meal: MealModel? = null
-
     /**food types list tagsAdapter*/
     private lateinit var tagsAdapter: Adapter<String>
 
     /**ingredients list tagsAdapter*/
     private lateinit var ingredientAdapter: Adapter<Ingredient>
 
-    /**
-     * Gets [meal] from the intent arguments and binds to specific items on the screen
-     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadDishDetails(arguments?.getInt("DETAIL_INTENT")?: error("Wrong id of dish"), view)
+        initView()
+        loadDishDetails(arguments?.getInt("MEAL_ID_INTENT")?: error("Wrong id of dish"))
     }
 
-    private fun loadDishDetails(id: Int, view: View) = MealModelRepository.createDishDetails(
+    /**
+     * View components initializing
+     */
+    @SuppressLint("CutPasteId")
+    private fun initView(){
+        tagsAdapter = Adapter()
+        ingredientAdapter = Adapter()
+        view?.let {
+            it.findViewById<RecyclerView>(R.id.tag)?.adapter = tagsAdapter
+            it.findViewById<RecyclerView>(R.id.ingredients_list)?.adapter = ingredientAdapter
+        }
+    }
+
+    /**
+     * Loading data from network
+     * @param id Id of meal in API
+     */
+    private fun loadDishDetails(id: Int) = MealModelRepository.createDishDetails(
             id,
             caseComplete = { mealModel ->
-                meal = mealModel
-                bind(view) },
+                if (mealModel != null) {
+                    bind(mealModel)
+                }
+            },
             caseError = {e ->
                 Log.e("Net", "Error: Can't load meal model", e)
                 Toast.makeText(context, "Error: Can't load meal model", Toast.LENGTH_LONG).show()
             }
         )
 
-    @SuppressLint("CutPasteId")
-    private fun bind(view: View) {
-        tagsAdapter = Adapter()
-        tagsAdapter.setList(meal?.strTags)
-
-        ingredientAdapter = Adapter()
+    /**
+     * Binding data with view components
+     * @param meal [MealModel] to bind with components
+     */
+    private fun bind(meal: MealModel?) {
+        tagsAdapter.setList(meal?.tags)
         ingredientAdapter.setList(meal?.ingredients)
 
-        with(view) {
+        view?.let {
             Glide
-                    .with(this)
-                    .load(meal?.strMealThumb?: R.drawable.heheboi)
-                    .into(findViewById(R.id.detailMealImage))
-            findViewById<TextView>(R.id.detailTitle).text = meal?.strMeal ?: "Unknown"
-            findViewById<TextView>(R.id.Cuisine).text = meal?.strArea?: "Unknown"
-            findViewById<TextView>(R.id.instructions).text = meal?.strInstructions?: "No instructions"
-            findViewById<RecyclerView>(R.id.tag).layoutManager = LinearLayoutManager(
-                    context,
-                    LinearLayoutManager.HORIZONTAL,
-                    false
-            )
-            findViewById<RecyclerView>(R.id.tag).adapter = tagsAdapter
-            findViewById<RecyclerView>(R.id.ingredients_list).layoutManager = LinearLayoutManager(
-                    context
-            )
-            findViewById<RecyclerView>(R.id.ingredients_list).adapter = ingredientAdapter
+                    .with(it)
+                    .load(meal?.strMealThumb ?: R.drawable.heheboi)
+                    .into(requireView().findViewById(R.id.detailMealImage))
+            it.findViewById<TextView>(R.id.detailTitle).text = meal?.strMeal ?: "Unknown"
+            it.findViewById<TextView>(R.id.Cuisine).text = meal?.strArea ?: "Unknown"
+            it.findViewById<TextView>(R.id.instructions).text = meal?.strInstructions ?: "No instructions"
         }
     }
 
     companion object {
-        private const val DETAIL_INTENT = "DETAIL_INTENT"
+        private const val MEAL_ID_INTENT = "MEAL_ID_INTENT"
         /**
          * Should be called instead instead of just instantiating the class
          * @param dish [MealModel] containing information to be displayed on the screen
          */
-        fun newInstance(idDish: Int) = MealDetailsFragment().apply {
-            arguments = bundleOf(DETAIL_INTENT to idDish)
+        fun newInstance(dishId: Int) = MealDetailsFragment().apply {
+            arguments = bundleOf(MEAL_ID_INTENT to dishId)
         }
     }
 

@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.MealModelListItem
@@ -20,26 +19,34 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
     /**The dishes list on the screen*/
     private lateinit var dishListView: RecyclerView
 
-    /**The items list that should be on the screen. Contained in [dishListView] */
-    private lateinit var dishes: List<MealModelListItem>
-
     /**[dishListView] custom adapter*/
     private lateinit var adapter: Adapter<MealModelListItem>
 
-    /**
-     * Sets [adapter] properties and binds it with [dishListView]
-     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadDishList(arguments?.getString("TYPE")?: error("Incorrect type"), view)
+        initView()
+        loadDishList(arguments?.getString("TYPE")?: error("Incorrect type"))
     }
 
-    private fun loadDishList(type: String, view: View) = MealModelRepository.createDishList(
+    /**
+     * View components initializing
+     */
+    private fun initView() {
+        adapter = Adapter()
+        adapter.setItemListener(this)
+        dishListView = requireView().findViewById(R.id.dishListView)
+        dishListView.adapter = adapter
+    }
+
+    /**
+     * Loading data from network
+     * @param type Meal category to load
+     */
+    private fun loadDishList(type: String) = MealModelRepository.createDishList(
             type,
             caseComplete = { dishesList ->
                 if (dishesList != null) {
-                    this.dishes = dishesList
-                    bind(view)
+                    bind(dishesList)
                 } },
             caseError = { e ->
                 Log.e("Net Exception", "Error: can't load dish list", e)
@@ -47,14 +54,12 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
             }
         )
 
-    private fun bind(view: View) {
-        adapter = Adapter()
-        adapter.setList(dishes)
-        adapter.setItemListener(this)
-
-        dishListView = view.findViewById(R.id.dishListView)
-        dishListView.layoutManager = LinearLayoutManager(context)
-        dishListView.adapter = adapter
+    /**
+     * Binding loaded list from network with recyclerview adapter
+     * @param dishesList loaded from network
+     */
+    private fun bind(dishesList: List<MealModelListItem>) {
+        adapter.setList(dishesList)
     }
 
     /**

@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.TypeModel
@@ -19,9 +18,6 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
     /**The types list on the screen*/
     private lateinit var typeListView: RecyclerView
 
-    /**The items list that should be on the screen. Contained in [typeListView] */
-    private var types: List<TypeModel> = listOf()
-
     /**[typeListView] custom adapter*/
     private lateinit var adapter: Adapter<TypeModel>
 
@@ -30,16 +26,26 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadTypes(view)
+        initView()
+        loadTypes()
     }
 
-    private fun loadTypes(view: View) = TypeModelRepository.createTypeList(
+    private fun initView() {
+        adapter = Adapter()
+        adapter.setItemListener(this)
+
+        typeListView = requireView().findViewById(R.id.typesListView)
+        typeListView.adapter = adapter
+    }
+
+    /**
+     * Loading data from network
+     */
+    private fun loadTypes() = TypeModelRepository.createTypeList(
             caseComplete = { typesList ->
                 if (typesList != null) {
-                    this.types = typesList
-                    bind(view)
+                    bind(typesList)
                 }
-                Log.i("Net", typesList.toString())
             },
             caseError = { t ->
                 Log.i("Net", "Can't load types", t)
@@ -47,23 +53,17 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
             }
         )
 
-    private fun bind(view: View) {
-        adapter = Adapter()
-        adapter.setList(types)
-        adapter.setItemListener(this)
-
-        typeListView = view.findViewById(R.id.typesListView)
-        typeListView.layoutManager = LinearLayoutManager(
-                context,
-                LinearLayoutManager.HORIZONTAL,
-                false
-        )
-        typeListView.adapter = adapter
+    /**
+     * Binding loaded list from network with recyclerview adapter
+     * @param typesList loaded list
+     */
+    private fun bind(typesList: List<TypeModel>) {
+        adapter.setList(typesList)
     }
 
     /**
-     * Called when item clicked
-     * WIP for a while
+     * Called when item clicked. Loading selected category
+     * @param item selected item
      */
     override fun onItemClick(item: TypeModel) {
         parentFragmentManager.beginTransaction()

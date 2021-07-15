@@ -17,9 +17,7 @@ object TypeModelRepository {
                 override fun onResponse(
                     call: Call<ListTypeModel>,
                     response: Response<ListTypeModel>
-                ) {
-                    caseComplete(response.body()?.listTypeModel)
-                }
+                ) = caseComplete(response.body()?.listTypeModel)
 
                 override fun onFailure(call: Call<ListTypeModel>, t: Throwable) = caseError(t)
 

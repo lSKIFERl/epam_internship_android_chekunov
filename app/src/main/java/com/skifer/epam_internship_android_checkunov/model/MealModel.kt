@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
  * @param idMeal dish identificator
  * @param strMeal name of the dish
  * @param strCategory category of the dish like "Chicken", "Beef", etc
- * @param strTags tags of the dish like "Meat", "Casserole", etc
+ * @param Tags tags of the dish like "Meat", "Casserole", etc
  * @param strArea where it from
  * @param strMealThumb link to image of the dish
  * @param strYoutube link to video guide on YouTube
@@ -24,8 +24,7 @@ data class MealModel(
         val strMeal: String?,
         @SerializedName("strCategory")
         val strCategory: String?,
-        @SerializedName("strTags")
-        val strTags: List<String>?,
+        val tags: List<String>?,
         @SerializedName("strArea")
         val strArea: String?,
         @SerializedName("strMealThumb")

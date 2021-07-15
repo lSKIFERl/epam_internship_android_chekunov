@@ -104,6 +104,7 @@ class Adapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
      * Sets list of items
      */
     fun setList(list: List<T>?) {
+        items.clear()
         if (list != null) {
             items.addAll(list)
         } else {

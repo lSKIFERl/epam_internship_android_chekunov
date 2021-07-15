@@ -4,7 +4,7 @@ import com.google.gson.GsonBuilder
 import com.skifer.epam_internship_android_checkunov.model.modellists.ListMealModel
 import com.skifer.epam_internship_android_checkunov.model.modellists.ListMealModelNet
 import com.skifer.epam_internship_android_checkunov.model.modellists.ListTypeModel
-import com.skifer.epam_internship_android_checkunov.net.deserialize.MealModelDeserialize
+import com.skifer.epam_internship_android_checkunov.net.deserializer.MealModelDeserializer
 import retrofit2.Call
 import retrofit2.Converter
 import retrofit2.Retrofit
@@ -41,7 +41,7 @@ object Network {
     val dishDetailsApiService: DishApi
     get() = getRetrofitClient(
         ListMealModel::class.java,
-        MealModelDeserialize()
+        MealModelDeserializer()
     ).create(DishApi::class.java)
 
     val dishApiService: DishApi

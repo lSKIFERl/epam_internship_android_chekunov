@@ -5,6 +5,7 @@ import com.skifer.epam_internship_android_checkunov.model.MealModelListItem
 import com.skifer.epam_internship_android_checkunov.model.modellists.ListMealModel
 import com.skifer.epam_internship_android_checkunov.model.modellists.ListMealModelNet
 import com.skifer.epam_internship_android_checkunov.net.Network
+import com.skifer.epam_internship_android_checkunov.net.exception.MealsIsEmptyException
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,9 +22,7 @@ object MealModelRepository {
                 override fun onResponse(
                     call: Call<ListMealModelNet>,
                     response: Response<ListMealModelNet>
-                ) {
-                    caseComplete(response.body()?.listMealModel)
-                }
+                ) = caseComplete(response.body()?.listMealModel)
 
                 override fun onFailure(call: Call<ListMealModelNet>, t: Throwable) = caseError(t)
 
@@ -42,7 +41,11 @@ object MealModelRepository {
                     call: Call<ListMealModel>,
                     response: Response<ListMealModel>
                 ) {
-                    caseComplete(response.body()?.listMealModel?.first())
+                    val result = response.body()?.listMealModel?.firstOrNull()
+                    if (result == null)
+                        caseError(MealsIsEmptyException("Dish is empty"))
+                    else
+                        caseComplete(result)
                 }
 
                 override fun onFailure(call: Call<ListMealModel>, t: Throwable) = caseError(t)
