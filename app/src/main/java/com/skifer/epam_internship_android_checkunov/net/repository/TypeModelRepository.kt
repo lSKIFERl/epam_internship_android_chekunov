@@ -1,27 +1,22 @@
 package com.skifer.epam_internship_android_checkunov.net.repository
 
 import com.skifer.epam_internship_android_checkunov.model.TypeModel
-import com.skifer.epam_internship_android_checkunov.model.modellists.ListTypeModel
 import com.skifer.epam_internship_android_checkunov.net.Network
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 object TypeModelRepository {
     fun createTypeList(
         caseComplete: (List<TypeModel>?) -> Unit,
         caseError: (Throwable) -> Unit
     ) {
-        Network.dishApiService.getCategory().enqueue(
-            object: Callback<ListTypeModel> {
-                override fun onResponse(
-                    call: Call<ListTypeModel>,
-                    response: Response<ListTypeModel>
-                ) = caseComplete(response.body()?.listTypeModel)
-
-                override fun onFailure(call: Call<ListTypeModel>, t: Throwable) = caseError(t)
-
-            }
-        )
+        Network.dishApiService.getCategory()
+            .map { it.listTypeModel }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { caseComplete(it) },
+                { caseError(it) }
+            )
     }
 }

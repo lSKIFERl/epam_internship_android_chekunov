@@ -1,4 +1,4 @@
-package com.skifer.epam_internship_android_checkunov
+package com.skifer.epam_internship_android_checkunov.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.MealModelListItem
 import com.skifer.epam_internship_android_checkunov.net.repository.MealModelRepository
@@ -71,9 +72,8 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
             .beginTransaction()
                 .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_in_right)
             .replace(
-                R.id.containerHost,
-                MealDetailsFragment.
-                newInstance(item.idMeal)
+                    R.id.containerHost,
+                    MealDetailsFragment.newInstance(item.idMeal)
             )
             .addToBackStack(null)
             .commit()

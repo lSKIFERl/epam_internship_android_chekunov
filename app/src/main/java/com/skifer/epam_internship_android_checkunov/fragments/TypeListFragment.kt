@@ -1,4 +1,4 @@
-package com.skifer.epam_internship_android_checkunov
+package com.skifer.epam_internship_android_checkunov.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.TypeModel
 import com.skifer.epam_internship_android_checkunov.net.repository.TypeModelRepository
@@ -69,8 +70,7 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
         parentFragmentManager.beginTransaction()
                 .replace(
                         R.id.meal_list_container,
-                        MealListFragment
-                                .newInstance(item.strCategory)
+                        MealListFragment.newInstance(item.strCategory)
                 )
                 .commit()
     }

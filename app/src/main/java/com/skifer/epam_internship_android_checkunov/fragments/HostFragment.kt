@@ -1,9 +1,10 @@
-package com.skifer.epam_internship_android_checkunov
+package com.skifer.epam_internship_android_checkunov.fragments
 
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
+import com.skifer.epam_internship_android_checkunov.R
 
 /**
  * First and main App Fragment
@@ -15,7 +16,7 @@ class HostFragment : Fragment(R.layout.fragment_host) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(true)
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
@@ -33,9 +34,8 @@ class HostFragment : Fragment(R.layout.fragment_host) {
         parentFragmentManager
                 .beginTransaction()
                 .replace(
-                    R.id.type_list_container,
-                    TypeListFragment
-                        .newInstance()
+                        R.id.type_list_container,
+                        TypeListFragment.newInstance()
                 )
                 .commit()
         Log.i("Net", "Loading types List")
