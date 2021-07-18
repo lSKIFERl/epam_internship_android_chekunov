@@ -49,7 +49,7 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
                 }
             },
             caseError = { t ->
-                Log.i("Net", "Can't load types", t)
+                Log.e("Net", "Can't load types", t)
                 Toast.makeText(parentFragment?.context, "Error in loading categories", Toast.LENGTH_LONG).show()
             }
         )

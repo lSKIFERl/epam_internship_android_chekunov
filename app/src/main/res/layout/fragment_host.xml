@@ -12,12 +12,15 @@
         android:layout_height="64dp"
         android:layout_marginStart="@dimen/detail_types_list_margin_left"
         android:layout_marginLeft="@dimen/detail_types_list_margin_left"
-        android:layout_marginTop="@dimen/detail_margin_top"/>
+        android:layout_marginTop="@dimen/detail_margin_top"
+        android:name="com.skifer.epam_internship_android_checkunov.fragments.TypeListFragment"
+        tools:layout="@layout/fragment_type_list" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/meal_list_container"
         android:layout_marginTop="@dimen/detail_margin_top"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_meal_list" />
 
 </LinearLayout>
