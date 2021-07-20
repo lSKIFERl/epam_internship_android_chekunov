@@ -1,8 +1,8 @@
 package com.skifer.epam_internship_android_checkunov.list_adapter.holders
 
 import android.view.View
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.TypeModel
@@ -34,7 +34,10 @@ class TypeViewHolder(itemView: View, onItemListener: Adapter.onItemListener<Type
      */
     fun bind(type: TypeModel) {
         this.type = type
-        itemView.findViewById<ImageView>(R.id.typeImage).setImageResource(type.picture)
+        Glide
+            .with(itemView)
+            .load(type.strCategoryThumb)
+            .into(itemView.findViewById(R.id.typeImage))
     }
 
     /**

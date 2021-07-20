@@ -1,7 +1,7 @@
 package com.skifer.epam_internship_android_checkunov.model
 
 import android.os.Parcelable
-import androidx.annotation.DrawableRes
+import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -11,6 +11,10 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class TypeModel(
-        @DrawableRes val picture: Int,
-        var selected: Boolean
+        @SerializedName("idCategory")
+        val idCategory: Long,
+        @SerializedName("strCategory")
+        val strCategory: String,
+        @SerializedName("strCategoryThumb")
+        val strCategoryThumb: String,
 ) : Parcelable

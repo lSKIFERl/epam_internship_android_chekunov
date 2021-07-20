@@ -1,12 +1,14 @@
 package com.skifer.epam_internship_android_checkunov
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.TypeModel
+import com.skifer.epam_internship_android_checkunov.net.repository.TypeModelRepository
 
 /**
  * Class of types of food displayed on the screen
@@ -16,9 +18,6 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
     /**The types list on the screen*/
     private lateinit var typeListView: RecyclerView
 
-    /**The items list that should be on the screen. Contained in [typeListView] */
-    private var types: List<TypeModel> = someTypes()
-
     /**[typeListView] custom adapter*/
     private lateinit var adapter: Adapter<TypeModel>
 
@@ -27,48 +26,54 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
+        loadTypes()
+    }
+
+    private fun initView() {
         adapter = Adapter()
-        adapter.setList(types)
         adapter.setItemListener(this)
 
-        typeListView = view.findViewById(R.id.typesListView)
-        typeListView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        typeListView = requireView().findViewById(R.id.typesListView)
         typeListView.adapter = adapter
     }
 
     /**
-     * Called when item clicked
-     * WIP for a while
+     * Loading data from network
      */
-    override fun onItemClick(item: TypeModel) {
-        //TODO: do smth logic in the future
+    private fun loadTypes() = TypeModelRepository.createTypeList(
+            caseComplete = { typesList ->
+                if (typesList != null) {
+                    bind(typesList)
+                }
+            },
+            caseError = { t ->
+                Log.i("Net", "Can't load types", t)
+                Toast.makeText(parentFragment?.context, "Error in loading categories", Toast.LENGTH_LONG).show()
+            }
+        )
+
+    /**
+     * Binding loaded list from network with recyclerview adapter
+     * @param typesList loaded list
+     */
+    private fun bind(typesList: List<TypeModel>) {
+        adapter.setList(typesList)
     }
 
     /**
-     * Builds a list of types. May be removed in the future
+     * Called when item clicked. Loading selected category
+     * @param item selected item
      */
-    private fun someTypes() = listOf(
-            TypeModel(
-                    picture = R.drawable.type_meat,
-                    selected = true
-            ),
-            TypeModel(
-                    picture = R.drawable.type_cakes,
-                    selected = false
-            ),
-            TypeModel(
-                    picture = R.drawable.type_pasta,
-                    selected = false
-            ),
-            TypeModel(
-                    picture = R.drawable.type_burito,
-                    selected = false
-            ),
-            TypeModel(
-                    picture = R.drawable.type_another_meat,
-                    selected = false
-            )
-    )
+    override fun onItemClick(item: TypeModel) {
+        parentFragmentManager.beginTransaction()
+                .replace(
+                        R.id.meal_list_container,
+                        MealListFragment
+                                .newInstance(item.strCategory)
+                )
+                .commit()
+    }
 
     companion object {
         private const val TYPE_LIST = "TYPE_LIST"

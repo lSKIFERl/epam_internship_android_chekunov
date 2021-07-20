@@ -1,40 +1,58 @@
 package com.skifer.epam_internship_android_checkunov.model
 
 import android.os.Parcelable
-import androidx.annotation.DrawableRes
-import com.skifer.epam_internship_android_checkunov.food_types.Cuisine
-import com.skifer.epam_internship_android_checkunov.food_types.FoodType
+import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 /**
  * Dish model
- * @param id dish identificator (will be used in DB)
- * @param title name of the dish
- * @param type type of the dish
- * @param country where it from
- * @param picture image of the dish
+ * @param idMeal dish identificator
+ * @param strMeal name of the dish
+ * @param strCategory category of the dish like "Chicken", "Beef", etc
+ * @param Tags tags of the dish like "Meat", "Casserole", etc
+ * @param strArea where it from
+ * @param strMealThumb link to image of the dish
+ * @param strYoutube link to video guide on YouTube
+ * @param ingredients all what we need to cook
+ * @param strInstructions cook guide
  */
 @Parcelize
 data class MealModel(
-        val id: Int,
-        val title: String?,
-        val type: List<FoodType>,
-        val country: Cuisine?,
-        val ingredients: List<Ingredient>,
-        @DrawableRes val picture: Int
+        @SerializedName("idMeal")
+        val idMeal: Int,
+        @SerializedName("strMeal")
+        val strMeal: String?,
+        @SerializedName("strCategory")
+        val strCategory: String?,
+        val tags: List<String>?,
+        @SerializedName("strArea")
+        val strArea: String?,
+        @SerializedName("strMealThumb")
+        val strMealThumb: String?,
+        @SerializedName("strYoutube")
+        val strYoutube: String?,
+        val ingredients: List<Ingredient>?,
+        @SerializedName("strInstructions")
+        val strInstructions: String?
+) : Parcelable
+
+@Parcelize
+data class MealModelListItem(
+        @SerializedName("idMeal")
+        val idMeal: Int,
+        @SerializedName("strMeal")
+        val strMeal: String?,
+        @SerializedName("strMealThumb")
+        val strMealThumb: String?
 ) : Parcelable
 
 /**
  * Ingredient model
- * @param id ingredient identificator (will be used in DB)
  * @param name name of the ingredient
- * @param count how much ingredient we need to cook
- * @param measure spoons, cups, etc.
+ * @param measure how much we need in spoons, cups, etc.
  */
 @Parcelize
 data class Ingredient(
-        val id: Int,
         val name: String,
-        val count: Int,
-        val measure: String = ""
+        val measure: String?
 ) : Parcelable

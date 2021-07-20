@@ -1,164 +1,93 @@
 package com.skifer.epam_internship_android_checkunov
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.skifer.epam_internship_android_checkunov.food_types.Cuisine
-import com.skifer.epam_internship_android_checkunov.food_types.FoodType
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
-import com.skifer.epam_internship_android_checkunov.model.Ingredient
-import com.skifer.epam_internship_android_checkunov.model.MealModel
+import com.skifer.epam_internship_android_checkunov.model.MealModelListItem
+import com.skifer.epam_internship_android_checkunov.net.repository.MealModelRepository
 
 /**
  * Class of food displayed on the screen
  */
-class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemListener<MealModel> {
+class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemListener<MealModelListItem> {
 
     /**The dishes list on the screen*/
     private lateinit var dishListView: RecyclerView
 
-    /**The items list that should be on the screen. Contained in [dishListView] */
-    private var dishes: List<MealModel> = someDishes()
-
     /**[dishListView] custom adapter*/
-    private lateinit var adapter: Adapter<MealModel>
+    private lateinit var adapter: Adapter<MealModelListItem>
 
-    /**
-     * Sets [adapter] properties and binds it with [dishListView]
-     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = Adapter()
-        adapter.setList(dishes)
-        adapter.setItemListener(this)
+        initView()
+        loadDishList(arguments?.getString("TYPE")?: error("Incorrect type"))
+    }
 
-        dishListView = view.findViewById(R.id.dishListView)
-        dishListView.layoutManager = LinearLayoutManager(context)
+    /**
+     * View components initializing
+     */
+    private fun initView() {
+        adapter = Adapter()
+        adapter.setItemListener(this)
+        dishListView = requireView().findViewById(R.id.dishListView)
         dishListView.adapter = adapter
     }
 
     /**
-     * Generates test list. Will be removed... someday
+     * Loading data from network
+     * @param type Meal category to load
      */
-    private fun someDishes(): List<MealModel> {
-        val dishes = mutableListOf<MealModel>()
-        dishes.add(
-                MealModel(
-                        id = 0,
-                        title = "Soy-Glazed Meatloaves with Wasabi Mashed Potatoes & Roasted Carrots",
-                        type = listOf(FoodType.MEAT, FoodType.BAKERY),
-                        country = Cuisine.EAST,
-                        ingredients = listOf(
-                            Ingredient(
-                                id = 0,
-                                name = "ingredient1",
-                                count = 1,
-                                measure = "cups"
-                            ),
-                            Ingredient(
-                                id = 0,
-                                name = "ingredient2",
-                                count = 5,
-                                measure = "cups"
-                            ),
-                            Ingredient(
-                                id = 0,
-                                name = "ingredient3",
-                                count = 6,
-                                measure = "cups"
-                            )
-                        ),
-                        picture = R.drawable.soy_glazed_meatloaves
-                )
+    private fun loadDishList(type: String) = MealModelRepository.createDishList(
+            type,
+            caseComplete = { dishesList ->
+                if (dishesList != null) {
+                    bind(dishesList)
+                } },
+            caseError = { e ->
+                Log.e("Net Exception", "Error: can't load dish list", e)
+                Toast.makeText(context, "Error: can't load dish list", Toast.LENGTH_LONG).show()
+            }
         )
-        dishes.add(
-                MealModel(
-                        id = 1,
-                        title = "Steak Diane",
-                        type = listOf(FoodType.MEAT, FoodType.BAKERY),
-                        country = Cuisine.USA,
-                    ingredients = listOf(
-                        Ingredient(
-                            id = 0,
-                            name = "ingredient1",
-                            count = 1,
-                            measure = "cups"
-                        ),
-                        Ingredient(
-                            id = 0,
-                            name = "ingredient2",
-                            count = 5,
-                            measure = "cups"
-                        ),
-                        Ingredient(
-                            id = 0,
-                            name = "ingredient3",
-                            count = 6,
-                            measure = "cups"
-                        )
-                    ),
-                        picture = R.drawable.steak_diane
-                )
-        )
-        dishes.add(
-                MealModel(
-                        id = 2,
-                        title = "Nice and hot spicy meat",
-                        type = listOf(FoodType.MEAT),
-                        country = Cuisine.JAMAICAN,
-                    ingredients = listOf(
-                        Ingredient(
-                            id = 0,
-                            name = "ingredient1",
-                            count = 1,
-                            measure = "cups"
-                        ),
-                        Ingredient(
-                            id = 0,
-                            name = "ingredient2",
-                            count = 5,
-                            measure = "cups"
-                        ),
-                        Ingredient(
-                            id = 0,
-                            name = "ingredient3",
-                            count = 6,
-                            measure = "cups"
-                        )
-                    ),
-                        picture = R.drawable.heheboi
-                )
-        )
-        return dishes
+
+    /**
+     * Binding loaded list from network with recyclerview adapter
+     * @param dishesList loaded from network
+     */
+    private fun bind(dishesList: List<MealModelListItem>) {
+        adapter.setList(dishesList)
     }
 
     /**
      * Starts new fragment the [MealDetailsFragment] with [item] model
      * @param item dish model
      */
-    override fun onItemClick(item: MealModel) {
+    override fun onItemClick(item: MealModelListItem) {
         requireActivity().supportFragmentManager
             .beginTransaction()
                 .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_in_right)
             .replace(
                 R.id.containerHost,
                 MealDetailsFragment.
-                newInstance(item)
+                newInstance(item.idMeal)
             )
             .addToBackStack(null)
             .commit()
     }
 
     companion object {
-        private const val MEAL_LIST = "MEAL_LIST"
+        private const val TYPE = "TYPE"
 
         /**
          * Should be called instead instead of just instantiating the class
          */
-        fun newInstance() = MealListFragment().apply {
+        fun newInstance(type: String) = MealListFragment().apply {
             //arguments = bundleOf(MEAL_LIST to ...) then get arguments somewhere
+            arguments = bundleOf("TYPE" to type)
         }
     }
 

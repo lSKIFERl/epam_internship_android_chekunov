@@ -4,7 +4,7 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/small_type_item"
+        android:id="@+id/small_tag_item"
         android:layout_width="@dimen/details_types_item_width"
         android:layout_height="@dimen/details_types_list_height"
         android:background="@drawable/rounded_corners"

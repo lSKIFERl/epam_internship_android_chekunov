@@ -10,8 +10,7 @@
             android:id="@+id/detailMealImage"
             android:layout_width="match_parent"
             android:layout_height="@dimen/image_height_large"
-            android:scaleType="centerCrop"
-            app:srcCompat="@drawable/soy_glazed_meatloaves" />
+            android:scaleType="centerCrop" />
 
         <include
                 layout="@layout/meal_details_bottom_sheet"

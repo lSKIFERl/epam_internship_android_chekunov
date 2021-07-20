@@ -36,7 +36,8 @@
             android:layout_marginTop="@dimen/detail_margin"
             android:fontFamily="@font/roboto"
             android:text="@string/cuisine"
-            android:textSize="@dimen/medium_font_size" />
+            android:textSize="@dimen/medium_font_size"
+            android:textAllCaps="true" />
 
         <TextView
             android:id="@+id/detailTitle"
@@ -53,7 +54,10 @@
             android:layout_marginBottom="@dimen/details_margin_bottom"
             android:layout_width="match_parent"
             android:layout_height="@dimen/details_types_list_height"
-            tools:listitem="@layout/item_food_type"/>
+            tools:listitem="@layout/item_tag"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="horizontal"
+            />
 
         <View
             android:id="@+id/divider"
@@ -75,7 +79,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/detail_margin"
-            tools:listitem="@layout/ingredient_item" />
+            tools:listitem="@layout/ingredient_item"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical" />
+
+        <TextView
+            android:id="@+id/instructions"
+            android:singleLine="false"
+            android:fontFamily="@font/roboto"
+            android:layout_marginTop="@dimen/detail_margin"
+            android:layout_marginBottom="@dimen/detail_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>
