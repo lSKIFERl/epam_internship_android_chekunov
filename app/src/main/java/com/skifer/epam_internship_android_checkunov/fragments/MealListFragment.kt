@@ -51,7 +51,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
                 } },
             caseError = { e ->
                 Log.e("Net Exception", "Error: can't load dish list", e)
-                Toast.makeText(context, "Error: can't load dish list", Toast.LENGTH_LONG).show()
+                Toast.makeText(parentFragment?.context, "Error: can't load dish list", Toast.LENGTH_LONG).show()
             }
         )
 

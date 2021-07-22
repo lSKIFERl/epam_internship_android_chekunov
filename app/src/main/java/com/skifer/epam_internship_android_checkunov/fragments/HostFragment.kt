@@ -31,6 +31,7 @@ class HostFragment : Fragment(R.layout.fragment_host) {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.i("Net", "Loading types List")
         parentFragmentManager
                 .beginTransaction()
                 .replace(
@@ -38,7 +39,6 @@ class HostFragment : Fragment(R.layout.fragment_host) {
                         TypeListFragment.newInstance()
                 )
                 .commit()
-        Log.i("Net", "Loading types List")
     }
 
     companion object {

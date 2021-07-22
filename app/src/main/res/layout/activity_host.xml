@@ -5,7 +5,6 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/containerHost"
-        android:name="com.skifer.epam_internship_android_checkunov.fragments.HostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </FrameLayout>
