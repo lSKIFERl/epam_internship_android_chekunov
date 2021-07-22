@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.MealModelListItem
-import com.skifer.epam_internship_android_checkunov.net.repository.MealModelRepository
+import com.skifer.epam_internship_android_checkunov.data.net.repository.MealModelRepository
 
 /**
  * Class of food displayed on the screen

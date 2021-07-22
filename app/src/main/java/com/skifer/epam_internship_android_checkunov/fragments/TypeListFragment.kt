@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.TypeModel
-import com.skifer.epam_internship_android_checkunov.net.repository.TypeModelRepository
+import com.skifer.epam_internship_android_checkunov.data.net.repository.TypeModelRepository
 
 /**
  * Class of types of food displayed on the screen

@@ -1,4 +1,4 @@
-package com.skifer.epam_internship_android_checkunov.net.deserializer
+package com.skifer.epam_internship_android_checkunov.data.net.deserializer
 
 import android.util.Log
 import com.google.gson.Gson

@@ -1,7 +1,7 @@
-package com.skifer.epam_internship_android_checkunov.net.repository
+package com.skifer.epam_internship_android_checkunov.data.net.repository
 
 import com.skifer.epam_internship_android_checkunov.model.TypeModel
-import com.skifer.epam_internship_android_checkunov.net.Network
+import com.skifer.epam_internship_android_checkunov.data.net.Network
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 

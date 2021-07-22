@@ -1,10 +1,10 @@
-package com.skifer.epam_internship_android_checkunov.net
+package com.skifer.epam_internship_android_checkunov.data.net
 
 import com.google.gson.GsonBuilder
 import com.skifer.epam_internship_android_checkunov.model.modellists.ListMealModel
 import com.skifer.epam_internship_android_checkunov.model.modellists.ListMealModelNet
 import com.skifer.epam_internship_android_checkunov.model.modellists.ListTypeModel
-import com.skifer.epam_internship_android_checkunov.net.deserializer.MealModelDeserializer
+import com.skifer.epam_internship_android_checkunov.data.net.deserializer.MealModelDeserializer
 import io.reactivex.rxjava3.core.Single
 import retrofit2.Converter
 import retrofit2.Retrofit
