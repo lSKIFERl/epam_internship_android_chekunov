@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.data.net.repository.MealModelRepository
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
@@ -60,7 +61,11 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
      * @param dishesList loaded from network
      */
     private fun bind(dishesList: List<MealModelListItem>) {
-        adapter.setList(dishesList)
+        if (App.instance.sharedPreferences.getString(SettingsFragment.SORT_MEALS_LIST, "SORT_ASC") == "SORT_ASC") {
+            adapter.setList(dishesList.sortedBy { it.strMeal })
+        } else {
+            adapter.setList(dishesList.sortedByDescending { it.strMeal })
+        }
     }
 
     /**
