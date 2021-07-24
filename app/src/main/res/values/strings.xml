@@ -2,4 +2,5 @@
     <string name="cuisine">Cuisine</string>
     <string name="title">Title</string>
     <string name="ingrediens">INGREDIENS</string>
+    <string name="app_label">Delicious dishes</string>
 </resources>
