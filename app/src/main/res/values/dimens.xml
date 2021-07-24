@@ -24,4 +24,5 @@
     <dimen name="pick_stick_height">6dp</dimen>
     <dimen name="details_types_item_width">96dp</dimen>
     <dimen name="image_height_large">600dp</dimen>
+    <dimen name="small_margin_top">12dp</dimen>
 </resources>
