@@ -10,8 +10,7 @@
         android:id="@+id/toolbar_home"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/slightly_gray"
-        app:menu="@menu/menu_host">
+        android:background="@color/slightly_gray">
 
         <TextView
             android:layout_width="wrap_content"
