@@ -1,6 +1,5 @@
 package com.skifer.epam_internship_android_checkunov.fragments
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -8,10 +7,11 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
+import com.skifer.epam_internship_android_checkunov.data.net.repository.TypeModelRepository
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.TypeModel
-import com.skifer.epam_internship_android_checkunov.data.net.repository.TypeModelRepository
 
 /**
  * Class of types of food displayed on the screen
@@ -28,7 +28,7 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedPreference = requireActivity().application.getSharedPreferences("last_instances", Context.MODE_PRIVATE)
+        sharedPreference = App.instance.sharedPreferences
         initView()
         loadTypes()
         startMealListFragment()
@@ -97,6 +97,7 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
      * @param item selected item
      */
     override fun onItemClick(item: TypeModel) {
+        adapter.notifyDataSetChanged()
         sharedPreference
             .edit()
             ?.putString("last_meal_type", item.strCategory)
