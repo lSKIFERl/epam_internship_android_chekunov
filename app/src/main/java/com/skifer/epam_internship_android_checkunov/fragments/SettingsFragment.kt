@@ -1,14 +1,19 @@
 package com.skifer.epam_internship_android_checkunov.fragments
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
+import com.skifer.epam_internship_android_checkunov.activities.FragmentsCommunicate
 
-class SettingsFragment : Fragment(R.layout.fragment_settings) {
+
+class SettingsFragment : BottomSheetDialogFragment() {
 
     private lateinit var ascSort: Button
 
@@ -18,10 +23,22 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private val newSettings = mutableMapOf<String, String>()
 
+    private var mBehavior: BottomSheetBehavior<View>? = null
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_settings, container, false)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
         bind()
+        mBehavior = BottomSheetBehavior.from(this.view?.parent as View)
+        mBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun initView() {
@@ -30,7 +47,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             descSort = it.findViewById(R.id.DESCSort)
             confirm = it.findViewById(R.id.confirm)
             it.findViewById<Toolbar>(R.id.toolbar_settings).setNavigationOnClickListener {
-                parentFragmentManager.popBackStack()
+                dismiss()
             }
         }
         ascSort.setOnClickListener {
@@ -56,7 +73,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                         )
                 )
                 .apply()
-            parentFragmentManager.popBackStack()
+            (activity as FragmentsCommunicate).update()
+            dismiss()
         }
     }
 

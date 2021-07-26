@@ -19,25 +19,20 @@ class HostFragment : Fragment(R.layout.fragment_host) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.i("Net", "Loading types List")
+        val l = TypeListFragment.newInstance()
         parentFragmentManager
             .beginTransaction()
             .replace(
                     R.id.type_list_container,
                     TypeListFragment.newInstance()
                 )
-            .addToBackStack("type_list")
+            .addToBackStack(TypeListFragment.TAG)
             .commit()
         val actionBarToolBar: Toolbar = view.findViewById(R.id.toolbar_home) as Toolbar
         actionBarToolBar.inflateMenu(R.menu.menu_host)
         actionBarToolBar.setOnMenuItemClickListener {
-            parentFragmentManager
-                .beginTransaction()
-                .replace(
-                    R.id.containerHost,
-                    SettingsFragment.newInstance()
-                )
-                .addToBackStack("settings")
-                .commit()
+            val bottomSheet = SettingsFragment.newInstance()
+            bottomSheet.show(parentFragmentManager, bottomSheet.tag)
             return@setOnMenuItemClickListener true
         }
     }

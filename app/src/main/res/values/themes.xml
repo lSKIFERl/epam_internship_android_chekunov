@@ -8,7 +8,7 @@
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnSecondary">@color/white</item>
         <!-- Font -->
         <item name="android:textSize">@dimen/small_font_size</item>
         <!-- Status bar color. -->
@@ -22,8 +22,9 @@
         <item name="color">@color/white</item>
     </style>
 
-    <style name="Toolbar.Settings" parent="Theme.MaterialComponents.DayNight.Bridge">
-        <item name="android:textColorSecondary">@color/selected_type</item>
+    <style name="selected_button" parent="Base.Widget.AppCompat.Button">
+        <item name="android:backgroundTint">?attr/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">?attr/colorOnSecondary</item>
     </style>
 
 </resources>

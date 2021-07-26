@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
+import com.skifer.epam_internship_android_checkunov.activities.FragmentsCommunicate
 import com.skifer.epam_internship_android_checkunov.data.net.repository.MealModelRepository
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.MealModelListItem
@@ -16,7 +17,7 @@ import com.skifer.epam_internship_android_checkunov.model.MealModelListItem
 /**
  * Class of food displayed on the screen
  */
-class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemListener<MealModelListItem> {
+class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemListener<MealModelListItem>, FragmentsCommunicate {
 
     /**The dishes list on the screen*/
     private lateinit var dishListView: RecyclerView
@@ -26,6 +27,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.i("Net", id.toString())
         initView()
         loadDishList(arguments?.getString("TYPE")?: error("Incorrect type"))
     }
@@ -91,6 +93,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
 
     companion object {
         private const val TYPE = "TYPE"
+        const val TAG = "MEAL_LIST"
 
         /**
          * Should be called instead instead of just instantiating the class
@@ -99,6 +102,11 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
             //arguments = bundleOf(MEAL_LIST to ...) then get arguments somewhere
             arguments = bundleOf("TYPE" to type)
         }
+    }
+
+    override fun update() {
+        loadDishList(arguments?.getString("TYPE")?: error("Incorrect type"))
+        adapter.notifyDataSetChanged()
     }
 
 }

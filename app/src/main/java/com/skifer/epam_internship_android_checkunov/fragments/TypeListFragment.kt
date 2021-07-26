@@ -89,6 +89,7 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
                     ?: error("Incorrect type")
                 )
             )
+            .addToBackStack(MealListFragment.TAG)
             .commit()
     }
 
@@ -107,6 +108,7 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
 
     companion object {
         private const val TYPE_LIST = "TYPE_LIST"
+        const val TAG = "TYPE_LIST"
 
         /**
          * Should be called instead instead of just instantiating the class
