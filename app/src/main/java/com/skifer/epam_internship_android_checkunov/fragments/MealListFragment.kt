@@ -75,12 +75,17 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
     override fun onItemClick(item: MealModelListItem) {
         requireActivity().supportFragmentManager
             .beginTransaction()
-                .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_in_right)
+                .setCustomAnimations(
+                    R.anim.enter_from_right,
+                    R.anim.exit_to_left,
+                    R.anim.enter_from_left,
+                    R.anim.exit_to_right
+                )
             .replace(
-                    R.id.containerHost,
-                    MealDetailsFragment.newInstance(item.idMeal)
+                R.id.containerHost,
+                MealDetailsFragment.newInstance(item.idMeal)
             )
-            .addToBackStack(null)
+            .addToBackStack("meal_list")
             .commit()
     }
 
