@@ -10,7 +10,9 @@ import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.TypeModel
 import com.skifer.epam_internship_android_checkunov.net.repository.TypeModelRepository
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * Class of types of food displayed on the screen
@@ -51,17 +53,30 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
     /**
      * Loading data from network
      */
-    private fun loadTypes() = TypeModelRepository.createTypeList().subscribe(
-        { typesList ->
-            if (typesList != null) {
-                bind(typesList)
-            }
-        },
-        { t ->
-            Log.e("Net", "Can't load types", t)
-            Toast.makeText(parentFragment?.context, "Error in loading categories", Toast.LENGTH_LONG).show()
-        }
-    )
+    private fun loadTypes() =
+        TypeModelRepository
+            .createTypeList()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { typesList ->
+                    if (typesList != null) {
+                        bind(typesList)
+                    }
+                },
+                { e ->
+                    Log.e(
+                        "Net",
+                        "Can't load types",
+                        e
+                    )
+                    Toast.makeText(
+                        context,
+                        "Error in loading categories",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            )
 
     /**
      * Binding loaded list from network with recyclerview adapter
@@ -77,11 +92,11 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
      */
     override fun onItemClick(item: TypeModel) {
         parentFragmentManager.beginTransaction()
-                .replace(
-                        R.id.meal_list_container,
-                        MealListFragment.newInstance(item.strCategory)
-                )
-                .commit()
+            .replace(
+                R.id.meal_list_container,
+                MealListFragment.newInstance(item.strCategory)
+            )
+            .commit()
     }
 
     companion object {

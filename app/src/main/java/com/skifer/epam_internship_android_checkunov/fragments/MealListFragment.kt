@@ -11,7 +11,9 @@ import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.MealModelListItem
 import com.skifer.epam_internship_android_checkunov.net.repository.MealModelRepository
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * Class of food displayed on the screen
@@ -30,7 +32,11 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        disposable = loadDishList(arguments?.getString("TYPE")?: error("Incorrect type"))
+        disposable = loadDishList(
+            arguments
+                ?.getString(TYPE)
+                ?: error("Incorrect type")
+        )
     }
 
     override fun onDestroy() {
@@ -52,15 +58,28 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
      * Loading data from network
      * @param type Meal category to load
      */
-    private fun loadDishList(type: String) = MealModelRepository.createDishList(type).subscribe(
+    private fun loadDishList(type: String) =
+        MealModelRepository
+            .createDishList(type)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
         { dishesList ->
             if (dishesList != null) {
                 bind(dishesList)
             }
         },
         { e ->
-            Log.e("Net Exception", "Error: can't load dish list", e)
-            Toast.makeText(context, "Error: can't load dish list", Toast.LENGTH_LONG).show()
+            Log.e(
+                "Net Exception",
+                "Error: can't load dish list",
+                e
+            )
+            Toast.makeText(
+                context,
+                "Error: can't load dish list",
+                Toast.LENGTH_LONG
+            ).show()
         }
     )
 
