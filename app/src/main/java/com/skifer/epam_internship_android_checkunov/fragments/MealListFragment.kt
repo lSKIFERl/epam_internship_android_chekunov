@@ -43,17 +43,17 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
      * Loading data from network
      * @param type Meal category to load
      */
-    private fun loadDishList(type: String) = MealModelRepository.createDishList(
-            type,
-            caseComplete = { dishesList ->
-                if (dishesList != null) {
-                    bind(dishesList)
-                } },
-            caseError = { e ->
-                Log.e("Net Exception", "Error: can't load dish list", e)
-                Toast.makeText(context, "Error: can't load dish list", Toast.LENGTH_LONG).show()
+    private fun loadDishList(type: String) = MealModelRepository.createDishList(type).subscribe(
+        { dishesList ->
+            if (dishesList != null) {
+                bind(dishesList)
             }
-        )
+        },
+        { e ->
+            Log.e("Net Exception", "Error: can't load dish list", e)
+            Toast.makeText(context, "Error: can't load dish list", Toast.LENGTH_LONG).show()
+        }
+    )
 
     /**
      * Binding loaded list from network with recyclerview adapter

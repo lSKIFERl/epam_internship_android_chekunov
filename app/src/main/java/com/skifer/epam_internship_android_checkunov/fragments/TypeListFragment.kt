@@ -42,17 +42,17 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
     /**
      * Loading data from network
      */
-    private fun loadTypes() = TypeModelRepository.createTypeList(
-            caseComplete = { typesList ->
-                if (typesList != null) {
-                    bind(typesList)
-                }
-            },
-            caseError = { t ->
-                Log.e("Net", "Can't load types", t)
-                Toast.makeText(parentFragment?.context, "Error in loading categories", Toast.LENGTH_LONG).show()
+    private fun loadTypes() = TypeModelRepository.createTypeList().subscribe(
+        { typesList ->
+            if (typesList != null) {
+                bind(typesList)
             }
-        )
+        },
+        { t ->
+            Log.e("Net", "Can't load types", t)
+            Toast.makeText(parentFragment?.context, "Error in loading categories", Toast.LENGTH_LONG).show()
+        }
+    )
 
     /**
      * Binding loaded list from network with recyclerview adapter

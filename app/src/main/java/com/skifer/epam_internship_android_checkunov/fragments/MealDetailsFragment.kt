@@ -14,6 +14,7 @@ import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.Ingredient
 import com.skifer.epam_internship_android_checkunov.model.MealModel
+import com.skifer.epam_internship_android_checkunov.net.exception.MealsIsEmptyException
 import com.skifer.epam_internship_android_checkunov.net.repository.MealModelRepository
 
 /**
@@ -50,18 +51,25 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
      * Loading data from network
      * @param id Id of meal in API
      */
-    private fun loadDishDetails(id: Int) = MealModelRepository.createDishDetails(
-            id,
-            caseComplete = { mealModel ->
-                if (mealModel != null) {
-                    bind(mealModel)
-                }
-            },
-            caseError = {e ->
-                Log.e("Net", "Error: Can't load meal model", e)
-                Toast.makeText(context, "Error: Can't load meal model", Toast.LENGTH_LONG).show()
+    private fun loadDishDetails(id: Int) = MealModelRepository.createDishDetails(id)?.subscribe(
+        { mealModel ->
+            if (mealModel != null) {
+                bind(mealModel)
+            } else {
+                Log.e(
+                    "Net",
+                    "Error: Can't load meal model",
+                    MealsIsEmptyException("Loaded MealModel is empty")
+                )
+                Toast.makeText(context, "There is nothing to see here(", Toast.LENGTH_LONG).show()
+                parentFragmentManager.popBackStack()
             }
-        )
+        },
+        { e ->
+            Log.e("Net", "Error: Can't load meal model", e)
+            Toast.makeText(context, "Error: Can't load meal model", Toast.LENGTH_LONG).show()
+        }
+    )
 
     /**
      * Binding data with view components
