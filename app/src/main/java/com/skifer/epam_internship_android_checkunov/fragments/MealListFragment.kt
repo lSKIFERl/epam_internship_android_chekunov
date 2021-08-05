@@ -11,6 +11,7 @@ import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.MealModelListItem
 import com.skifer.epam_internship_android_checkunov.net.repository.MealModelRepository
+import io.reactivex.rxjava3.disposables.Disposable
 
 /**
  * Class of food displayed on the screen
@@ -23,10 +24,18 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
     /**[dishListView] custom adapter*/
     private lateinit var adapter: Adapter<MealModelListItem>
 
+    /**used to unsubscribe from observable*/
+    private var disposable: Disposable? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        loadDishList(arguments?.getString("TYPE")?: error("Incorrect type"))
+        disposable = loadDishList(arguments?.getString("TYPE")?: error("Incorrect type"))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable?.dispose()
     }
 
     /**

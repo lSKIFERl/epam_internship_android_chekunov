@@ -16,6 +16,7 @@ import com.skifer.epam_internship_android_checkunov.model.Ingredient
 import com.skifer.epam_internship_android_checkunov.model.MealModel
 import com.skifer.epam_internship_android_checkunov.net.exception.MealsIsEmptyException
 import com.skifer.epam_internship_android_checkunov.net.repository.MealModelRepository
+import io.reactivex.rxjava3.disposables.Disposable
 
 /**
  * Displays detailed information about selected dish in [MealListFragment]
@@ -28,10 +29,18 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
     /**ingredients list tagsAdapter*/
     private lateinit var ingredientAdapter: Adapter<Ingredient>
 
+    /**used to unsubscribe from observable*/
+    private var disposable: Disposable? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        loadDishDetails(arguments?.getInt("MEAL_ID_INTENT")?: error("Wrong id of dish"))
+        disposable = loadDishDetails(arguments?.getInt("MEAL_ID_INTENT")?: error("Wrong id of dish"))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable?.dispose()
     }
 
     /**

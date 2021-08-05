@@ -10,6 +10,7 @@ import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.TypeModel
 import com.skifer.epam_internship_android_checkunov.net.repository.TypeModelRepository
+import io.reactivex.rxjava3.disposables.Disposable
 
 /**
  * Class of types of food displayed on the screen
@@ -22,13 +23,21 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
     /**[typeListView] custom adapter*/
     private lateinit var adapter: Adapter<TypeModel>
 
+    /**used to unsubscribe from observable*/
+    private var disposable: Disposable? = null
+
     /**
      * Sets [adapter] properties and binds it with [typeListView]
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        loadTypes()
+        disposable = loadTypes()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable?.dispose()
     }
 
     private fun initView() {
