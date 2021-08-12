@@ -1,18 +1,21 @@
 package com.skifer.epam_internship_android_checkunov.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.activities.FragmentsCommunicate
-import com.skifer.epam_internship_android_checkunov.data.net.repository.MealModelRepository
+import com.skifer.epam_internship_android_checkunov.data.net.repository.MealListRepositoryImpl
+import com.skifer.epam_internship_android_checkunov.fragments.viewmodel.MealListFactory
+import com.skifer.epam_internship_android_checkunov.fragments.viewmodel.MealListViewModel
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.MealModelListItem
+import io.reactivex.rxjava3.disposables.Disposable
 
 /**
  * Class of food displayed on the screen
@@ -25,11 +28,33 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
     /**[dishListView] custom adapter*/
     private lateinit var adapter: Adapter<MealModelListItem>
 
+    private lateinit var itemList: List<MealModelListItem>
+
+    private lateinit var disposable: Disposable
+
+    private val viewModel: MealListViewModel by viewModels{ MealListFactory(MealListRepositoryImpl(), arguments?.getString("TYPE")?: error("Incorrect type")) }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.i("Net", id.toString())
         initView()
-        loadDishList(arguments?.getString("TYPE")?: error("Incorrect type"))
+        disposable = viewModel.loadData()
+        viewModel.mealList.observe(viewLifecycleOwner) {
+            try {
+                itemList = it
+                bind(it)
+            } catch (t: Throwable) {
+                Toast.makeText(
+                    context,
+                    "Error: can't load dish list",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
     }
 
     /**
@@ -43,28 +68,14 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
     }
 
     /**
-     * Loading data from network
-     * @param type Meal category to load
-     */
-    private fun loadDishList(type: String) = MealModelRepository.createDishList(
-            type,
-            caseComplete = { dishesList ->
-                if (dishesList != null) {
-                    bind(dishesList)
-                } },
-            caseError = { e ->
-                Log.e("Net Exception", "Error: can't load dish list", e)
-                Toast.makeText(parentFragment?.context, "Error: can't load dish list", Toast.LENGTH_LONG).show()
-            }
-        )
-
-    /**
      * Binding loaded list from network with recyclerview adapter
      * @param dishesList loaded from network
      */
     private fun bind(dishesList: List<MealModelListItem>) {
-        if (App.instance.sharedPreferences.getString(SettingsFragment.SORT_MEALS_LIST, "SORT_ASC") == "SORT_ASC") {
-            adapter.setList(dishesList.sortedBy { it.strMeal })
+        if (App.instance.sharedPreferences.getString(
+                SettingsFragment.SORT_MEALS_LIST,
+                "SORT_ASC") == "SORT_ASC") {
+                    adapter.setList(dishesList.sortedBy { it.strMeal })
         } else {
             adapter.setList(dishesList.sortedByDescending { it.strMeal })
         }
@@ -105,7 +116,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
     }
 
     override fun update() {
-        loadDishList(arguments?.getString("TYPE")?: error("Incorrect type"))
+        bind(itemList)
         adapter.notifyDataSetChanged()
     }
 

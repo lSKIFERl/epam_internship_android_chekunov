@@ -2,20 +2,24 @@ package com.skifer.epam_internship_android_checkunov.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.skifer.epam_internship_android_checkunov.R
-import com.skifer.epam_internship_android_checkunov.data.net.repository.MealModelRepository
+import com.skifer.epam_internship_android_checkunov.data.net.exception.MealsIsEmptyException
+import com.skifer.epam_internship_android_checkunov.data.net.repository.MealModelRepositoryImpl
+import com.skifer.epam_internship_android_checkunov.fragments.viewmodel.MealModelFactory
+import com.skifer.epam_internship_android_checkunov.fragments.viewmodel.MealModelViewModel
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.Ingredient
 import com.skifer.epam_internship_android_checkunov.model.MealModel
+import io.reactivex.rxjava3.disposables.Disposable
 
 /**
  * Displays detailed information about selected dish in [MealListFragment]
@@ -28,10 +32,43 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
     /**ingredients list tagsAdapter*/
     private lateinit var ingredientAdapter: Adapter<Ingredient>
 
+    private lateinit var disposable: Disposable
+
+    private val viewModel: MealModelViewModel by viewModels{
+        MealModelFactory(
+            MealModelRepositoryImpl(),
+            arguments?.getInt("MEAL_ID_INTENT")?: error("Wrong id of dish")
+        )
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        loadDishDetails(arguments?.getInt("MEAL_ID_INTENT")?: error("Wrong id of dish"))
+        disposable = viewModel.loadData()
+        viewModel.meal.observe(viewLifecycleOwner){
+            try {
+                bind(it)
+            } catch (e: MealsIsEmptyException) {
+                Toast.makeText(
+                    context,
+                    "There is nothing to see here",
+                    Toast.LENGTH_LONG
+                ).show()
+                parentFragmentManager.popBackStack()
+            } catch (e: Throwable) {
+                Toast.makeText(
+                    context,
+                    "Error: Can't load meal model",
+                    Toast.LENGTH_LONG
+                ).show()
+                parentFragmentManager.popBackStack()
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
     }
 
     /**
@@ -49,23 +86,6 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
             }
         }
     }
-
-    /**
-     * Loading data from network
-     * @param id Id of meal in API
-     */
-    private fun loadDishDetails(id: Int) = MealModelRepository.createDishDetails(
-            id,
-            caseComplete = { mealModel ->
-                if (mealModel != null) {
-                    bind(mealModel)
-                }
-            },
-            caseError = {e ->
-                Log.e("Net", "Error: Can't load meal model", e)
-                Toast.makeText(context, "Error: Can't load meal model", Toast.LENGTH_LONG).show()
-            }
-        )
 
     /**
      * Binding data with view components
