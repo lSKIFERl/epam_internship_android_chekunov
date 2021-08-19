@@ -2,6 +2,8 @@ package com.skifer.epam_internship_android_checkunov.presentation.feature.host.v
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view.MealListFragment
 
@@ -10,22 +12,16 @@ import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.v
  */
 class HostActivity: AppCompatActivity(), FragmentsCommunicate {
 
+    lateinit var navController: NavController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_host)
-
-        supportFragmentManager
-                .beginTransaction()
-                .replace(
-                        R.id.containerHost,
-                        HostFragment.
-                        newInstance()
-                )
-                .commit()
+        navController = (supportFragmentManager.findFragmentById(R.id.nav_host) as NavHostFragment).navController
     }
 
     override fun update() {
-        (supportFragmentManager.findFragmentById(R.id.meal_list_container) as MealListFragment).update()
+        (supportFragmentManager.findFragmentById(R.id.mealList) as MealListFragment).update()
     }
 }
 

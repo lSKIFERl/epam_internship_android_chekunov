@@ -1,4 +1,4 @@
-package com.skifer.epam_internship_android_checkunov.presentation.feature.types.view.holder
+package com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view.holder
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

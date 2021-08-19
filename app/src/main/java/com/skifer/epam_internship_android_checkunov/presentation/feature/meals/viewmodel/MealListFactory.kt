@@ -3,11 +3,12 @@ package com.skifer.epam_internship_android_checkunov.presentation.feature.meals.
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.skifer.epam_internship_android_checkunov.domain.usecase.MealListUseCase
+import com.skifer.epam_internship_android_checkunov.domain.usecase.TypeListUseCase
 
 class MealListFactory(
-    private val useCase: MealListUseCase,
-    private val category: String
+    private val mealListUseCase: MealListUseCase,
+    private val typeListUseCase: TypeListUseCase,
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-        MealListViewModel(useCase, category) as T
+        MealListViewModel(mealListUseCase, typeListUseCase) as T
 }

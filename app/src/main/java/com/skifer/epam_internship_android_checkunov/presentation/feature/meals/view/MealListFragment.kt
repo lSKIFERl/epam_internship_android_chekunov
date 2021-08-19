@@ -1,16 +1,21 @@
 package com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.data.repository.MealListRepositoryImpl
+import com.skifer.epam_internship_android_checkunov.data.repository.TypeModelRepositoryImpl
 import com.skifer.epam_internship_android_checkunov.domain.usecase.MealListUseCase
+import com.skifer.epam_internship_android_checkunov.domain.usecase.TypeListUseCase
 import com.skifer.epam_internship_android_checkunov.presentation.feature.ViewHolderAdapter
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.view.MealDetailsFragment
 import com.skifer.epam_internship_android_checkunov.presentation.feature.host.view.FragmentsCommunicate
@@ -18,37 +23,110 @@ import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.v
 import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.viewmodel.MealListViewModel
 import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.view.SettingsFragment
 import com.skifer.epam_internship_android_checkunov.presentation.model.MealModelListItem
-import io.reactivex.rxjava3.disposables.Disposable
+import com.skifer.epam_internship_android_checkunov.presentation.model.TypeModel
 
 /**
  * Class of food displayed on the screen
  */
-class MealListFragment : Fragment(R.layout.fragment_meal_list), ViewHolderAdapter.onItemListener<MealModelListItem>,
-    FragmentsCommunicate {
+class MealListFragment : Fragment(R.layout.fragment_meal_list), FragmentsCommunicate {
 
     /**The dishes list on the screen*/
     private lateinit var dishListView: RecyclerView
 
     /**[dishListView] custom adapter*/
-    private lateinit var adapter: ViewHolderAdapter<MealModelListItem>
+    private lateinit var mealListAdapter: ViewHolderAdapter<MealModelListItem>
+
+    /**The types list on the screen*/
+    private lateinit var typeListView: RecyclerView
+
+    /**[typeListView] custom adapter*/
+    private lateinit var typeListAdapter: ViewHolderAdapter<TypeModel>
 
     private lateinit var itemList: List<MealModelListItem>
 
-    private lateinit var disposable: Disposable
+    private lateinit var sharedPreference: SharedPreferences
 
     private val viewModel: MealListViewModel by viewModels{
         MealListFactory(
             MealListUseCase(
                 MealListRepositoryImpl()
             ),
-            arguments?.getString("TYPE")?: error("Incorrect type")
+            TypeListUseCase(
+                TypeModelRepositoryImpl()
+            )
+            //arguments?.getString("TYPE")?: error("Incorrect type")
         )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView()
-        disposable = viewModel.loadData()
+        sharedPreference = App.instance.sharedPreferences
+        initTypeListView()
+        initMealListView()
+
+        loadTypes()
+
+        val actionBarToolBar: Toolbar = view.findViewById(R.id.toolbar_home) as Toolbar
+        actionBarToolBar.inflateMenu(R.menu.menu_host)
+        actionBarToolBar.setOnMenuItemClickListener {
+            findNavController().navigate(
+                MealListFragmentDirections.actionMealListFragmentToSettingsFragment()
+            )
+            /*val bottomSheet = SettingsFragment.newInstance()
+            bottomSheet.show(parentFragmentManager, bottomSheet.tag)*/
+            return@setOnMenuItemClickListener true
+        }
+    }
+
+    /**
+     * View components initializing
+     */
+    private fun initMealListView() {
+        mealListAdapter = ViewHolderAdapter()
+        mealListAdapter.setItemListener(object: ViewHolderAdapter.onItemListener<MealModelListItem>{
+            override fun onItemClick(item: MealModelListItem) {
+                /*requireActivity().supportFragmentManager
+                    .beginTransaction()
+                    .setCustomAnimations(
+                        R.anim.enter_from_right,
+                        R.anim.exit_to_left,
+                        R.anim.enter_from_left,
+                        R.anim.exit_to_right
+                    )
+                    .replace(
+                        R.id.containerHost,
+                        MealDetailsFragment.newInstance(item.idMeal)
+                    )
+                    .addToBackStack("meal_list")
+                    .commit()*/
+                findNavController().navigate(
+                    R.id.mealDetailsFragment,
+                    bundleOf(MealDetailsFragment.MEAL_ID_INTENT to item.idMeal)
+                )
+            }
+        })
+        dishListView = requireView().findViewById(R.id.dishListView)
+        dishListView.adapter = mealListAdapter
+    }
+
+    private fun initTypeListView() {
+        typeListAdapter = ViewHolderAdapter()
+        typeListAdapter.setItemListener(object: ViewHolderAdapter.onItemListener<TypeModel>{
+            override fun onItemClick(item: TypeModel) {
+                typeListAdapter.notifyDataSetChanged()
+                sharedPreference
+                    .edit()
+                    ?.putString("last_meal_type", item.strCategory)
+                    ?.apply()
+                viewModel.loadMealList(item.strCategory)
+            }
+        })
+        typeListView = requireView().findViewById(R.id.typesListView)
+        typeListView.adapter = typeListAdapter
+    }
+
+    private fun loadMeals() {
+        sharedPreference.getString(TYPE, null)?.let { viewModel.loadMealList(it) }
         viewModel.mealList.observe(viewLifecycleOwner) {
             try {
                 itemList = it
@@ -63,19 +141,35 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ViewHolderAdapte
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        disposable.dispose()
+    private fun loadTypes() {
+        viewModel.loadTypeList()
+        viewModel.typeList.observe(viewLifecycleOwner) {
+            try {
+                typeListAdapter.setList(it)
+                defaultLoad(it.first().strCategory)
+                loadMeals()
+            } catch (t: Throwable) {
+                Toast.makeText(
+                    context,
+                    "Can't load types",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 
     /**
-     * View components initializing
+     * Set first type as default for the first list launching or loading default value
+     * @param type first loaded type
      */
-    private fun initView() {
-        adapter = ViewHolderAdapter()
-        adapter.setItemListener(this)
-        dishListView = requireView().findViewById(R.id.dishListView)
-        dishListView.adapter = adapter
+    private fun defaultLoad(type: String) {
+        if (sharedPreference
+                .getString("last_meal_type", null) == null) {
+            sharedPreference
+                .edit()
+                ?.putString("last_meal_type", type)
+                ?.apply()
+        }
     }
 
     /**
@@ -86,49 +180,27 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ViewHolderAdapte
         if (App.instance.sharedPreferences.getString(
                 SettingsFragment.SORT_MEALS_LIST,
                 "SORT_ASC") == "SORT_ASC") {
-                    adapter.setList(dishesList.sortedBy { it.strMeal })
+                    mealListAdapter.setList(dishesList.sortedBy { it.strMeal })
         } else {
-            adapter.setList(dishesList.sortedByDescending { it.strMeal })
+            mealListAdapter.setList(dishesList.sortedByDescending { it.strMeal })
         }
     }
 
-    /**
-     * Starts new fragment the [MealDetailsFragment] with [item] model
-     * @param item dish model
-     */
-    override fun onItemClick(item: MealModelListItem) {
-        requireActivity().supportFragmentManager
-            .beginTransaction()
-                .setCustomAnimations(
-                    R.anim.enter_from_right,
-                    R.anim.exit_to_left,
-                    R.anim.enter_from_left,
-                    R.anim.exit_to_right
-                )
-            .replace(
-                R.id.containerHost,
-                MealDetailsFragment.newInstance(item.idMeal)
-            )
-            .addToBackStack("meal_list")
-            .commit()
-    }
-
     companion object {
-        private const val TYPE = "TYPE"
-        const val TAG = "MEAL_LIST"
+        const val TYPE = "TYPE"
 
         /**
          * Should be called instead instead of just instantiating the class
          */
         fun newInstance(type: String) = MealListFragment().apply {
             //arguments = bundleOf(MEAL_LIST to ...) then get arguments somewhere
-            arguments = bundleOf("TYPE" to type)
+            arguments = bundleOf(TYPE to type)
         }
     }
 
     override fun update() {
         bind(itemList)
-        adapter.notifyDataSetChanged()
+        mealListAdapter.notifyDataSetChanged()
     }
 
 }

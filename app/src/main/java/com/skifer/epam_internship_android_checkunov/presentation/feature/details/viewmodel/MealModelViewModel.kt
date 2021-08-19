@@ -9,6 +9,7 @@ import com.skifer.epam_internship_android_checkunov.domain.usecase.MealModelUseC
 import com.skifer.epam_internship_android_checkunov.presentation.mapper.toUi
 import com.skifer.epam_internship_android_checkunov.presentation.model.MealModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class MealModelViewModel(
@@ -19,20 +20,23 @@ class MealModelViewModel(
     val meal: LiveData<MealModel>
         get() = mutableMeal
 
-    fun loadData() =
-        useCase.invoke(id)
+    private var disposable: Disposable? = null
+
+    fun loadData() {
+        disposable = useCase.invoke(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { if (it != null) {
-                    mutableMeal.value = it.toUi()
-                } else {
-                    Log.e(
-                        "Net",
-                        "Error: Can't load meal model",
-                        MealsIsEmptyException("Loaded MealModel is empty")
-                    )
-                }
+                {
+                    if (it != null) {
+                        mutableMeal.value = it.toUi()
+                    } else {
+                        Log.e(
+                            "Net",
+                            "Error: Can't load meal model",
+                            MealsIsEmptyException("Loaded MealModel is empty")
+                        )
+                    }
                 },
                 { e ->
                     Log.e(
@@ -43,4 +47,10 @@ class MealModelViewModel(
                     throw e
                 }
             )
+    }
+
+    override fun onCleared() {
+        disposable?.dispose()
+        super.onCleared()
+    }
 }
