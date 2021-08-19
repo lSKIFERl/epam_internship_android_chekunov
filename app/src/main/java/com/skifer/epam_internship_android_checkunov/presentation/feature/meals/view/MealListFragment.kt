@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -16,19 +17,18 @@ import com.skifer.epam_internship_android_checkunov.data.repository.MealListRepo
 import com.skifer.epam_internship_android_checkunov.data.repository.TypeModelRepositoryImpl
 import com.skifer.epam_internship_android_checkunov.domain.usecase.MealListUseCase
 import com.skifer.epam_internship_android_checkunov.domain.usecase.TypeListUseCase
+import com.skifer.epam_internship_android_checkunov.presentation.base.ShareViewModel
 import com.skifer.epam_internship_android_checkunov.presentation.feature.ViewHolderAdapter
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.view.MealDetailsFragment
-import com.skifer.epam_internship_android_checkunov.presentation.feature.host.view.FragmentsCommunicate
 import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.viewmodel.MealListFactory
 import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.viewmodel.MealListViewModel
-import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.view.SettingsFragment
 import com.skifer.epam_internship_android_checkunov.presentation.model.MealModelListItem
 import com.skifer.epam_internship_android_checkunov.presentation.model.TypeModel
 
 /**
  * Class of food displayed on the screen
  */
-class MealListFragment : Fragment(R.layout.fragment_meal_list), FragmentsCommunicate {
+class MealListFragment : Fragment(R.layout.fragment_meal_list){
 
     /**The dishes list on the screen*/
     private lateinit var dishListView: RecyclerView
@@ -46,6 +46,8 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), FragmentsCommuni
 
     private lateinit var sharedPreference: SharedPreferences
 
+    private val sorterSharedView: ShareViewModel by activityViewModels()
+
     private val viewModel: MealListViewModel by viewModels{
         MealListFactory(
             MealListUseCase(
@@ -54,7 +56,6 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), FragmentsCommuni
             TypeListUseCase(
                 TypeModelRepositoryImpl()
             )
-            //arguments?.getString("TYPE")?: error("Incorrect type")
         )
     }
 
@@ -85,20 +86,6 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), FragmentsCommuni
         mealListAdapter = ViewHolderAdapter()
         mealListAdapter.setItemListener(object: ViewHolderAdapter.onItemListener<MealModelListItem>{
             override fun onItemClick(item: MealModelListItem) {
-                /*requireActivity().supportFragmentManager
-                    .beginTransaction()
-                    .setCustomAnimations(
-                        R.anim.enter_from_right,
-                        R.anim.exit_to_left,
-                        R.anim.enter_from_left,
-                        R.anim.exit_to_right
-                    )
-                    .replace(
-                        R.id.containerHost,
-                        MealDetailsFragment.newInstance(item.idMeal)
-                    )
-                    .addToBackStack("meal_list")
-                    .commit()*/
                 findNavController().navigate(
                     R.id.mealDetailsFragment,
                     bundleOf(MealDetailsFragment.MEAL_ID_INTENT to item.idMeal)
@@ -177,13 +164,9 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), FragmentsCommuni
      * @param dishesList loaded from network
      */
     private fun bind(dishesList: List<MealModelListItem>) {
-        if (App.instance.sharedPreferences.getString(
-                SettingsFragment.SORT_MEALS_LIST,
-                "SORT_ASC") == "SORT_ASC") {
-                    mealListAdapter.setList(dishesList.sortedBy { it.strMeal })
-        } else {
-            mealListAdapter.setList(dishesList.sortedByDescending { it.strMeal })
-        }
+        sorterSharedView.sortBy.observe(viewLifecycleOwner, {
+            mealListAdapter.setList(sorterSharedView.sort(dishesList, it))
+        })
     }
 
     companion object {
@@ -196,11 +179,6 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), FragmentsCommuni
             //arguments = bundleOf(MEAL_LIST to ...) then get arguments somewhere
             arguments = bundleOf(TYPE to type)
         }
-    }
-
-    override fun update() {
-        bind(itemList)
-        mealListAdapter.notifyDataSetChanged()
     }
 
 }

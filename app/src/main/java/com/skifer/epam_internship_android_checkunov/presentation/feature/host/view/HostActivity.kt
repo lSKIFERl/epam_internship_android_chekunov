@@ -5,12 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.skifer.epam_internship_android_checkunov.R
-import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view.MealListFragment
 
 /**
  * Main Activity for the whole application
  */
-class HostActivity: AppCompatActivity(), FragmentsCommunicate {
+class HostActivity: AppCompatActivity(){
 
     lateinit var navController: NavController
 
@@ -19,12 +18,4 @@ class HostActivity: AppCompatActivity(), FragmentsCommunicate {
         setContentView(R.layout.activity_host)
         navController = (supportFragmentManager.findFragmentById(R.id.nav_host) as NavHostFragment).navController
     }
-
-    override fun update() {
-        (supportFragmentManager.findFragmentById(R.id.mealList) as MealListFragment).update()
-    }
-}
-
-interface FragmentsCommunicate {
-    fun update()
 }
