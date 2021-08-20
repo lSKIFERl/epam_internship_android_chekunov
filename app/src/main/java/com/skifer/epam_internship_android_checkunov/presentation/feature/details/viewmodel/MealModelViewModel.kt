@@ -44,6 +44,8 @@ class MealModelViewModel(
                         "Error: Can't load meal model",
                         e
                     )
+                    // TODO: Нужна помощь в обработке исключения:
+                    //  оно пробрасывается, но не весть пойми куда
                     throw e
                 }
             )

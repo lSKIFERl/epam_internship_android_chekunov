@@ -18,7 +18,7 @@ fun MealModelDto.toEntity(): MealModelEntity {
     val ingredients = mutableListOf<IngredientEntity>()
     with(json) {
         (1..20).forEach { i ->
-            if (!get("strIngredient$i").isJsonNull) {
+            if (get("strIngredient$i") != null) {
                 if (!get("strIngredient$i").asString.equals("") &&
                     get("strIngredient$i").asString != null
                 ) {
@@ -31,7 +31,7 @@ fun MealModelDto.toEntity(): MealModelEntity {
                 }
             }
         }
-        if (!get("strTags").isJsonNull) {
+        if (get("strTags") != null) {
             strTags.addAll(
                 get("strTags").asString
                     ?.split(",")

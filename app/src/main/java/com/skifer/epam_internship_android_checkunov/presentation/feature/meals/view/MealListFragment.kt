@@ -22,6 +22,7 @@ import com.skifer.epam_internship_android_checkunov.presentation.feature.ViewHol
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.view.MealDetailsFragment
 import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.viewmodel.MealListFactory
 import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.viewmodel.MealListViewModel
+import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.view.SettingsFragment
 import com.skifer.epam_internship_android_checkunov.presentation.model.MealModelListItem
 import com.skifer.epam_internship_android_checkunov.presentation.model.TypeModel
 
@@ -67,6 +68,10 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list){
 
         loadTypes()
 
+        sorterSharedView.sortBy.observe(viewLifecycleOwner, {
+            mealListAdapter.setList(sorterSharedView.sort(itemList, it))
+        })
+
         val actionBarToolBar: Toolbar = view.findViewById(R.id.toolbar_home) as Toolbar
         actionBarToolBar.inflateMenu(R.menu.menu_host)
         actionBarToolBar.setOnMenuItemClickListener {
@@ -100,20 +105,22 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list){
         typeListAdapter = ViewHolderAdapter()
         typeListAdapter.setItemListener(object: ViewHolderAdapter.onItemListener<TypeModel>{
             override fun onItemClick(item: TypeModel) {
-                typeListAdapter.notifyDataSetChanged()
                 sharedPreference
                     .edit()
-                    ?.putString("last_meal_type", item.strCategory)
+                    ?.putString(TYPE, item.strCategory)
                     ?.apply()
                 viewModel.loadMealList(item.strCategory)
+                typeListAdapter.notifyDataSetChanged()
             }
         })
         typeListView = requireView().findViewById(R.id.typesListView)
         typeListView.adapter = typeListAdapter
     }
 
-    private fun loadMeals() {
-        sharedPreference.getString(TYPE, null)?.let { viewModel.loadMealList(it) }
+    private fun loadMeals(category: String?) {
+        if (category != null) {
+            viewModel.loadMealList(category)
+        }
         viewModel.mealList.observe(viewLifecycleOwner) {
             try {
                 itemList = it
@@ -134,7 +141,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list){
             try {
                 typeListAdapter.setList(it)
                 defaultLoad(it.first().strCategory)
-                loadMeals()
+                loadMeals(sharedPreference.getString(TYPE, null))
             } catch (t: Throwable) {
                 Toast.makeText(
                     context,
@@ -151,10 +158,10 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list){
      */
     private fun defaultLoad(type: String) {
         if (sharedPreference
-                .getString("last_meal_type", null) == null) {
+                .getString(TYPE, null) == null) {
             sharedPreference
                 .edit()
-                ?.putString("last_meal_type", type)
+                ?.putString(TYPE, type)
                 ?.apply()
         }
     }
@@ -164,9 +171,15 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list){
      * @param dishesList loaded from network
      */
     private fun bind(dishesList: List<MealModelListItem>) {
-        sorterSharedView.sortBy.observe(viewLifecycleOwner, {
-            mealListAdapter.setList(sorterSharedView.sort(dishesList, it))
-        })
+        mealListAdapter.setList(
+            sorterSharedView.sort(
+                dishesList,
+                App.instance.sharedPreferences.getString(
+                    SettingsFragment.SORT_MEALS_LIST,
+                    sorterSharedView.SORT_ASC
+                )
+            )
+        )
     }
 
     companion object {

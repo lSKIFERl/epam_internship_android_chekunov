@@ -9,7 +9,7 @@ class ShareViewModel: ViewModel() {
     val SORT_DESC = "SORT_DESC"
     val sortBy = MutableLiveData<String>()
 
-    fun sort(list: List<MealModelListItem>, order: String) =
+    fun sort(list: List<MealModelListItem>, order: String?) =
         if (order.equals(SORT_DESC)) {
             list.sortedByDescending { it.strMeal }
         } else {
