@@ -1,4 +1,4 @@
-package com.skifer.epam_internship_android_checkunov
+package com.skifer.epam_internship_android_checkunov.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -6,9 +6,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.TypeModel
 import com.skifer.epam_internship_android_checkunov.net.repository.TypeModelRepository
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * Class of types of food displayed on the screen
@@ -21,13 +25,21 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
     /**[typeListView] custom adapter*/
     private lateinit var adapter: Adapter<TypeModel>
 
+    /**used to unsubscribe from observable*/
+    private var disposable: Disposable? = null
+
     /**
      * Sets [adapter] properties and binds it with [typeListView]
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        loadTypes()
+        disposable = loadTypes()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable?.dispose()
     }
 
     private fun initView() {
@@ -41,17 +53,30 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
     /**
      * Loading data from network
      */
-    private fun loadTypes() = TypeModelRepository.createTypeList(
-            caseComplete = { typesList ->
-                if (typesList != null) {
-                    bind(typesList)
+    private fun loadTypes() =
+        TypeModelRepository
+            .createTypeList()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { typesList ->
+                    if (typesList != null) {
+                        bind(typesList)
+                    }
+                },
+                { e ->
+                    Log.e(
+                        "Net",
+                        "Can't load types",
+                        e
+                    )
+                    Toast.makeText(
+                        context,
+                        "Error in loading categories",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
-            },
-            caseError = { t ->
-                Log.i("Net", "Can't load types", t)
-                Toast.makeText(parentFragment?.context, "Error in loading categories", Toast.LENGTH_LONG).show()
-            }
-        )
+            )
 
     /**
      * Binding loaded list from network with recyclerview adapter
@@ -67,12 +92,11 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
      */
     override fun onItemClick(item: TypeModel) {
         parentFragmentManager.beginTransaction()
-                .replace(
-                        R.id.meal_list_container,
-                        MealListFragment
-                                .newInstance(item.strCategory)
-                )
-                .commit()
+            .replace(
+                R.id.meal_list_container,
+                MealListFragment.newInstance(item.strCategory)
+            )
+            .commit()
     }
 
     companion object {

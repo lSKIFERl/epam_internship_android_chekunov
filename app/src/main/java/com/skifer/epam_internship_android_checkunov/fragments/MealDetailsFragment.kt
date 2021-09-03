@@ -1,4 +1,4 @@
-package com.skifer.epam_internship_android_checkunov
+package com.skifer.epam_internship_android_checkunov.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -10,10 +10,15 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.Ingredient
 import com.skifer.epam_internship_android_checkunov.model.MealModel
+import com.skifer.epam_internship_android_checkunov.net.exception.MealsIsEmptyException
 import com.skifer.epam_internship_android_checkunov.net.repository.MealModelRepository
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * Displays detailed information about selected dish in [MealListFragment]
@@ -26,10 +31,22 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
     /**ingredients list tagsAdapter*/
     private lateinit var ingredientAdapter: Adapter<Ingredient>
 
+    /**used to unsubscribe from observable*/
+    private var disposable: Disposable? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        loadDishDetails(arguments?.getInt("MEAL_ID_INTENT")?: error("Wrong id of dish"))
+        disposable = loadDishDetails(
+            arguments
+                ?.getInt(MEAL_ID_INTENT)
+                ?: error("Wrong id of dish")
+        )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable?.dispose()
     }
 
     /**
@@ -49,18 +66,42 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
      * Loading data from network
      * @param id Id of meal in API
      */
-    private fun loadDishDetails(id: Int) = MealModelRepository.createDishDetails(
-            id,
-            caseComplete = { mealModel ->
-                if (mealModel != null) {
-                    bind(mealModel)
+    private fun loadDishDetails(id: Int) =
+        MealModelRepository
+            .createDishDetails(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { mealModel ->
+                    if (mealModel != null) {
+                        bind(mealModel)
+                    } else {
+                        Log.e(
+                            "Net",
+                            "Error: Can't load meal model",
+                            MealsIsEmptyException("Loaded MealModel is empty")
+                        )
+                        Toast.makeText(
+                            context,
+                            "There is nothing to see here",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        parentFragmentManager.popBackStack()
+                    }
+                },
+                { e ->
+                    Log.e(
+                        "Net",
+                        "Error: Can't load meal model",
+                        e
+                    )
+                    Toast.makeText(
+                        context,
+                        "Error: Can't load meal model",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
-            },
-            caseError = {e ->
-                Log.e("Net", "Error: Can't load meal model", e)
-                Toast.makeText(context, "Error: Can't load meal model", Toast.LENGTH_LONG).show()
-            }
-        )
+            )
 
     /**
      * Binding data with view components
@@ -85,7 +126,7 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
         private const val MEAL_ID_INTENT = "MEAL_ID_INTENT"
         /**
          * Should be called instead instead of just instantiating the class
-         * @param dish [MealModel] containing information to be displayed on the screen
+         * @param dishId [MealModel] id containing information to be displayed on the screen
          */
         fun newInstance(dishId: Int) = MealDetailsFragment().apply {
             arguments = bundleOf(MEAL_ID_INTENT to dishId)

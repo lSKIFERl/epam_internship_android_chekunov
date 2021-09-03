@@ -5,9 +5,10 @@ import com.skifer.epam_internship_android_checkunov.model.modellists.ListMealMod
 import com.skifer.epam_internship_android_checkunov.model.modellists.ListMealModelNet
 import com.skifer.epam_internship_android_checkunov.model.modellists.ListTypeModel
 import com.skifer.epam_internship_android_checkunov.net.deserializer.MealModelDeserializer
-import retrofit2.Call
+import io.reactivex.rxjava3.core.Single
 import retrofit2.Converter
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -27,15 +28,17 @@ object Network {
     private fun getRetrofitClient(type: Type, typeAdapter: Any): Retrofit =
         Retrofit.Builder()
             .baseUrl("https://www.themealdb.com/api/json/v1/1/")
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .addConverterFactory(createGsonConverter(type, typeAdapter))
             .build()
             ?: error("Retrofit error")
 
     private fun getRetrofitClient(): Retrofit =
         Retrofit.Builder()
-                .baseUrl("https://www.themealdb.com/api/json/v1/1/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
+            .baseUrl("https://www.themealdb.com/api/json/v1/1/")
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
             ?: error("Retrofit error")
 
     val dishDetailsApiService: DishApi
@@ -51,11 +54,11 @@ object Network {
 
 interface DishApi {
     @GET("lookup.php")
-    fun getDetailsDish(@Query("i") id: Int): Call<ListMealModel>
+    fun getDetailsDish(@Query("i") id: Int): Single<ListMealModel>
 
     @GET("filter.php")
-    fun getDishByCategory(@Query("c") category: String): Call<ListMealModelNet>
+    fun getDishByCategory(@Query("c") category: String): Single<ListMealModelNet>
 
     @GET("categories.php")
-    fun getCategory(): Call<ListTypeModel>
+    fun getCategory(): Single<ListTypeModel>
 }
