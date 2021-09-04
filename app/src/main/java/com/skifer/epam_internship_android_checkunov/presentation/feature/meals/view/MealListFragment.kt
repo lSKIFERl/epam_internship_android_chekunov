@@ -48,19 +48,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ViewHolderAdapte
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        disposable = viewModel.loadData()
-        viewModel.mealList.observe(viewLifecycleOwner) {
-            try {
-                itemList = it
-                bind(it)
-            } catch (t: Throwable) {
-                Toast.makeText(
-                    context,
-                    "Error: can't load dish list",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
+        observeViewModel()
     }
 
     override fun onDestroy() {
@@ -89,6 +77,21 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ViewHolderAdapte
                     adapter.setList(dishesList.sortedBy { it.strMeal })
         } else {
             adapter.setList(dishesList.sortedByDescending { it.strMeal })
+        }
+    }
+
+    private fun observeViewModel() {
+        disposable = viewModel.loadData()
+        viewModel.errorLiveData.observe(viewLifecycleOwner) {
+            Toast.makeText(
+                context,
+                "Error: can't load dish list",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+        viewModel.mealList.observe(viewLifecycleOwner) {
+            itemList = it
+            bind(it)
         }
     }
 

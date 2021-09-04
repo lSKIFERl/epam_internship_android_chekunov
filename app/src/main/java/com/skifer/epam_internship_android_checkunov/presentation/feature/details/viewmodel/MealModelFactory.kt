@@ -8,6 +8,7 @@ class MealModelFactory(
     private val useCase: MealModelUseCase,
     private val id: Int
 ): ViewModelProvider.Factory {
+
     override fun <T : ViewModel?> create(modelClass: Class<T>): T =
         MealModelViewModel(useCase, id) as T
 }

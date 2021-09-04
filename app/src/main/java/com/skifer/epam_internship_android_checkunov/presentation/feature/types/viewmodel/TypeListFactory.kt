@@ -7,6 +7,7 @@ import com.skifer.epam_internship_android_checkunov.domain.usecase.TypeListUseCa
 class TypeListFactory(
     private val useCase: TypeListUseCase
 ):ViewModelProvider.Factory {
+
     override fun <T : ViewModel?> create(modelClass: Class<T>): T =
         TypeListViewModel(useCase) as T
 }

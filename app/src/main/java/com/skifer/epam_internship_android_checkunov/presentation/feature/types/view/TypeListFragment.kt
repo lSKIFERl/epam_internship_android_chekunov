@@ -31,7 +31,7 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), ViewHolderAdapter
 
     private lateinit var disposable: Disposable
 
-    private lateinit var sharedPreference: SharedPreferences
+    private lateinit var sharedPreferences: SharedPreferences
 
     val viewModel: TypeListViewModel by viewModels {
         TypeListFactory(
@@ -43,22 +43,9 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), ViewHolderAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedPreference = App.instance.sharedPreferences
+        sharedPreferences = App.instance.sharedPreferences
         initView()
-        disposable = viewModel.loadData()
-        viewModel.typeList.observe(viewLifecycleOwner) {
-            try {
-                adapter.setList(it)
-                defaultLoad(it.first().strCategory)
-            } catch (t: Throwable) {
-                Toast.makeText(
-                    context,
-                    "Can't load types",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-        startMealListFragment()
+        observeViewModel()
     }
 
     override fun onDestroy() {
@@ -74,16 +61,14 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), ViewHolderAdapter
     }
 
     /**
-     * Set first type as default for the first list launching or loading default value
+     * Set first type as default for the first list launching
      * @param type first loaded type
      */
-    private fun defaultLoad(type: String) {
-        if (sharedPreference
-                .getString("last_meal_type", null) == null) {
-            sharedPreference
-                .edit()
-                ?.putString("last_meal_type", type)
-                ?.apply()
+    private fun saveAsDefault(type: String) {
+        val isLastMealTypeNull =
+            sharedPreferences.getString(LAST_MEAL_TYPE, null) == null
+        if (isLastMealTypeNull) {
+            saveLastType(type)
         }
     }
 
@@ -92,13 +77,29 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), ViewHolderAdapter
             .replace(
                 R.id.meal_list_container,
                 MealListFragment.newInstance(
-                    sharedPreference
-                        .getString("last_meal_type", null)
+                    sharedPreferences
+                        .getString(LAST_MEAL_TYPE, null)
                         ?: error("Incorrect type")
                 )
             )
             .addToBackStack(MealListFragment.TAG)
             .commit()
+    }
+
+    private fun observeViewModel() {
+        disposable = viewModel.loadData()
+        viewModel.errorLiveData.observe(viewLifecycleOwner) {
+            Toast.makeText(
+                context,
+                "Can't load types",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+        viewModel.typeList.observe(viewLifecycleOwner) {
+            adapter.setList(it)
+            saveAsDefault(it.first().strCategory)
+            startMealListFragment()
+        }
     }
 
     /**
@@ -107,15 +108,20 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), ViewHolderAdapter
      */
     override fun onItemClick(item: TypeModel) {
         adapter.notifyDataSetChanged()
-        sharedPreference
-            .edit()
-            ?.putString("last_meal_type", item.strCategory)
-            ?.apply()
+        saveLastType(item.strCategory)
         startMealListFragment()
+    }
+
+    private fun saveLastType(type: String) {
+        sharedPreferences
+            .edit()
+            ?.putString(LAST_MEAL_TYPE, type)
+            ?.apply()
     }
 
     companion object {
         private const val TYPE_LIST = "TYPE_LIST"
+        private const val LAST_MEAL_TYPE = "last_meal_type"
         const val TAG = "TYPE_LIST"
 
         /**
