@@ -13,10 +13,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
-import com.skifer.epam_internship_android_checkunov.data.repository.MealListRepositoryImpl
-import com.skifer.epam_internship_android_checkunov.data.repository.TypeModelRepositoryImpl
-import com.skifer.epam_internship_android_checkunov.domain.usecase.MealListUseCase
-import com.skifer.epam_internship_android_checkunov.domain.usecase.TypeListUseCase
 import com.skifer.epam_internship_android_checkunov.presentation.base.ShareViewModel
 import com.skifer.epam_internship_android_checkunov.presentation.feature.ViewHolderAdapter
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.view.MealDetailsFragment
@@ -51,12 +47,8 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list){
 
     private val viewModel: MealListViewModel by viewModels{
         MealListFactory(
-            MealListUseCase(
-                MealListRepositoryImpl()
-            ),
-            TypeListUseCase(
-                TypeModelRepositoryImpl()
-            )
+            App.appComponent.mealListUseCase,
+            App.appComponent.typeListUseCase
         )
     }
 

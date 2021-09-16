@@ -12,10 +12,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.data.network.exception.MealsIsEmptyException
-import com.skifer.epam_internship_android_checkunov.data.repository.MealModelRepositoryImpl
-import com.skifer.epam_internship_android_checkunov.domain.usecase.MealModelUseCase
 import com.skifer.epam_internship_android_checkunov.presentation.feature.ViewHolderAdapter
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.viewmodel.MealModelFactory
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.viewmodel.MealModelViewModel
@@ -35,9 +34,7 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
 
     private val viewModel: MealModelViewModel by viewModels{
         MealModelFactory(
-            MealModelUseCase(
-                MealModelRepositoryImpl()
-            ),
+            App.appComponent.mealModelUseCase,
             arguments?.getInt(MEAL_ID_INTENT)?: error("Wrong id of dish")
         )
     }
