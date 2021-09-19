@@ -2,29 +2,16 @@ package com.skifer.epam_internship_android_checkunov.fragments
 
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.View
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.skifer.epam_internship_android_checkunov.R
+
 
 /**
  * First and main App Fragment
  */
 class HostFragment : Fragment(R.layout.fragment_host) {
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        setHasOptionsMenu(true)
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_host, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-        return
-    }
 
     /**
      * Starts [MealListFragment] immediately
@@ -32,13 +19,22 @@ class HostFragment : Fragment(R.layout.fragment_host) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.i("Net", "Loading types List")
+        val l = TypeListFragment.newInstance()
         parentFragmentManager
-                .beginTransaction()
-                .replace(
-                        R.id.type_list_container,
-                        TypeListFragment.newInstance()
+            .beginTransaction()
+            .replace(
+                    R.id.type_list_container,
+                    TypeListFragment.newInstance()
                 )
-                .commit()
+            .addToBackStack(TypeListFragment.TAG)
+            .commit()
+        val actionBarToolBar: Toolbar = view.findViewById(R.id.toolbar_home) as Toolbar
+        actionBarToolBar.inflateMenu(R.menu.menu_host)
+        actionBarToolBar.setOnMenuItemClickListener {
+            val bottomSheet = SettingsFragment.newInstance()
+            bottomSheet.show(parentFragmentManager, bottomSheet.tag)
+            return@setOnMenuItemClickListener true
+        }
     }
 
     companion object {

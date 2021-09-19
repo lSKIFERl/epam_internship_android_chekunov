@@ -14,7 +14,7 @@ object TypeModelRepository {
         caseComplete: (List<TypeModel>?) -> Unit,
         caseError: (Throwable) -> Unit
     ) {
-        val database = App.instance.getDatabase()
+        val database = App.instance.database
         database
             .getTypeModelDao()
             .getAll()

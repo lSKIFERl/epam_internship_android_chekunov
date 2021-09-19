@@ -6,16 +6,17 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.skifer.epam_internship_android_checkunov.R
+import com.skifer.epam_internship_android_checkunov.data.net.repository.MealModelRepository
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.Ingredient
 import com.skifer.epam_internship_android_checkunov.model.MealModel
 import com.skifer.epam_internship_android_checkunov.net.exception.MealsIsEmptyException
-import com.skifer.epam_internship_android_checkunov.net.repository.MealModelRepository
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -59,6 +60,9 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
         view?.let {
             it.findViewById<RecyclerView>(R.id.tag)?.adapter = tagsAdapter
             it.findViewById<RecyclerView>(R.id.ingredients_list)?.adapter = ingredientAdapter
+            it.findViewById<Toolbar>(R.id.toolbarMealDetails).setNavigationOnClickListener {
+                parentFragmentManager.popBackStack()
+            }
         }
     }
 

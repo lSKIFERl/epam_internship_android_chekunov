@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+
+        app:navigationIcon="@drawable/ic_baseline_close_24">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_bold"
+            android:text="@string/settingsLabel"
+            android:textAlignment="center"
+            android:textSize="@dimen/large_font_size" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/detail_margin"
+        android:layout_marginTop="@dimen/detail_margin_top"
+        android:text="@string/settingsLabel2"
+        android:textSize="@dimen/medium_font_size" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/detail_margin"
+        android:layout_marginTop="@dimen/small_margin_top">
+
+        <Button
+            android:id="@+id/ASCSort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sortItems1"
+            android:textAllCaps="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/DESCSort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/sortItems2"
+            android:textAllCaps="false"
+            app:layout_constraintStart_toEndOf="@+id/ASCSort"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/detail_margin"
+        android:layout_marginEnd="@dimen/detail_margin"
+        android:layout_marginBottom="@dimen/details_margin_bottom"
+        android:fontFamily="@font/roboto_bold"
+        android:text="@string/apply"
+        android:textSize="@dimen/medium_font_size"
+        android:theme="@style/selected_button"
+        />
+
+</LinearLayout>

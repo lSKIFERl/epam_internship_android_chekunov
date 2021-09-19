@@ -3,6 +3,7 @@ package com.skifer.epam_internship_android_checkunov.list_adapter.holders
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.TypeModel
@@ -38,6 +39,8 @@ class TypeViewHolder(itemView: View, onItemListener: Adapter.onItemListener<Type
             .with(itemView)
             .load(type.strCategoryThumb)
             .into(itemView.findViewById(R.id.typeImage))
+        itemView.isSelected =
+            adapterPosition == App.instance.sharedPreferences.getInt("new_meal_type_id", 0)
     }
 
     /**
@@ -46,6 +49,10 @@ class TypeViewHolder(itemView: View, onItemListener: Adapter.onItemListener<Type
      * @param v The view that was clicked.
      */
     override fun onClick(v: View?) {
+        App.instance.sharedPreferences
+            .edit()
+            .putInt("new_meal_type_id", adapterPosition)
+            .apply()
         this.onItemListener.onItemClick(type)
     }
 }

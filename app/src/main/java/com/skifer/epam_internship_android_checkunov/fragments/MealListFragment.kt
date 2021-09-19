@@ -7,15 +7,17 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
+import com.skifer.epam_internship_android_checkunov.activities.FragmentsCommunicate
+import com.skifer.epam_internship_android_checkunov.data.net.repository.MealModelRepository
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.MealModelListItem
-import com.skifer.epam_internship_android_checkunov.data.net.repository.MealModelRepository
 
 /**
  * Class of food displayed on the screen
  */
-class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemListener<MealModelListItem> {
+class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemListener<MealModelListItem>, FragmentsCommunicate {
 
     /**The dishes list on the screen*/
     private lateinit var dishListView: RecyclerView
@@ -25,6 +27,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.i("Net", id.toString())
         initView()
         loadDishList(arguments?.getString("TYPE")?: error("Incorrect type"))
     }
@@ -60,7 +63,11 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
      * @param dishesList loaded from network
      */
     private fun bind(dishesList: List<MealModelListItem>) {
-        adapter.setList(dishesList)
+        if (App.instance.sharedPreferences.getString(SettingsFragment.SORT_MEALS_LIST, "SORT_ASC") == "SORT_ASC") {
+            adapter.setList(dishesList.sortedBy { it.strMeal })
+        } else {
+            adapter.setList(dishesList.sortedByDescending { it.strMeal })
+        }
     }
 
     /**
@@ -70,17 +77,23 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
     override fun onItemClick(item: MealModelListItem) {
         requireActivity().supportFragmentManager
             .beginTransaction()
-                .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_in_right)
+                .setCustomAnimations(
+                    R.anim.enter_from_right,
+                    R.anim.exit_to_left,
+                    R.anim.enter_from_left,
+                    R.anim.exit_to_right
+                )
             .replace(
-                    R.id.containerHost,
-                    MealDetailsFragment.newInstance(item.idMeal)
+                R.id.containerHost,
+                MealDetailsFragment.newInstance(item.idMeal)
             )
-            .addToBackStack(null)
+            .addToBackStack("meal_list")
             .commit()
     }
 
     companion object {
         private const val TYPE = "TYPE"
+        const val TAG = "MEAL_LIST"
 
         /**
          * Should be called instead instead of just instantiating the class
@@ -89,6 +102,11 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
             //arguments = bundleOf(MEAL_LIST to ...) then get arguments somewhere
             arguments = bundleOf("TYPE" to type)
         }
+    }
+
+    override fun update() {
+        loadDishList(arguments?.getString("TYPE")?: error("Incorrect type"))
+        adapter.notifyDataSetChanged()
     }
 
 }
