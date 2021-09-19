@@ -14,6 +14,7 @@ class TypeModelRepositoryImpl(
     private val dishApi: DishApi,
     private val database: ModelsDataBase
 ): TypeModelRepository {
+  
     override fun loadTypeList(): Single<List<TypeModelEntity>> =
             database
             .getTypeModelDao()
@@ -31,34 +32,6 @@ class TypeModelRepositoryImpl(
                 } else Single.just(it)
             }
             .map {
-                it.fromDBList().map { it.toEntity() }
+                it.fromDBListToEntity()
             }
-
-    fun ListTypeModel.toDBList(): List<TypeModelDB> {
-        val dbModelList: MutableList<TypeModelDB> = mutableListOf()
-        listTypeModel.forEach {
-            dbModelList.add(
-                TypeModelDB(
-                    it.idCategory,
-                    it.strCategory,
-                    it.strCategoryThumb
-                )
-            )
-        }
-        return dbModelList.toList()
-    }
-
-    fun List<TypeModelDB>.fromDBList(): List<TypeModelDto> {
-        val modelList: MutableList<TypeModelDto> = mutableListOf()
-        this.forEach {
-            modelList.add(
-                TypeModelDto(
-                    it.idCategory,
-                    it.strCategory,
-                    it.strCategoryThumb
-                )
-            )
-        }
-        return modelList.toList()
-    }
 }
