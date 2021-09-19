@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-
+@Deprecated("Replaced by DI")
 object Network {
 
     private fun getRetrofitClient(): Retrofit =

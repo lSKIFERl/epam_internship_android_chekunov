@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
 import com.skifer.epam_internship_android_checkunov.data.database.database.ModelsDataBase
+import com.skifer.epam_internship_android_checkunov.di.AppComponent
+import com.skifer.epam_internship_android_checkunov.di.DaggerAppComponent
 
 
 class App : Application() {
@@ -19,9 +21,11 @@ class App : Application() {
         sharedPreferences = getSharedPreferences("last_instances", Context.MODE_PRIVATE)
         database = Room.databaseBuilder(this, ModelsDataBase::class.java, "models_data_base")
             .build()
+        appComponent = DaggerAppComponent.builder().bindContext(applicationContext).build()
     }
 
     companion object {
         lateinit var instance: App
+        lateinit var appComponent: AppComponent
     }
 }

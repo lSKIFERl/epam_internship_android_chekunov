@@ -8,4 +8,8 @@ import com.skifer.epam_internship_android_checkunov.data.database.entities.TypeM
 @Database(entities = [TypeModelDB::class], version = 1)
 abstract class ModelsDataBase: RoomDatabase() {
     abstract fun getTypeModelDao(): TypeModelDao
+
+    companion object {
+        val NAME = "MODELS_DATA_BASE"
+    }
 }
