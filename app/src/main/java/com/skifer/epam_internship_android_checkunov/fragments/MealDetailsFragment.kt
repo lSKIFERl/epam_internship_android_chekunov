@@ -16,6 +16,10 @@ import com.skifer.epam_internship_android_checkunov.data.net.repository.MealMode
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.Ingredient
 import com.skifer.epam_internship_android_checkunov.model.MealModel
+import com.skifer.epam_internship_android_checkunov.net.exception.MealsIsEmptyException
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * Displays detailed information about selected dish in [MealListFragment]
@@ -28,10 +32,22 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
     /**ingredients list tagsAdapter*/
     private lateinit var ingredientAdapter: Adapter<Ingredient>
 
+    /**used to unsubscribe from observable*/
+    private var disposable: Disposable? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        loadDishDetails(arguments?.getInt("MEAL_ID_INTENT")?: error("Wrong id of dish"))
+        disposable = loadDishDetails(
+            arguments
+                ?.getInt(MEAL_ID_INTENT)
+                ?: error("Wrong id of dish")
+        )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable?.dispose()
     }
 
     /**
@@ -54,18 +70,42 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
      * Loading data from network
      * @param id Id of meal in API
      */
-    private fun loadDishDetails(id: Int) = MealModelRepository.createDishDetails(
-            id,
-            caseComplete = { mealModel ->
-                if (mealModel != null) {
-                    bind(mealModel)
+    private fun loadDishDetails(id: Int) =
+        MealModelRepository
+            .createDishDetails(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { mealModel ->
+                    if (mealModel != null) {
+                        bind(mealModel)
+                    } else {
+                        Log.e(
+                            "Net",
+                            "Error: Can't load meal model",
+                            MealsIsEmptyException("Loaded MealModel is empty")
+                        )
+                        Toast.makeText(
+                            context,
+                            "There is nothing to see here",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        parentFragmentManager.popBackStack()
+                    }
+                },
+                { e ->
+                    Log.e(
+                        "Net",
+                        "Error: Can't load meal model",
+                        e
+                    )
+                    Toast.makeText(
+                        context,
+                        "Error: Can't load meal model",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
-            },
-            caseError = {e ->
-                Log.e("Net", "Error: Can't load meal model", e)
-                Toast.makeText(context, "Error: Can't load meal model", Toast.LENGTH_LONG).show()
-            }
-        )
+            )
 
     /**
      * Binding data with view components
