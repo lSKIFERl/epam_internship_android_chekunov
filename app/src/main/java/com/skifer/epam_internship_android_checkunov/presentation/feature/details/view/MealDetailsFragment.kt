@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.skifer.epam_internship_android_checkunov.R
@@ -20,7 +21,6 @@ import com.skifer.epam_internship_android_checkunov.presentation.feature.details
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.viewmodel.MealModelViewModel
 import com.skifer.epam_internship_android_checkunov.presentation.model.Ingredient
 import com.skifer.epam_internship_android_checkunov.presentation.model.MealModel
-import io.reactivex.rxjava3.disposables.Disposable
 
 /**
  * Displays detailed information about selected dish in [MealListFragment]
@@ -33,21 +33,19 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
     /**ingredients list tagsAdapter*/
     private lateinit var ingredientAdapter: ViewHolderAdapter<Ingredient>
 
-    private lateinit var disposable: Disposable
-
     private val viewModel: MealModelViewModel by viewModels{
         MealModelFactory(
             MealModelUseCase(
                 MealModelRepositoryImpl()
             ),
-            arguments?.getInt("MEAL_ID_INTENT")?: error("Wrong id of dish")
+            arguments?.getInt(MEAL_ID_INTENT)?: error("Wrong id of dish")
         )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        disposable = viewModel.loadData()
+        viewModel.loadData()
         viewModel.error.observe(viewLifecycleOwner) {
             when (it) {
                 is MealsIsEmptyException ->
@@ -63,16 +61,11 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
                         Toast.LENGTH_LONG
                     ).show()
             }
-            parentFragmentManager.popBackStack()
+            findNavController().popBackStack()
         }
         viewModel.meal.observe(viewLifecycleOwner){
             bind(it)
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposable.dispose()
     }
 
     /**
@@ -86,7 +79,7 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
             it.findViewById<RecyclerView>(R.id.tag)?.adapter = tagsAdapter
             it.findViewById<RecyclerView>(R.id.ingredients_list)?.adapter = ingredientAdapter
             it.findViewById<Toolbar>(R.id.toolbarMealDetails).setNavigationOnClickListener {
-                parentFragmentManager.popBackStack()
+                findNavController().popBackStack()
             }
         }
     }
@@ -111,7 +104,7 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
     }
 
     companion object {
-        private const val MEAL_ID_INTENT = "MEAL_ID_INTENT"
+        const val MEAL_ID_INTENT = "MEAL_ID_INTENT"
         /**
          * Should be called instead instead of just instantiating the class
          * @param dishId [MealModel] id containing information to be displayed on the screen

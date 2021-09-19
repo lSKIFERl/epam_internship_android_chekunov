@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mealListFragment">
+
+    <fragment
+        android:id="@+id/mealListFragment"
+        android:name="com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view.MealListFragment"
+        android:label="MealListFragment" >
+        <action
+            android:id="@+id/action_mealListFragment_to_mealDetailsFragment"
+            app:destination="@id/mealDetailsFragment"
+            app:enterAnim="@android:anim/slide_out_right"
+            app:exitAnim="@android:anim/slide_in_left" />
+        <action
+            android:id="@+id/action_mealListFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_mealListFragment_pop"
+            app:popUpTo="@id/mealListFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/mealDetailsFragment"
+        android:name="com.skifer.epam_internship_android_checkunov.presentation.feature.details.view.MealDetailsFragment"
+        android:label="fragment_meal_details"
+        tools:layout="@layout/fragment_meal_details">
+        <action
+            android:id="@+id/action_mealDetailsFragment_to_mealListFragment"
+            app:destination="@id/mealListFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/settingsFragment"
+        android:name="com.skifer.epam_internship_android_checkunov.presentation.feature.settings.view.SettingsFragment"
+        android:label="SettingsFragment" >
+        <action
+            android:id="@+id/action_settingsFragment_to_mealListFragment"
+            app:destination="@id/mealListFragment" />
+    </dialog>
+</navigation>

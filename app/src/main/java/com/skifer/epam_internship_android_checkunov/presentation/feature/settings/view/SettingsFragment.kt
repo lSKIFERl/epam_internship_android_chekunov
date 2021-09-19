@@ -6,11 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
-import com.skifer.epam_internship_android_checkunov.presentation.feature.host.view.FragmentsCommunicate
+import com.skifer.epam_internship_android_checkunov.presentation.base.ShareViewModel
 
 
 class SettingsFragment : BottomSheetDialogFragment() {
@@ -24,6 +25,8 @@ class SettingsFragment : BottomSheetDialogFragment() {
     private val newSettings = mutableMapOf<String, String>()
 
     private var mBehavior: BottomSheetBehavior<View>? = null
+
+    private val sorterSharedView: ShareViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,16 +68,16 @@ class SettingsFragment : BottomSheetDialogFragment() {
                 .edit()
                 .putString(
                     SORT_MEALS_LIST,
-                    newSettings.get(
-                        SORT_MEALS_LIST
-                    )
+                    newSettings[SORT_MEALS_LIST]
                         ?:App.instance.sharedPreferences.getString(
                             SORT_MEALS_LIST,
                             SORT_ASC
                         )
                 )
                 .apply()
-            (activity as FragmentsCommunicate).update()
+            sorterSharedView.setSortOrder(
+                newSettings[SORT_MEALS_LIST] ?: SORT_ASC
+            )
             dismiss()
         }
     }

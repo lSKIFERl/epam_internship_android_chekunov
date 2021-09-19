@@ -10,6 +10,7 @@ import com.skifer.epam_internship_android_checkunov.presentation.feature.SingleL
 import com.skifer.epam_internship_android_checkunov.presentation.mapper.toUi
 import com.skifer.epam_internship_android_checkunov.presentation.model.MealModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class MealModelViewModel(
@@ -27,8 +28,10 @@ class MealModelViewModel(
     val error: LiveData<Throwable>
         get() = mutableError
 
+    private var disposable: Disposable? = null
+
     fun loadData() =
-        useCase.invoke(id)
+        disposable = useCase.invoke(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -53,4 +56,10 @@ class MealModelViewModel(
                     )
                 }
             )
+    }
+
+    override fun onCleared() {
+        disposable?.dispose()
+        super.onCleared()
+    }
 }

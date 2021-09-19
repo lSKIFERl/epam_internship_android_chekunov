@@ -11,7 +11,7 @@ import com.skifer.epam_internship_android_checkunov.presentation.feature.ViewHol
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.view.holder.FoodTypeHolder
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.view.holder.IngredientsViewHolder
 import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view.holder.DishViewHolder
-import com.skifer.epam_internship_android_checkunov.presentation.feature.types.view.holder.TypeViewHolder
+import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view.holder.TypeViewHolder
 import com.skifer.epam_internship_android_checkunov.presentation.model.Ingredient
 import com.skifer.epam_internship_android_checkunov.presentation.model.MealModelListItem
 import com.skifer.epam_internship_android_checkunov.presentation.model.TypeModel
