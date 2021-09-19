@@ -6,6 +6,7 @@ import io.reactivex.rxjava3.core.Single
 
 @Dao
 interface TypeModelDao {
+
     @Query("SELECT * FROM TypeModelDB")
     fun getAll(): Single<List<TypeModelDB>>
 

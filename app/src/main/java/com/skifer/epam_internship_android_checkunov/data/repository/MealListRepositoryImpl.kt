@@ -7,6 +7,7 @@ import com.skifer.epam_internship_android_checkunov.domain.repository.MealListRe
 class MealListRepositoryImpl(
     private val dishApi: DishApi
 ): MealListRepository {
+  
     override fun loadDishList(category: String) =
         dishApi.getDishByCategory(category)
             .map { it.listMealModel.map { it.toEntity() } }

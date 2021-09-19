@@ -9,6 +9,7 @@ import io.reactivex.rxjava3.core.Single
 class MealModelRepositoryImpl(
     private val dishApi: DishApi
 ): MealModelRepository {
+
     override fun loadDishDetails(id: Int): Single<MealModelEntity> =
         dishApi.getDetailsDish(id)
             .map { it.listMealModel.firstOrNull()?.toEntity() }

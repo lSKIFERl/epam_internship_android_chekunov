@@ -43,24 +43,25 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
         super.onViewCreated(view, savedInstanceState)
         initView()
         viewModel.loadData()
-        viewModel.meal.observe(viewLifecycleOwner){
-            try {
-                bind(it)
-            } catch (e: MealsIsEmptyException) {
-                Toast.makeText(
-                    context,
-                    "There is nothing to see here",
-                    Toast.LENGTH_LONG
-                ).show()
-                findNavController().popBackStack()
-            } catch (e: Throwable) {
-                Toast.makeText(
-                    context,
-                    "Error: Can't load meal model",
-                    Toast.LENGTH_LONG
-                ).show()
-                findNavController().popBackStack()
+        viewModel.error.observe(viewLifecycleOwner) {
+            when (it) {
+                is MealsIsEmptyException ->
+                    Toast.makeText(
+                        context,
+                        "There is nothing to see here",
+                        Toast.LENGTH_LONG
+                    ).show()
+                is Throwable ->
+                    Toast.makeText(
+                        context,
+                        "Error: Can't load meal model",
+                        Toast.LENGTH_LONG
+                    ).show()
             }
+            findNavController().popBackStack()
+        }
+        viewModel.meal.observe(viewLifecycleOwner){
+            bind(it)
         }
     }
 

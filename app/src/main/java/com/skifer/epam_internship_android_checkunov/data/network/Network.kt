@@ -27,6 +27,7 @@ object Network {
 }
 
 interface DishApi {
+
     @GET("lookup.php")
     fun getDetailsDish(@Query("i") id: Int): Single<ListMealModel>
 

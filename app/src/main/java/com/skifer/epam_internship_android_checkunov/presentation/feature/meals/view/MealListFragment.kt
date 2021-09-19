@@ -57,7 +57,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list){
         sharedPreference = App.instance.sharedPreferences
         initTypeListView()
         initMealListView()
-
+        observeViewModel()
         loadTypes()
 
         sorterSharedView.sortBy.observe(viewLifecycleOwner, {
@@ -142,47 +142,80 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list){
                 ).show()
             }
         }
-    }
-
-    /**
      * Set first type as default for the first list launching or loading default value
      * @param type first loaded type
-     */
     private fun defaultLoad(type: String) {
         if (sharedPreference
-                .getString(TYPE, null) == null) {
+                .getString(TYPE, null) == null
+        ) {
             sharedPreference
                 .edit()
                 ?.putString(TYPE, type)
                 ?.apply()
         }
-    }
-
-    /**
-     * Binding loaded list from network with recyclerview adapter
-     * @param dishesList loaded from network
-     */
-    private fun bind(dishesList: List<MealModelListItem>) {
-        mealListAdapter.setList(
-            sorterSharedView.sort(
-                dishesList,
-                App.instance.sharedPreferences.getString(
-                    SettingsFragment.SORT_MEALS_LIST,
-                    sorterSharedView.SORT_ASC
-                )
-            )
-        )
-    }
-
-    companion object {
-        const val TYPE = "TYPE"
 
         /**
-         * Should be called instead instead of just instantiating the class
+         * Binding loaded list from network with recyclerview adapter
+         * @param dishesList loaded from network
          */
-        fun newInstance(type: String) = MealListFragment().apply {
-            //arguments = bundleOf(MEAL_LIST to ...) then get arguments somewhere
-            arguments = bundleOf(TYPE to type)
+        private fun bind(dishesList: List<MealModelListItem>) {
+            mealListAdapter.setList(
+                sorterSharedView.sort(
+                    dishesList,
+                    App.instance.sharedPreferences.getString(
+                        SettingsFragment.SORT_MEALS_LIST,
+                        sorterSharedView.SORT_ASC
+                    )
+                )
+            )
+        }
+
+        private fun observeViewModel() {
+            viewModel.loadData()
+            viewModel.errorLiveData.observe(viewLifecycleOwner) {
+                Toast.makeText(
+                    context,
+                    "Error: can't load dish list",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            viewModel.mealList.observe(viewLifecycleOwner) {
+                itemList = it
+                bind(it)
+            }
+        }
+
+        /**
+         * Starts new fragment the [MealDetailsFragment] with [item] model
+         * @param item dish model
+         */
+        override fun onItemClick(item: MealModelListItem) {
+            requireActivity().supportFragmentManager
+                .beginTransaction()
+                .setCustomAnimations(
+                    R.anim.enter_from_right,
+                    R.anim.exit_to_left,
+                    R.anim.enter_from_left,
+                    R.anim.exit_to_right
+                )
+                .replace(
+                    R.id.containerHost,
+                    MealDetailsFragment.newInstance(item.idMeal)
+                )
+                .addToBackStack("meal_list")
+                .commit()
+        }
+
+        companion object {
+            const val TYPE = "TYPE"
+
+            /**
+             * Should be called instead instead of just instantiating the class
+             */
+            fun newInstance(type: String) = MealListFragment().apply {
+                //arguments = bundleOf(MEAL_LIST to ...) then get arguments somewhere
+                arguments = bundleOf(TYPE to type)
+            }
         }
     }
 

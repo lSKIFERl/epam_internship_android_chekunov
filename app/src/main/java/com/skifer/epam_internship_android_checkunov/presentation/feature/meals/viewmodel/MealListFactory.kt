@@ -9,6 +9,7 @@ class MealListFactory(
     private val mealListUseCase: MealListUseCase,
     private val typeListUseCase: TypeListUseCase,
 ): ViewModelProvider.Factory {
+
     override fun <T : ViewModel?> create(modelClass: Class<T>): T =
         MealListViewModel(mealListUseCase, typeListUseCase) as T
 }
