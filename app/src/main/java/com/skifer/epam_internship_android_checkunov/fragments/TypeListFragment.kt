@@ -1,14 +1,17 @@
-package com.skifer.epam_internship_android_checkunov
+package com.skifer.epam_internship_android_checkunov.fragments
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.TypeModel
-import com.skifer.epam_internship_android_checkunov.net.repository.TypeModelRepository
+import com.skifer.epam_internship_android_checkunov.data.net.repository.TypeModelRepository
 
 /**
  * Class of types of food displayed on the screen
@@ -21,19 +24,19 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
     /**[typeListView] custom adapter*/
     private lateinit var adapter: Adapter<TypeModel>
 
-    /**
-     * Sets [adapter] properties and binds it with [typeListView]
-     */
+    private lateinit var sharedPreference: SharedPreferences
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sharedPreference = requireActivity().application.getSharedPreferences("last_instances", Context.MODE_PRIVATE)
         initView()
         loadTypes()
+        startMealListFragment()
     }
 
     private fun initView() {
         adapter = Adapter()
         adapter.setItemListener(this)
-
         typeListView = requireView().findViewById(R.id.typesListView)
         typeListView.adapter = adapter
     }
@@ -42,16 +45,17 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
      * Loading data from network
      */
     private fun loadTypes() = TypeModelRepository.createTypeList(
-            caseComplete = { typesList ->
-                if (typesList != null) {
-                    bind(typesList)
-                }
-            },
-            caseError = { t ->
-                Log.i("Net", "Can't load types", t)
-                Toast.makeText(parentFragment?.context, "Error in loading categories", Toast.LENGTH_LONG).show()
+        caseComplete = { typesList ->
+            if (typesList != null) {
+                bind(typesList)
+                defaultLoad(typesList.first().strCategory)
             }
-        )
+        }
+    ) {
+        Log.e("Net", "Can't load types", it)
+        Toast.makeText(parentFragment?.context, "Error in loading categories", Toast.LENGTH_LONG)
+            .show()
+    }
 
     /**
      * Binding loaded list from network with recyclerview adapter
@@ -62,17 +66,42 @@ class TypeListFragment: Fragment(R.layout.fragment_type_list), Adapter.onItemLis
     }
 
     /**
+     * Set first type as default for the first list launching or loading default value
+     * @param type first loaded type
+     */
+    private fun defaultLoad(type: String) {
+        if (sharedPreference
+                .getString("last_meal_type", null) == null) {
+            sharedPreference
+                .edit()
+                ?.putString("last_meal_type", type)
+                ?.apply()
+        }
+    }
+
+    private fun startMealListFragment () {
+        parentFragmentManager.beginTransaction()
+            .replace(
+                R.id.meal_list_container,
+                MealListFragment.newInstance(
+                    sharedPreference
+                    .getString("last_meal_type", null)
+                    ?: error("Incorrect type")
+                )
+            )
+            .commit()
+    }
+
+    /**
      * Called when item clicked. Loading selected category
      * @param item selected item
      */
     override fun onItemClick(item: TypeModel) {
-        parentFragmentManager.beginTransaction()
-                .replace(
-                        R.id.meal_list_container,
-                        MealListFragment
-                                .newInstance(item.strCategory)
-                )
-                .commit()
+        sharedPreference
+            .edit()
+            ?.putString("last_meal_type", item.strCategory)
+            ?.apply()
+        startMealListFragment()
     }
 
     companion object {

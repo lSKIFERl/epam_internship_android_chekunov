@@ -1,4 +1,4 @@
-package com.skifer.epam_internship_android_checkunov
+package com.skifer.epam_internship_android_checkunov.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -7,9 +7,10 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.MealModelListItem
-import com.skifer.epam_internship_android_checkunov.net.repository.MealModelRepository
+import com.skifer.epam_internship_android_checkunov.data.net.repository.MealModelRepository
 
 /**
  * Class of food displayed on the screen
@@ -50,7 +51,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
                 } },
             caseError = { e ->
                 Log.e("Net Exception", "Error: can't load dish list", e)
-                Toast.makeText(context, "Error: can't load dish list", Toast.LENGTH_LONG).show()
+                Toast.makeText(parentFragment?.context, "Error: can't load dish list", Toast.LENGTH_LONG).show()
             }
         )
 
@@ -71,9 +72,8 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), Adapter.onItemLi
             .beginTransaction()
                 .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_in_right)
             .replace(
-                R.id.containerHost,
-                MealDetailsFragment.
-                newInstance(item.idMeal)
+                    R.id.containerHost,
+                    MealDetailsFragment.newInstance(item.idMeal)
             )
             .addToBackStack(null)
             .commit()

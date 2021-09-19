@@ -20,7 +20,6 @@
         android:paddingRight="@dimen/detail_margin">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/swipe"
             android:layout_width="@dimen/pick_stick_width"
             android:layout_height="@dimen/pick_stick_height"
             android:layout_gravity="center"
@@ -60,13 +59,11 @@
             />
 
         <View
-            android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/pick_stick" />
 
         <TextView
-            android:id="@+id/ingredients"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/details_margin_top"

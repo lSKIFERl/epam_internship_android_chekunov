@@ -16,5 +16,5 @@ data class TypeModel(
         @SerializedName("strCategory")
         val strCategory: String,
         @SerializedName("strCategoryThumb")
-        val strCategoryThumb: String,
+        val strCategoryThumb: String
 ) : Parcelable

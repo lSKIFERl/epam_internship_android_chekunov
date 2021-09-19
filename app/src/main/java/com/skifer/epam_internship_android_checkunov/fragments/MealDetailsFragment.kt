@@ -1,4 +1,4 @@
-package com.skifer.epam_internship_android_checkunov
+package com.skifer.epam_internship_android_checkunov.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -10,10 +10,11 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.list_adapter.Adapter
 import com.skifer.epam_internship_android_checkunov.model.Ingredient
 import com.skifer.epam_internship_android_checkunov.model.MealModel
-import com.skifer.epam_internship_android_checkunov.net.repository.MealModelRepository
+import com.skifer.epam_internship_android_checkunov.data.net.repository.MealModelRepository
 
 /**
  * Displays detailed information about selected dish in [MealListFragment]
@@ -85,7 +86,7 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
         private const val MEAL_ID_INTENT = "MEAL_ID_INTENT"
         /**
          * Should be called instead instead of just instantiating the class
-         * @param dish [MealModel] containing information to be displayed on the screen
+         * @param dishId [MealModel] id containing information to be displayed on the screen
          */
         fun newInstance(dishId: Int) = MealDetailsFragment().apply {
             arguments = bundleOf(MEAL_ID_INTENT to dishId)

@@ -6,12 +6,13 @@
 
     <application
         android:allowBackup="true"
+        android:name=".App"
         android:icon="@mipmap/ic_launcher"
         android:label="Delicious dishes"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Epaminternshipandroidcheckunov">
-        <activity android:name=".HostActivity">
+        <activity android:name=".activities.HostActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
