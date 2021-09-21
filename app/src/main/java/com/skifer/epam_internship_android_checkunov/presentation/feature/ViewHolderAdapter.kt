@@ -128,6 +128,6 @@ class ViewHolderAdapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
      * Click listener for each item of recyclerview
      */
     interface onItemListener <T> {
-        fun onItemClick(item: T)
+        fun onItemClick(item: T?)
     }
 }

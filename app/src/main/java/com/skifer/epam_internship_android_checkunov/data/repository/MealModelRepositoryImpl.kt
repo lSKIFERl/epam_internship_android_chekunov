@@ -5,8 +5,11 @@ import com.skifer.epam_internship_android_checkunov.data.network.mapper.toEntity
 import com.skifer.epam_internship_android_checkunov.domain.entity.MealModelEntity
 import com.skifer.epam_internship_android_checkunov.domain.repository.MealModelRepository
 import io.reactivex.rxjava3.core.Single
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MealModelRepositoryImpl(
+@Singleton
+class MealModelRepositoryImpl @Inject constructor(
     private val dishApi: DishApi
 ): MealModelRepository {
 

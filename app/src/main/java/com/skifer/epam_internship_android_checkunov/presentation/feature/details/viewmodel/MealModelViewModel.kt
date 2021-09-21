@@ -15,7 +15,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 
 class MealModelViewModel(
     private val useCase: MealModelUseCase,
-    private val id: Int
 ): ViewModel() {
 
     private val mutableMeal: MutableLiveData<MealModel> = MutableLiveData()
@@ -30,22 +29,23 @@ class MealModelViewModel(
 
     private var disposable: Disposable? = null
 
-    fun loadData() =
+    fun loadData(id: Int) {
         disposable = useCase.invoke(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { if (it != null) {
-                    mutableMeal.value = it.toUi()
-                } else {
-                    val error = MealsIsEmptyException("Loaded MealModel is empty")
-                    mutableError.value = error
-                    Log.e(
-                        "Net",
-                        "Error: Can't load meal model",
-                        error
-                    )
-                }
+                {
+                    if (it != null) {
+                        mutableMeal.value = it.toUi()
+                    } else {
+                        val error = MealsIsEmptyException("Loaded MealModel is empty")
+                        mutableError.value = error
+                        Log.e(
+                            "Net",
+                            "Error: Can't load meal model",
+                            error
+                        )
+                    }
                 },
                 { e ->
                     mutableError.value = e

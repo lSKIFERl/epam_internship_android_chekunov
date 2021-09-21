@@ -1,35 +1,29 @@
 package com.skifer.epam_internship_android_checkunov.di.modules
 
-import com.skifer.epam_internship_android_checkunov.data.database.database.ModelsDataBase
-import com.skifer.epam_internship_android_checkunov.data.network.DishApi
 import com.skifer.epam_internship_android_checkunov.data.repository.MealListRepositoryImpl
 import com.skifer.epam_internship_android_checkunov.data.repository.MealModelRepositoryImpl
 import com.skifer.epam_internship_android_checkunov.data.repository.TypeModelRepositoryImpl
 import com.skifer.epam_internship_android_checkunov.domain.repository.MealListRepository
 import com.skifer.epam_internship_android_checkunov.domain.repository.MealModelRepository
 import com.skifer.epam_internship_android_checkunov.domain.repository.TypeModelRepository
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 
-@Module(includes = [NetworkModule::class, DataBaseModule::class])
-class RepositoryModule {
+@Module
+interface BindModule {
 
-    @Provides
+    @Binds
     fun provideMealListRepository(
-        dishApi: DishApi
-    ): MealListRepository =
-        MealListRepositoryImpl(dishApi)
+        repository: MealListRepositoryImpl
+    ): MealListRepository
 
-    @Provides
+    @Binds
     fun provideMealModelRepository(
-        dishApi: DishApi
-    ): MealModelRepository =
-        MealModelRepositoryImpl(dishApi)
+        repository: MealModelRepositoryImpl
+    ): MealModelRepository
 
-    @Provides
+    @Binds
     fun provideTypeModelRepository(
-        dishApi: DishApi,
-        modelsDataBase: ModelsDataBase
-    ): TypeModelRepository =
-        TypeModelRepositoryImpl(dishApi, modelsDataBase)
+        repository: TypeModelRepositoryImpl
+    ): TypeModelRepository
 }

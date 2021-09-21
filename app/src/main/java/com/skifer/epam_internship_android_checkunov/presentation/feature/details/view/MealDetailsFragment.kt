@@ -8,23 +8,23 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.data.network.exception.MealsIsEmptyException
+import com.skifer.epam_internship_android_checkunov.di.ComponentProvider
 import com.skifer.epam_internship_android_checkunov.presentation.feature.ViewHolderAdapter
-import com.skifer.epam_internship_android_checkunov.presentation.feature.details.viewmodel.MealModelFactory
+import com.skifer.epam_internship_android_checkunov.presentation.feature.details.di.DetailsComponent
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.viewmodel.MealModelViewModel
 import com.skifer.epam_internship_android_checkunov.presentation.model.Ingredient
 import com.skifer.epam_internship_android_checkunov.presentation.model.MealModel
+import javax.inject.Inject
 
 /**
  * Displays detailed information about selected dish in [MealListFragment]
  */
-class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
+class MealDetailsFragment: Fragment(R.layout.fragment_meal_details), ComponentProvider<DetailsComponent> {
 
     /**food types list tagsAdapter*/
     private lateinit var tagsAdapter: ViewHolderAdapter<String>
@@ -32,17 +32,25 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details) {
     /**ingredients list tagsAdapter*/
     private lateinit var ingredientAdapter: ViewHolderAdapter<Ingredient>
 
-    private val viewModel: MealModelViewModel by viewModels{
-        MealModelFactory(
-            App.appComponent.mealModelUseCase,
-            arguments?.getInt(MEAL_ID_INTENT)?: error("Wrong id of dish")
-        )
+    @Inject
+    lateinit var viewModel: MealModelViewModel
+
+    override val component: DetailsComponent by lazy {
+        DetailsComponent.create(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        component.inject(this)
+
+        loadMeal()
+
         initView()
-        viewModel.loadData()
+    }
+
+    private fun loadMeal() {
+        val id = arguments?.getInt(MEAL_ID_INTENT)?: error("Wrong id of dish")
+        viewModel.loadData(id)
         viewModel.error.observe(viewLifecycleOwner) {
             when (it) {
                 is MealsIsEmptyException ->

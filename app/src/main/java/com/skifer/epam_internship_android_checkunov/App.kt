@@ -15,6 +15,8 @@ class App : Application() {
 
     lateinit var sharedPreferences: SharedPreferences
 
+    lateinit var appComponent: AppComponent
+
     override fun onCreate() {
         super.onCreate()
         instance = this
@@ -26,6 +28,11 @@ class App : Application() {
 
     companion object {
         lateinit var instance: App
-        lateinit var appComponent: AppComponent
     }
 }
+
+fun Context.getAppComponent() =
+    when (this) {
+        is App -> appComponent
+        else -> (this.applicationContext as App).appComponent
+    }
