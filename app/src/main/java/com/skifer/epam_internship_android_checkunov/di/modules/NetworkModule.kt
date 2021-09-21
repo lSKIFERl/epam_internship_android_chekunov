@@ -15,7 +15,7 @@ class NetworkModule {
     @Singleton
     fun provideDishApi(): DishApi =
         Retrofit.Builder()
-            .baseUrl("https://www.themealdb.com/api/json/v1/1/")
+            .baseUrl(DishApi.BASE_URL)
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()

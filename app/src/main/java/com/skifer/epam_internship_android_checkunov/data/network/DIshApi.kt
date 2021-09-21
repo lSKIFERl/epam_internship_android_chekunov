@@ -17,4 +17,8 @@ interface DishApi {
 
     @GET("categories.php")
     fun getCategory(): Single<ListTypeModel>
+
+    companion object {
+        const val BASE_URL = "https://www.themealdb.com/api/json/v1/1/"
+    }
 }

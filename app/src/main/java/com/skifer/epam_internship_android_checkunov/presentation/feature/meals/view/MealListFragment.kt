@@ -123,7 +123,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
         viewModel.errorLiveData.observe(viewLifecycleOwner) {
             Toast.makeText(
                 context,
-                "Can't load types",
+                getString(R.string.error_cant_load_types),
                 Toast.LENGTH_LONG
             ).show()
         }
@@ -141,7 +141,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
         viewModel.errorLiveData.observe(viewLifecycleOwner) {
             Toast.makeText(
                 context,
-                "Error: can't load dish list",
+                getString(R.string.error_cant_load_meal_list),
                 Toast.LENGTH_LONG
             ).show()
         }
@@ -176,7 +176,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
                         dishesList,
                         App.instance.sharedPreferences.getString(
                             SettingsFragment.SORT_MEALS_LIST,
-                            sorterSharedView.SORT_ASC
+                            ShareViewModel.SORT_ASC
                         )
                     )
                 )

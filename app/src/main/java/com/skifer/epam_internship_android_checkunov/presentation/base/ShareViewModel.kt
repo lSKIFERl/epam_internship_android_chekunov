@@ -5,8 +5,6 @@ import androidx.lifecycle.ViewModel
 import com.skifer.epam_internship_android_checkunov.presentation.model.MealModelListItem
 
 class ShareViewModel: ViewModel() {
-    val SORT_ASC = "SORT_ASC"
-    val SORT_DESC = "SORT_DESC"
     val sortBy = MutableLiveData<String>()
 
     fun sort(list: List<MealModelListItem>, order: String?) =
@@ -20,5 +18,10 @@ class ShareViewModel: ViewModel() {
         if(order.equals(SORT_ASC) or order.equals(SORT_DESC)) {
             sortBy.value = order
         }
+    }
+
+    companion object {
+        val SORT_ASC = "SORT_ASC"
+        val SORT_DESC = "SORT_DESC"
     }
 }

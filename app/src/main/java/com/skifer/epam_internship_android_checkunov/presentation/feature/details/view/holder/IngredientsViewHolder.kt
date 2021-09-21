@@ -15,15 +15,11 @@ import com.skifer.epam_internship_android_checkunov.presentation.model.Ingredien
 class IngredientsViewHolder(itemView: View)
     : RecyclerView.ViewHolder(itemView) {
 
-    /**Held item*/
-    lateinit var ingredient: Ingredient
-
     /**
      * Binds this holder with [Ingredient] item
      * @param ingredient Model bound to this holder
      */
     fun bind(ingredient: Ingredient) {
-        this.ingredient = ingredient
         itemView.findViewById<TextView>(R.id.ingredient_item).text =
             StringBuilder("${ingredient.name} - ${ingredient.measure}")
     }

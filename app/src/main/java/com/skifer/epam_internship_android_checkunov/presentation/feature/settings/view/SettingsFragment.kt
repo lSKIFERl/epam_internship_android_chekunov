@@ -95,8 +95,6 @@ class SettingsFragment : BottomSheetDialogFragment() {
         private const val SORT_DESC = "SORT_DESC"
         const val SORT_MEALS_LIST = "SORT_MEALS_LIST"
 
-        private const val PREVIOUS_SETTINGS = "PREVIOUS_SETTINGS"
-
         /**
          * Should be called instead instead of just instantiating the class
          */

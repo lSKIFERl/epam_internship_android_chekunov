@@ -20,7 +20,7 @@ class DishViewHolder(itemView: View, onItemListener: ViewHolderAdapter.onItemLis
     : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
     /**model of containment dish*/
-    lateinit var meal: MealModelListItem
+    var meal: MealModelListItem? = null
 
     /**click listener*/
     val onItemListener: ViewHolderAdapter.onItemListener<MealModelListItem>

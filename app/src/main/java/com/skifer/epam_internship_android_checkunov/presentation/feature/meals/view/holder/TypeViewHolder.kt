@@ -19,7 +19,7 @@ class TypeViewHolder(itemView: View, onItemListener: ViewHolderAdapter.onItemLis
     : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
     /**Contained model*/
-    lateinit var type: TypeModel
+    var type: TypeModel? = null
 
     /**Click listener*/
     val onItemListener: ViewHolderAdapter.onItemListener<TypeModel>

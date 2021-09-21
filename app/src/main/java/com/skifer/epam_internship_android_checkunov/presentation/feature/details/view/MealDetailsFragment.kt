@@ -49,20 +49,22 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details), ComponentPr
     }
 
     private fun loadMeal() {
-        val id = arguments?.getInt(MEAL_ID_INTENT)?: error("Wrong id of dish")
+        val id = arguments?.getInt(MEAL_ID_INTENT)?: error(
+            getString(R.string.error_wrong_id)
+        )
         viewModel.loadData(id)
         viewModel.error.observe(viewLifecycleOwner) {
             when (it) {
                 is MealsIsEmptyException ->
                     Toast.makeText(
                         context,
-                        "There is nothing to see here",
+                        it.message,
                         Toast.LENGTH_LONG
                     ).show()
                 is Throwable ->
                     Toast.makeText(
                         context,
-                        "Error: Can't load meal model",
+                        getString(R.string.error_cant_load_meal),
                         Toast.LENGTH_LONG
                     ).show()
             }
@@ -100,11 +102,25 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details), ComponentPr
         view?.let {
             Glide
                     .with(it)
-                    .load(meal?.strMealThumb ?: R.drawable.heheboi)
-                    .into(requireView().findViewById(R.id.detailMealImage))
-            it.findViewById<TextView>(R.id.detailTitle).text = meal?.strMeal ?: "Unknown"
-            it.findViewById<TextView>(R.id.Cuisine).text = meal?.strArea ?: "Unknown"
-            it.findViewById<TextView>(R.id.instructions).text = meal?.strInstructions ?: "No instructions"
+                    .load(
+                        meal?.strMealThumb
+                            ?: R.drawable.heheboi
+                    )
+                    .into(
+                        requireView()
+                            .findViewById(
+                                R.id.detailMealImage
+                            )
+                    )
+            it.findViewById<TextView>(R.id.detailTitle).text =
+                meal?.strMeal
+                    ?: getString(R.string.empty)
+            it.findViewById<TextView>(R.id.Cuisine).text =
+                meal?.strArea
+                    ?: getString(R.string.empty)
+            it.findViewById<TextView>(R.id.instructions).text =
+                meal?.strInstructions
+                    ?: getString(R.string.empty_instructions)
         }
     }
 
