@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.skifer.epam_internship_android_checkunov.domain.usecase.GetLastCategoryUseCase
 import com.skifer.epam_internship_android_checkunov.domain.usecase.MealListUseCase
+import com.skifer.epam_internship_android_checkunov.domain.usecase.SetLastCategoryUseCase
 import com.skifer.epam_internship_android_checkunov.domain.usecase.TypeListUseCase
 import com.skifer.epam_internship_android_checkunov.presentation.feature.SingleLiveEvent
 import com.skifer.epam_internship_android_checkunov.presentation.mapper.toUi
@@ -14,9 +16,11 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class MealListViewModel(
+class MealListViewModel (
     private val mealListUseCase: MealListUseCase,
-    private val typeListUseCase: TypeListUseCase
+    private val typeListUseCase: TypeListUseCase,
+    private val setLastCategory: SetLastCategoryUseCase,
+    private val getLastCategory: GetLastCategoryUseCase
     ): ViewModel() {
 
     private val mutableMealList: MutableLiveData<List<MealModelListItem>> = MutableLiveData()
@@ -36,9 +40,9 @@ class MealListViewModel(
 
     private val disposable = CompositeDisposable()
 
-    fun loadMealList(category: String) {
+    fun loadMealList() {
         disposable.add(
-            mealListUseCase.invoke(category)
+            mealListUseCase.invoke(getLastCategory())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -80,6 +84,11 @@ class MealListViewModel(
                     }
                 )
         )
+    }
+
+    fun setCategory(item: String) {
+        setLastCategory(item)
+        loadMealList()
     }
 
     override fun onCleared() {

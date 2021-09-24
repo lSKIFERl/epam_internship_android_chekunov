@@ -1,24 +1,20 @@
 package com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.di.ComponentProvider
-import com.skifer.epam_internship_android_checkunov.presentation.base.ShareViewModel
 import com.skifer.epam_internship_android_checkunov.presentation.feature.ViewHolderAdapter
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.view.MealDetailsFragment
 import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.di.MealsComponent
 import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.viewmodel.MealListViewModel
-import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.view.SettingsFragment
+import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.viewmodel.SharedSettingsViewModel
 import com.skifer.epam_internship_android_checkunov.presentation.model.MealModelListItem
 import com.skifer.epam_internship_android_checkunov.presentation.model.TypeModel
 import javax.inject.Inject
@@ -42,12 +38,11 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
 
     private lateinit var itemList: List<MealModelListItem>
 
-    private lateinit var sharedPreference: SharedPreferences
-
-    private val sorterSharedView: ShareViewModel by activityViewModels()
-
     @Inject
     lateinit var viewModel: MealListViewModel
+
+    @Inject
+    lateinit var sorterSharedView: SharedSettingsViewModel
 
     override val component: MealsComponent by lazy {
         MealsComponent.create(this)
@@ -55,17 +50,16 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedPreference = App.instance.sharedPreferences
         component.inject(this)
+
+        initTypeListView()
+        initMealListView()
+        initActionBar(view)
 
         loadTypes()
 
-        initActionBar(view)
-        initTypeListView()
-        initMealListView()
-
         sorterSharedView.sortBy.observe(viewLifecycleOwner, {
-            mealListAdapter.setList(sorterSharedView.sort(itemList, it))
+            mealListAdapter.setList(sorterSharedView.sort(itemList))
         })
     }
 
@@ -84,12 +78,8 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
         typeListAdapter = ViewHolderAdapter()
         typeListAdapter.setItemListener(object : ViewHolderAdapter.onItemListener<TypeModel> {
             override fun onItemClick(item: TypeModel?) {
-                sharedPreference
-                    .edit()
-                    ?.putString(TYPE, item?.strCategory)
-                    ?.apply()
                 if (item != null) {
-                    viewModel.loadMealList(item.strCategory)
+                    viewModel.setCategory(item.strCategory)
                 }
                 typeListAdapter.notifyDataSetChanged()
             }
@@ -129,15 +119,12 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
         }
         viewModel.typeList.observe(viewLifecycleOwner) {
             typeListAdapter.setList(it)
-            defaultLoad(it.first().strCategory)
-            loadMeals(sharedPreference.getString(TYPE, null))
+            viewModel.setCategory(it.first().strCategory)
+            loadMeals()
         }
     }
 
-    private fun loadMeals(category: String?) {
-        if (category != null) {
-            viewModel.loadMealList(category)
-        }
+    private fun loadMeals() {
         viewModel.errorLiveData.observe(viewLifecycleOwner) {
             Toast.makeText(
                 context,
@@ -151,21 +138,6 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
         }
     }
 
-        /**
-         * Set first type as default for the first list launching or loading default value
-         * @param type first loaded type
-         */
-        private fun defaultLoad(type: String) {
-            if (sharedPreference
-                    .getString(TYPE, null) == null
-            ) {
-                sharedPreference
-                    .edit()
-                    ?.putString(TYPE, type)
-                    ?.apply()
-            }
-        }
-
             /**
              * Binding loaded list from network with recyclerview adapter
              * @param dishesList loaded from network
@@ -173,11 +145,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
             private fun bind(dishesList: List<MealModelListItem>) {
                 mealListAdapter.setList(
                     sorterSharedView.sort(
-                        dishesList,
-                        App.instance.sharedPreferences.getString(
-                            SettingsFragment.SORT_MEALS_LIST,
-                            ShareViewModel.SORT_ASC
-                        )
+                        dishesList
                     )
                 )
             }

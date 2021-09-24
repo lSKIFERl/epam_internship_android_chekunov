@@ -3,10 +3,15 @@ package com.skifer.epam_internship_android_checkunov.presentation.feature.meals.
 import com.skifer.epam_internship_android_checkunov.di.annotations.FragmentScope
 import com.skifer.epam_internship_android_checkunov.getAppComponent
 import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view.MealListFragment
+import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.di.SettingsModule
+import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.viewmodel.SharedSettingsViewModel
 import dagger.Subcomponent
 
 @Subcomponent(
-    modules = [MealsModule::class]
+    modules = [
+        MealsModule::class,
+        SettingsModule::class
+    ]
 )
 interface MealsComponent {
 
@@ -17,6 +22,8 @@ interface MealsComponent {
     }
 
     fun inject(mealListFragment: MealListFragment)
+
+    fun sharedView(): SharedSettingsViewModel
 
     companion object {
 
