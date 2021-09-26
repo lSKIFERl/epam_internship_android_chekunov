@@ -5,49 +5,54 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.skifer.epam_internship_android_checkunov.domain.usecase.GetLastCategoryUseCase
-import com.skifer.epam_internship_android_checkunov.domain.usecase.MealListUseCase
+import com.skifer.epam_internship_android_checkunov.domain.usecase.GetMealListUseCase
 import com.skifer.epam_internship_android_checkunov.domain.usecase.SetLastCategoryUseCase
-import com.skifer.epam_internship_android_checkunov.domain.usecase.TypeListUseCase
+import com.skifer.epam_internship_android_checkunov.domain.usecase.GetCategoryListUseCase
 import com.skifer.epam_internship_android_checkunov.presentation.feature.SingleLiveEvent
 import com.skifer.epam_internship_android_checkunov.presentation.mapper.toUi
-import com.skifer.epam_internship_android_checkunov.presentation.model.MealModelListItem
-import com.skifer.epam_internship_android_checkunov.presentation.model.TypeModel
+import com.skifer.epam_internship_android_checkunov.presentation.model.MealListItemModel
+import com.skifer.epam_internship_android_checkunov.presentation.model.CategoryModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class MealListViewModel (
-    private val mealListUseCase: MealListUseCase,
-    private val typeListUseCase: TypeListUseCase,
+    private val getMealListUseCase: GetMealListUseCase,
+    private val getCategoryListUseCase: GetCategoryListUseCase,
     private val setLastCategory: SetLastCategoryUseCase,
     private val getLastCategory: GetLastCategoryUseCase
     ): ViewModel() {
 
-    private val mutableMealList: MutableLiveData<List<MealModelListItem>> = MutableLiveData()
+    private val mutableMealListModel: MutableLiveData<List<MealListItemModel>> = MutableLiveData()
 
     private val mutableError: SingleLiveEvent<Throwable> = SingleLiveEvent()
 
-    private val mutableTypeList: MutableLiveData<List<TypeModel>> = MutableLiveData()
+    private val mutableCategoryList: MutableLiveData<List<CategoryModel>> = MutableLiveData()
 
-    val mealList: LiveData<List<MealModelListItem>>
-        get() = mutableMealList
+    val mealListModel: LiveData<List<MealListItemModel>>
+        get() = mutableMealListModel
 
-    val typeList: LiveData<List<TypeModel>>
-        get() = mutableTypeList
+    val categoryList: LiveData<List<CategoryModel>>
+        get() = mutableCategoryList
 
     val errorLiveData: LiveData<Throwable>
         get() = mutableError
 
     private val disposable = CompositeDisposable()
 
+    init {
+        loadTypeList()
+        loadMealList()
+    }
+
     fun loadMealList() {
         disposable.add(
-            mealListUseCase.invoke(getLastCategory())
+            getMealListUseCase.invoke(getLastCategory())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
-                        mutableMealList.value = it.map {
+                        mutableMealListModel.value = it.map {
                             it.toUi()
                         }
                     },
@@ -65,12 +70,12 @@ class MealListViewModel (
 
     fun loadTypeList() {
         disposable.add(
-            typeListUseCase.invoke()
+            getCategoryListUseCase.invoke()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
-                        mutableTypeList.value = it.map {
+                        mutableCategoryList.value = it.map {
                             it.toUi()
                         }
                     },
@@ -87,7 +92,21 @@ class MealListViewModel (
     }
 
     fun setCategory(item: String) {
-        setLastCategory(item)
+        disposable.add(
+            setLastCategory(item)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({},
+                    {
+                        mutableError.value = it
+                        Log.e(
+                            "Net",
+                            "Can't put category in prefs",
+                            it
+                        )
+                    }
+                )
+        )
         loadMealList()
     }
 

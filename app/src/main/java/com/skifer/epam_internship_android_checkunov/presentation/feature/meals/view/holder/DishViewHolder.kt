@@ -5,41 +5,41 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.skifer.epam_internship_android_checkunov.R
-import com.skifer.epam_internship_android_checkunov.domain.entity.MealModelEntity
+import com.skifer.epam_internship_android_checkunov.domain.entity.MealEntity
 import com.skifer.epam_internship_android_checkunov.presentation.feature.ViewHolderAdapter
-import com.skifer.epam_internship_android_checkunov.presentation.model.MealModelListItem
+import com.skifer.epam_internship_android_checkunov.presentation.model.MealListItemModel
 
 /**
  * Holder for dish list
  *
  * Provides logic to display for each list item
  * @param itemView view of list item on the screen that was clicked
- * @param onItemListener Click listener for each list item
+ * @param onItemModelListener Click listener for each list item
  */
-class DishViewHolder(itemView: View, onItemListener: ViewHolderAdapter.onItemListener<MealModelListItem>)
+class DishViewHolder(itemView: View, onItemModelListener: ViewHolderAdapter.onItemListener<MealListItemModel>)
     : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
     /**model of containment dish*/
-    var meal: MealModelListItem? = null
+    var mealModel: MealListItemModel? = null
 
     /**click listener*/
-    val onItemListener: ViewHolderAdapter.onItemListener<MealModelListItem>
+    val onItemModelListener: ViewHolderAdapter.onItemListener<MealListItemModel>
 
     init {
-        this.onItemListener = onItemListener
+        this.onItemModelListener = onItemModelListener
         itemView.setOnClickListener(this)
     }
 
     /**
-     * Binds this holder with [MealModelEntity] item
-     * @param meal Model bound to this holder
+     * Binds this holder with [MealEntity] item
+     * @param mealModel Model bound to this holder
      */
-    fun bind(meal: MealModelListItem) {
-        this.meal = meal
-        itemView.findViewById<TextView>(R.id.dishLabel).text = meal.strMeal
+    fun bind(mealModel: MealListItemModel) {
+        this.mealModel = mealModel
+        itemView.findViewById<TextView>(R.id.dishLabel).text = mealModel.strMeal
         Glide
             .with(itemView)
-            .load(meal.strMealThumb)
+            .load(mealModel.strMealThumb)
             .into(itemView.findViewById(R.id.dishImage))
     }
 
@@ -49,6 +49,6 @@ class DishViewHolder(itemView: View, onItemListener: ViewHolderAdapter.onItemLis
      * @param v The view that was clicked.
      */
     override fun onClick(v: View?) {
-        this.onItemListener.onItemClick(meal)
+        this.onItemModelListener.onItemClick(mealModel)
     }
 }

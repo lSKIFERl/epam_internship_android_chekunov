@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class TypeModelDB(
+data class CategoryModelDB(
     @PrimaryKey
     @ColumnInfo(name = "idCategory")
     val idCategory: Long,

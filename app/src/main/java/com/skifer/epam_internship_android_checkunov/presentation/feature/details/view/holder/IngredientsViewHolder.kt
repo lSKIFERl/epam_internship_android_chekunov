@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.skifer.epam_internship_android_checkunov.R
-import com.skifer.epam_internship_android_checkunov.presentation.model.Ingredient
+import com.skifer.epam_internship_android_checkunov.presentation.model.IngredientModel
 
 /**
  * Holder for ingredients of dish in details fragment
@@ -16,11 +16,11 @@ class IngredientsViewHolder(itemView: View)
     : RecyclerView.ViewHolder(itemView) {
 
     /**
-     * Binds this holder with [Ingredient] item
-     * @param ingredient Model bound to this holder
+     * Binds this holder with [IngredientModel] item
+     * @param ingredientModel Model bound to this holder
      */
-    fun bind(ingredient: Ingredient) {
+    fun bind(ingredientModel: IngredientModel) {
         itemView.findViewById<TextView>(R.id.ingredient_item).text =
-            StringBuilder("${ingredient.name} - ${ingredient.measure}")
+            StringBuilder("${ingredientModel.name} - ${ingredientModel.measure}")
     }
 }

@@ -6,7 +6,7 @@ import com.bumptech.glide.Glide
 import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.presentation.feature.ViewHolderAdapter
-import com.skifer.epam_internship_android_checkunov.presentation.model.TypeModel
+import com.skifer.epam_internship_android_checkunov.presentation.model.CategoryModel
 
 /**
  * Holder for types of food in list fragment
@@ -15,14 +15,14 @@ import com.skifer.epam_internship_android_checkunov.presentation.model.TypeModel
  * @param itemView view of list item on the screen that was clicked
  * @param onItemListener Click listener for each list item
  */
-class TypeViewHolder(itemView: View, onItemListener: ViewHolderAdapter.onItemListener<TypeModel>)
+class TypeViewHolder(itemView: View, onItemListener: ViewHolderAdapter.onItemListener<CategoryModel>)
     : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
     /**Contained model*/
-    var type: TypeModel? = null
+    var category: CategoryModel? = null
 
     /**Click listener*/
-    val onItemListener: ViewHolderAdapter.onItemListener<TypeModel>
+    val onItemListener: ViewHolderAdapter.onItemListener<CategoryModel>
 
     init{
         this.onItemListener = onItemListener
@@ -30,14 +30,14 @@ class TypeViewHolder(itemView: View, onItemListener: ViewHolderAdapter.onItemLis
     }
 
     /**
-     * Binds this holder with [TypeModel] item
-     * @param type Model bound to this holder
+     * Binds this holder with [CategoryModel] item
+     * @param category Model bound to this holder
      */
-    fun bind(type: TypeModel) {
-        this.type = type
+    fun bind(category: CategoryModel) {
+        this.category = category
         Glide
             .with(itemView)
-            .load(type.strCategoryThumb)
+            .load(category.strCategoryThumb)
             .into(itemView.findViewById(R.id.typeImage))
         itemView.isSelected =
             adapterPosition == App.instance.sharedPreferences.getInt("new_meal_type_id", 0)
@@ -53,6 +53,6 @@ class TypeViewHolder(itemView: View, onItemListener: ViewHolderAdapter.onItemLis
             .edit()
             .putInt("new_meal_type_id", adapterPosition)
             .apply()
-        this.onItemListener.onItemClick(type)
+        this.onItemListener.onItemClick(category)
     }
 }

@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
  * @param measure how much we need in spoons, cups, etc.
  */
 @Parcelize
-data class Ingredient(
+data class IngredientModel(
     val name: String,
     val measure: String?
 ) : Parcelable

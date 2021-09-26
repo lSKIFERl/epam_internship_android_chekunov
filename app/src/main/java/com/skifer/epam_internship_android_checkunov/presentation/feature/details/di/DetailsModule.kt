@@ -2,8 +2,8 @@ package com.skifer.epam_internship_android_checkunov.presentation.feature.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.skifer.epam_internship_android_checkunov.domain.usecase.MealModelUseCase
-import com.skifer.epam_internship_android_checkunov.presentation.feature.details.viewmodel.MealModelViewModel
+import com.skifer.epam_internship_android_checkunov.domain.usecase.GetMealUseCase
+import com.skifer.epam_internship_android_checkunov.presentation.feature.details.viewmodel.MealDetailsViewModel
 import dagger.Module
 import dagger.Provides
 
@@ -11,12 +11,12 @@ import dagger.Provides
 class DetailsModule {
     @Provides
     fun provideMealModelViewModelFactory(
-        useCase: MealModelUseCase
-    ): MealModelViewModel = object : ViewModelProvider.Factory {
+        useCaseGet: GetMealUseCase
+    ): MealDetailsViewModel = object : ViewModelProvider.Factory {
 
         override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-            MealModelViewModel(useCase) as T
+            MealDetailsViewModel(useCaseGet) as T
 
     }
-        .create(MealModelViewModel::class.java)
+        .create(MealDetailsViewModel::class.java)
 }

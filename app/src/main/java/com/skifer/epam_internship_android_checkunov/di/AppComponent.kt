@@ -6,8 +6,8 @@ import com.skifer.epam_internship_android_checkunov.di.modules.DataBaseModule
 import com.skifer.epam_internship_android_checkunov.di.modules.NetworkModule
 import com.skifer.epam_internship_android_checkunov.di.modules.PrefsModule
 import com.skifer.epam_internship_android_checkunov.domain.repository.MealListRepository
-import com.skifer.epam_internship_android_checkunov.domain.repository.MealModelRepository
-import com.skifer.epam_internship_android_checkunov.domain.repository.TypeModelRepository
+import com.skifer.epam_internship_android_checkunov.domain.repository.MealRepository
+import com.skifer.epam_internship_android_checkunov.domain.repository.CategoryRepository
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.di.DetailsComponent
 import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.di.MealsComponent
 import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.di.SettingsComponent
@@ -40,8 +40,8 @@ interface AppComponent {
 
     fun provideMealListRepository(): MealListRepository
 
-    fun provideMealModelRepository(): MealModelRepository
+    fun provideMealModelRepository(): MealRepository
 
-    fun provideTypeModelRepository(): TypeModelRepository
+    fun provideTypeModelRepository(): CategoryRepository
 
 }

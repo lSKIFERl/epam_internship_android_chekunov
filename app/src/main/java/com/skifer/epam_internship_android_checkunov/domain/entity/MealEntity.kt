@@ -12,7 +12,7 @@ package com.skifer.epam_internship_android_checkunov.domain.entity
  * @param ingredients all what we need to cook
  * @param strInstructions cook guide
  */
-data class MealModelEntity(
+data class MealEntity(
     val idMeal: Int,
     val strMeal: String?,
     val strCategory: String?,

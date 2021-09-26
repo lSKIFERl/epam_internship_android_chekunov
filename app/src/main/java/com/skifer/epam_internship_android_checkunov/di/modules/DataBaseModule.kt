@@ -2,7 +2,7 @@ package com.skifer.epam_internship_android_checkunov.di.modules
 
 import android.content.Context
 import androidx.room.Room
-import com.skifer.epam_internship_android_checkunov.data.database.database.ModelsDataBase
+import com.skifer.epam_internship_android_checkunov.data.database.database.MealsModelsDataBase
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -14,10 +14,11 @@ class DataBaseModule {
     @Singleton
     fun provideDataBase(
         context: Context
-    ): ModelsDataBase =
+    ): MealsModelsDataBase =
         Room.databaseBuilder(
             context,
-            ModelsDataBase::class.java,
-            ModelsDataBase.NAME)
+            MealsModelsDataBase::class.java,
+            MealsModelsDataBase.NAME)
+            .fallbackToDestructiveMigration()
             .build()
 }

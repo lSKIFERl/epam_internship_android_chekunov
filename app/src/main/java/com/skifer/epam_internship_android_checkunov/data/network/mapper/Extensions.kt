@@ -3,14 +3,14 @@ package com.skifer.epam_internship_android_checkunov.data.network.mapper
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import com.skifer.epam_internship_android_checkunov.data.network.model.MealModelDto
-import com.skifer.epam_internship_android_checkunov.data.network.model.MealModelListItemDto
-import com.skifer.epam_internship_android_checkunov.data.network.model.TypeModelDto
+import com.skifer.epam_internship_android_checkunov.data.network.model.MealListItemModelDto
+import com.skifer.epam_internship_android_checkunov.data.network.model.CategoryModelDto
 import com.skifer.epam_internship_android_checkunov.domain.entity.IngredientEntity
-import com.skifer.epam_internship_android_checkunov.domain.entity.MealModelEntity
-import com.skifer.epam_internship_android_checkunov.domain.entity.MealModelListItemEntity
-import com.skifer.epam_internship_android_checkunov.domain.entity.TypeModelEntity
+import com.skifer.epam_internship_android_checkunov.domain.entity.MealEntity
+import com.skifer.epam_internship_android_checkunov.domain.entity.MealListItemEntity
+import com.skifer.epam_internship_android_checkunov.domain.entity.CategoryEntity
 
-fun MealModelDto.toEntity(): MealModelEntity {
+fun MealModelDto.toEntity(): MealEntity {
     val json = JsonParser()
         .parse(Gson().toJson(this))
         .asJsonObject
@@ -39,7 +39,7 @@ fun MealModelDto.toEntity(): MealModelEntity {
             )
         }
     }
-    return MealModelEntity(
+    return MealEntity(
         idMeal,
         strMeal,
         strCategory,
@@ -52,6 +52,6 @@ fun MealModelDto.toEntity(): MealModelEntity {
     )
 }
 
-fun MealModelListItemDto.toEntity() = MealModelListItemEntity(idMeal, strMeal, strMealThumb)
+fun MealListItemModelDto.toEntity() = MealListItemEntity(idMeal, strMeal, strMealThumb)
 
-fun TypeModelDto.toEntity() = TypeModelEntity(idCategory, strCategory, strCategoryThumb)
+fun CategoryModelDto.toEntity() = CategoryEntity(idCategory, strCategory, strCategoryThumb)

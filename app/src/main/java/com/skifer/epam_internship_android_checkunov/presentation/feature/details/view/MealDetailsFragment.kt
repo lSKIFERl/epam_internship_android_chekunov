@@ -16,8 +16,8 @@ import com.skifer.epam_internship_android_checkunov.data.network.exception.Meals
 import com.skifer.epam_internship_android_checkunov.di.ComponentProvider
 import com.skifer.epam_internship_android_checkunov.presentation.feature.ViewHolderAdapter
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.di.DetailsComponent
-import com.skifer.epam_internship_android_checkunov.presentation.feature.details.viewmodel.MealModelViewModel
-import com.skifer.epam_internship_android_checkunov.presentation.model.Ingredient
+import com.skifer.epam_internship_android_checkunov.presentation.feature.details.viewmodel.MealDetailsViewModel
+import com.skifer.epam_internship_android_checkunov.presentation.model.IngredientModel
 import com.skifer.epam_internship_android_checkunov.presentation.model.MealModel
 import javax.inject.Inject
 
@@ -30,10 +30,10 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details), ComponentPr
     private lateinit var tagsAdapter: ViewHolderAdapter<String>
 
     /**ingredients list tagsAdapter*/
-    private lateinit var ingredientAdapter: ViewHolderAdapter<Ingredient>
+    private lateinit var ingredientModelAdapter: ViewHolderAdapter<IngredientModel>
 
     @Inject
-    lateinit var viewModel: MealModelViewModel
+    lateinit var viewModel: MealDetailsViewModel
 
     override val component: DetailsComponent by lazy {
         DetailsComponent.create(this)
@@ -81,10 +81,10 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details), ComponentPr
     @SuppressLint("CutPasteId")
     private fun initView(){
         tagsAdapter = ViewHolderAdapter()
-        ingredientAdapter = ViewHolderAdapter()
+        ingredientModelAdapter = ViewHolderAdapter()
         view?.let {
             it.findViewById<RecyclerView>(R.id.tag)?.adapter = tagsAdapter
-            it.findViewById<RecyclerView>(R.id.ingredients_list)?.adapter = ingredientAdapter
+            it.findViewById<RecyclerView>(R.id.ingredients_list)?.adapter = ingredientModelAdapter
             it.findViewById<Toolbar>(R.id.toolbarMealDetails).setNavigationOnClickListener {
                 findNavController().popBackStack()
             }
@@ -97,7 +97,7 @@ class MealDetailsFragment: Fragment(R.layout.fragment_meal_details), ComponentPr
      */
     private fun bind(meal: MealModel?) {
         tagsAdapter.setList(meal?.tags)
-        ingredientAdapter.setList(meal?.ingredients)
+        ingredientModelAdapter.setList(meal?.ingredientModels)
 
         view?.let {
             Glide

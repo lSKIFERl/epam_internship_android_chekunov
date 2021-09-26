@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.skifer.epam_internship_android_checkunov.data.network.exception.MealsIsEmptyException
-import com.skifer.epam_internship_android_checkunov.domain.usecase.MealModelUseCase
+import com.skifer.epam_internship_android_checkunov.domain.usecase.GetMealUseCase
 import com.skifer.epam_internship_android_checkunov.presentation.feature.SingleLiveEvent
 import com.skifer.epam_internship_android_checkunov.presentation.mapper.toUi
 import com.skifer.epam_internship_android_checkunov.presentation.model.MealModel
@@ -13,8 +13,8 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class MealModelViewModel(
-    private val useCase: MealModelUseCase,
+class MealDetailsViewModel(
+    private val useCaseGet: GetMealUseCase,
 ): ViewModel() {
 
     private val mutableMeal: MutableLiveData<MealModel> = MutableLiveData()
@@ -30,7 +30,7 @@ class MealModelViewModel(
     private var disposable: Disposable? = null
 
     fun loadData(id: Int) {
-        disposable = useCase.invoke(id)
+        disposable = useCaseGet.invoke(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(

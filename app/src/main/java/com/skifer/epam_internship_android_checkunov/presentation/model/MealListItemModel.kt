@@ -4,8 +4,8 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class TypeModel(
-        val idCategory: Long,
-        val strCategory: String,
-        val strCategoryThumb: String
+data class MealListItemModel(
+    val idMeal: Int,
+    val strMeal: String?,
+    val strMealThumb: String?
 ) : Parcelable

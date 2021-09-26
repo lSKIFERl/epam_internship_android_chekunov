@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.skifer.epam_internship_android_checkunov.data.preferences.Sort
 import com.skifer.epam_internship_android_checkunov.domain.usecase.GetSortUseCase
 import com.skifer.epam_internship_android_checkunov.domain.usecase.SetSortUseCase
-import com.skifer.epam_internship_android_checkunov.presentation.model.MealModelListItem
+import com.skifer.epam_internship_android_checkunov.presentation.model.MealListItemModel
 
 class SharedSettingsViewModel (
     private val setSort: SetSortUseCase,
@@ -14,11 +14,11 @@ class SharedSettingsViewModel (
 
     val sortBy = MutableLiveData<Sort>()
 
-    fun sort(list: List<MealModelListItem>) =
+    fun sort(listModel: List<MealListItemModel>) =
         if (getSort() == Sort.SORT_DESC) {
-            list.sortedByDescending { it.strMeal }
+            listModel.sortedByDescending { it.strMeal }
         } else {
-            list.sortedBy { it.strMeal }
+            listModel.sortedBy { it.strMeal }
         }
 
     fun setSortOrder(order: Sort) {

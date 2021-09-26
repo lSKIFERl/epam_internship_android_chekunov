@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.skifer.epam_internship_android_checkunov.R
-import com.skifer.epam_internship_android_checkunov.domain.entity.MealModelEntity
+import com.skifer.epam_internship_android_checkunov.domain.entity.MealEntity
 import com.skifer.epam_internship_android_checkunov.presentation.feature.ViewHolderAdapter.onItemListener
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.view.holder.FoodTypeHolder
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.view.holder.IngredientsViewHolder
 import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view.holder.DishViewHolder
 import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view.holder.TypeViewHolder
-import com.skifer.epam_internship_android_checkunov.presentation.model.Ingredient
-import com.skifer.epam_internship_android_checkunov.presentation.model.MealModelListItem
-import com.skifer.epam_internship_android_checkunov.presentation.model.TypeModel
+import com.skifer.epam_internship_android_checkunov.presentation.model.CategoryModel
+import com.skifer.epam_internship_android_checkunov.presentation.model.IngredientModel
+import com.skifer.epam_internship_android_checkunov.presentation.model.MealListItemModel
 
 /**
  * List Adapter class for recyclerview.
@@ -39,19 +39,19 @@ class ViewHolderAdapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var holder: RecyclerView.ViewHolder? = null
         context = parent.context
         when(items.elementAtOrNull(0)) {
-            is MealModelListItem -> holder = DishViewHolder(
+            is MealListItemModel -> holder = DishViewHolder(
                     LayoutInflater.from(context).inflate(
                             R.layout.recyclerview_item,
                             parent,
                             false),
-                    itemListener as onItemListener<MealModelListItem>
+                    itemListener as onItemListener<MealListItemModel>
             )
-            is TypeModel -> holder = TypeViewHolder(
+            is CategoryModel -> holder = TypeViewHolder(
                     LayoutInflater.from(context).inflate(
                             R.layout.type_item,
                             parent,
                             false),
-                    itemListener as onItemListener<TypeModel>
+                    itemListener as onItemListener<CategoryModel>
                     )
             is String -> holder = FoodTypeHolder(
                 LayoutInflater.from(context).inflate(
@@ -60,7 +60,7 @@ class ViewHolderAdapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     false
                 )
             )
-            is Ingredient -> holder = IngredientsViewHolder (
+            is IngredientModel -> holder = IngredientsViewHolder (
                 LayoutInflater.from(parent.context).inflate(
                     R.layout.ingredient_item,
                     parent,
@@ -89,14 +89,14 @@ class ViewHolderAdapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
      * holder can be one of the following:
      * [DishViewHolder], [TypeViewHolder], [FoodTypeHolder], [IngredientsViewHolder]
      * @param item item that can be connected to the specific Holder:
-     * [MealModelEntity], [TypeModel], [FoodType], [Ingredient]
+     * [MealEntity], [CategoryModel], [FoodType], [IngredientModel]
      */
     private fun <T> RecyclerView.ViewHolder.bind(item: T?) {
         when(this) {
-            is DishViewHolder -> (item as? MealModelListItem)?.let{ bind(it) }
-            is TypeViewHolder -> (item as? TypeModel)?.let{ bind(it) }
+            is DishViewHolder -> (item as? MealListItemModel)?.let{ bind(it) }
+            is TypeViewHolder -> (item as? CategoryModel)?.let{ bind(it) }
             is FoodTypeHolder -> (item as? String)?.let { bind(it) }
-            is IngredientsViewHolder -> (item as? Ingredient)?.let { bind(it) }
+            is IngredientsViewHolder -> (item as? IngredientModel)?.let { bind(it) }
         }
     }
 
