@@ -4,5 +4,5 @@ import com.skifer.epam_internship_android_checkunov.domain.repository.CategoryRe
 import javax.inject.Inject
 
 class SetLastCategoryUseCase @Inject constructor(private val repository: CategoryRepository) {
-    operator fun invoke(category: String) = repository.setLastType(category)
+    operator fun invoke(category: String) = repository.setLastCategory(category)
 }

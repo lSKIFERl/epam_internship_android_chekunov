@@ -76,7 +76,7 @@ class SettingsFragment : BottomSheetDialogFragment(), ComponentProvider<Settings
     }
 
     private fun bind() {
-        if (sorterSharedView.getSortOrder() == Sort.SORT_ASC) {
+        if (sorterSharedView.lastOrder == Sort.SORT_ASC) {
             ascSort.setBackgroundColor(resources.getColor(R.color.selected_type))
         } else {
             descSort.setBackgroundColor(resources.getColor(R.color.selected_type))

@@ -8,6 +8,7 @@ import com.skifer.epam_internship_android_checkunov.data.preferences.CategorySha
 import com.skifer.epam_internship_android_checkunov.domain.entity.CategoryEntity
 import com.skifer.epam_internship_android_checkunov.domain.repository.CategoryRepository
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
@@ -17,7 +18,7 @@ class CategoryRepositoryImpl @Inject constructor(
     private val prefs: CategorySharedPreferencesSource
 ): CategoryRepository {
   
-    override fun loadTypeList(): Single<List<CategoryEntity>> =
+    override fun loadCategoryList(): Single<List<CategoryEntity>> =
             database
             .getTypeModelDao()
             .getAll()
@@ -37,9 +38,9 @@ class CategoryRepositoryImpl @Inject constructor(
                 it.fromDBListToEntity()
             }
 
-    override fun getLastType() = prefs.getLastCategoryName()
+    override fun getLastCategory(): Observable<String> = Observable.just(prefs.getLastCategoryName())
 
-    override fun setLastType(categoryName: String): Completable = Completable.fromAction {
+    override fun setLastCategory(categoryName: String): Completable = Completable.fromAction {
         prefs.setLastCategoryName(categoryName)
     }
 }

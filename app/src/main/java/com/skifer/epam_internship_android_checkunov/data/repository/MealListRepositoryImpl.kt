@@ -6,6 +6,7 @@ import com.skifer.epam_internship_android_checkunov.data.preferences.Sort
 import com.skifer.epam_internship_android_checkunov.data.preferences.SortingSharedPreferencesSources
 import com.skifer.epam_internship_android_checkunov.domain.repository.MealListRepository
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
 
@@ -18,7 +19,7 @@ class MealListRepositoryImpl @Inject constructor(
         mealApi.getMealByCategory(category)
             .map { it.listMealModel.map { it.toEntity() } }
 
-    override fun getSort(): Sort = prefs.getSort()
+    override fun getSort(): Observable<Sort> = Observable.just(prefs.getSort())
 
     override fun setSort(sort: Sort): Completable = Completable.fromAction {
         prefs.setSort(sort)

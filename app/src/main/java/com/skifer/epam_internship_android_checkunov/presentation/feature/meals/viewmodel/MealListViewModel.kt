@@ -4,14 +4,14 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.skifer.epam_internship_android_checkunov.domain.usecase.GetCategoryListUseCase
 import com.skifer.epam_internship_android_checkunov.domain.usecase.GetLastCategoryUseCase
 import com.skifer.epam_internship_android_checkunov.domain.usecase.GetMealListUseCase
 import com.skifer.epam_internship_android_checkunov.domain.usecase.SetLastCategoryUseCase
-import com.skifer.epam_internship_android_checkunov.domain.usecase.GetCategoryListUseCase
 import com.skifer.epam_internship_android_checkunov.presentation.feature.SingleLiveEvent
 import com.skifer.epam_internship_android_checkunov.presentation.mapper.toUi
-import com.skifer.epam_internship_android_checkunov.presentation.model.MealListItemModel
 import com.skifer.epam_internship_android_checkunov.presentation.model.CategoryModel
+import com.skifer.epam_internship_android_checkunov.presentation.model.MealListItemModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -40,14 +40,17 @@ class MealListViewModel (
 
     private val disposable = CompositeDisposable()
 
+    private var lastCategory: String = ""
+
     init {
+        getCategory()
         loadTypeList()
         loadMealList()
     }
 
     fun loadMealList() {
         disposable.add(
-            getMealListUseCase.invoke(getLastCategory())
+            getMealListUseCase(lastCategory)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -70,7 +73,7 @@ class MealListViewModel (
 
     fun loadTypeList() {
         disposable.add(
-            getCategoryListUseCase.invoke()
+            getCategoryListUseCase()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -89,6 +92,20 @@ class MealListViewModel (
                     }
                 )
         )
+    }
+
+    private fun getCategory() {
+        disposable.add(
+            getLastCategory()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    {
+                      lastCategory = it
+                    },
+                    {}
+                )
+            )
     }
 
     fun setCategory(item: String) {
