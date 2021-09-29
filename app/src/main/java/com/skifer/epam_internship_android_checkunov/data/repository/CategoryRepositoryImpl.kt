@@ -10,18 +10,21 @@ import com.skifer.epam_internship_android_checkunov.domain.repository.CategoryRe
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 class CategoryRepositoryImpl @Inject constructor(
     private val mealApi: MealApi,
     private val database: MealsModelsDataBase,
     private val prefs: CategorySharedPreferencesSource
-): CategoryRepository {
-  
+) : CategoryRepository {
+
     override fun loadCategoryList(): Single<List<CategoryEntity>> =
-            database
+        database
             .getTypeModelDao()
             .getAll()
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
             .flatMap {
                 if (it.isEmpty()) {
                     mealApi.getCategory()
@@ -38,9 +41,17 @@ class CategoryRepositoryImpl @Inject constructor(
                 it.fromDBListToEntity()
             }
 
-    override fun getLastCategory(): Observable<String> = Observable.just(prefs.getLastCategoryName())
+    override fun getLastCategory(): Observable<String> =
+        Observable.just(prefs.getLastCategoryName())
 
     override fun setLastCategory(categoryName: String): Completable = Completable.fromAction {
         prefs.setLastCategoryName(categoryName)
+    }
+
+    override fun getLastCategoryId(): Single<Long> =
+        Single.just(prefs.getLastCategoryId())
+
+    override fun setLastCategoryId(id: Long): Completable = Completable.fromAction {
+        prefs.setLastCategoryId(id)
     }
 }

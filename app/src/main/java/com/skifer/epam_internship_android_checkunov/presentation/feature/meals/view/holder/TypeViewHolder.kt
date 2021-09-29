@@ -3,7 +3,6 @@ package com.skifer.epam_internship_android_checkunov.presentation.feature.meals.
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.presentation.feature.ViewHolderAdapter
 import com.skifer.epam_internship_android_checkunov.presentation.model.CategoryModel
@@ -19,7 +18,7 @@ class TypeViewHolder(itemView: View, onItemListener: ViewHolderAdapter.onItemLis
     : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
     /**Contained model*/
-    var category: CategoryModel? = null
+    lateinit var category: CategoryModel
 
     /**Click listener*/
     val onItemListener: ViewHolderAdapter.onItemListener<CategoryModel>
@@ -39,8 +38,7 @@ class TypeViewHolder(itemView: View, onItemListener: ViewHolderAdapter.onItemLis
             .with(itemView)
             .load(category.strCategoryThumb)
             .into(itemView.findViewById(R.id.typeImage))
-        itemView.isSelected =
-            adapterPosition == App.instance.sharedPreferences.getInt("new_meal_type_id", 0)
+        itemView.isSelected = category.active
     }
 
     /**
@@ -49,10 +47,6 @@ class TypeViewHolder(itemView: View, onItemListener: ViewHolderAdapter.onItemLis
      * @param v The view that was clicked.
      */
     override fun onClick(v: View?) {
-        App.instance.sharedPreferences
-            .edit()
-            .putInt("new_meal_type_id", adapterPosition)
-            .apply()
         this.onItemListener.onItemClick(category)
     }
 }

@@ -4,10 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.skifer.epam_internship_android_checkunov.domain.usecase.GetCategoryListUseCase
-import com.skifer.epam_internship_android_checkunov.domain.usecase.GetLastCategoryUseCase
-import com.skifer.epam_internship_android_checkunov.domain.usecase.GetMealListUseCase
-import com.skifer.epam_internship_android_checkunov.domain.usecase.SetLastCategoryUseCase
+import com.skifer.epam_internship_android_checkunov.domain.usecase.*
 import com.skifer.epam_internship_android_checkunov.presentation.feature.SingleLiveEvent
 import com.skifer.epam_internship_android_checkunov.presentation.mapper.toUi
 import com.skifer.epam_internship_android_checkunov.presentation.model.CategoryModel
@@ -20,7 +17,9 @@ class MealListViewModel (
     private val getMealListUseCase: GetMealListUseCase,
     private val getCategoryListUseCase: GetCategoryListUseCase,
     private val setLastCategory: SetLastCategoryUseCase,
-    private val getLastCategory: GetLastCategoryUseCase
+    private val getLastCategory: GetLastCategoryUseCase,
+    private val setLastCategoryId: SetLastCategoryIdUseCase,
+    private val getLastCategoryId: GetLastCategoryIdUseCase
     ): ViewModel() {
 
     private val mutableMealListModel: MutableLiveData<List<MealListItemModel>> = MutableLiveData()
@@ -40,18 +39,13 @@ class MealListViewModel (
 
     private val disposable = CompositeDisposable()
 
-    private var lastCategory: String = ""
-
     init {
-        getCategory()
         loadTypeList()
-        loadMealList()
     }
 
     fun loadMealList() {
         disposable.add(
-            getMealListUseCase(lastCategory)
-                .subscribeOn(Schedulers.io())
+            getMealListUseCase(getCategory())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
@@ -74,12 +68,15 @@ class MealListViewModel (
     fun loadTypeList() {
         disposable.add(
             getCategoryListUseCase()
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
                         mutableCategoryList.value = it.map {
                             it.toUi()
+                        }
+                        if (getCategory() == "") {
+                            setCategory(it.first().toUi())
+                            setCategoryId(it.first().toUi().idCategory)
                         }
                     },
                     { e ->
@@ -92,9 +89,11 @@ class MealListViewModel (
                     }
                 )
         )
+        loadMealList()
     }
 
-    private fun getCategory() {
+    private fun getCategory(): String {
+        var lastCategory = ""
         disposable.add(
             getLastCategory()
                 .subscribeOn(Schedulers.io())
@@ -106,11 +105,13 @@ class MealListViewModel (
                     {}
                 )
             )
+        getCategoryId()
+        return lastCategory
     }
 
-    fun setCategory(item: String) {
+    fun setCategory(item: CategoryModel) {
         disposable.add(
-            setLastCategory(item)
+            setLastCategory(item.strCategory)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({},
@@ -124,7 +125,41 @@ class MealListViewModel (
                     }
                 )
         )
+        loadTypeList()
         loadMealList()
+        item.active = true
+    }
+
+    private fun setCategoryId(id: Long) {
+        disposable.add(
+            setLastCategoryId(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({},
+                    {
+                        mutableError.value = it
+                        Log.e(
+                            "Net",
+                            "Can't put category id in prefs",
+                            it
+                        )
+                    }
+                )
+        )
+    }
+
+    private fun getCategoryId() {
+        disposable.add(
+            getLastCategoryId()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    {
+                    },
+                    {
+                    }
+                )
+        )
     }
 
     override fun onCleared() {

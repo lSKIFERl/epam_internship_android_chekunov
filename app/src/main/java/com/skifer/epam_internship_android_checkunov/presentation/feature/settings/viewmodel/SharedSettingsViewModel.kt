@@ -22,29 +22,35 @@ class SharedSettingsViewModel (
 
     private val disposable = CompositeDisposable()
 
+    init {
+        getSortOrder()
+    }
 
-    fun sort(listModel: List<MealListItemModel>) =
-        if (lastOrder == Sort.SORT_DESC) {
-            listModel.sortedByDescending { it.strMeal }
+    fun sort(listModel: List<MealListItemModel>?) =
+        if (getSort() == Sort.SORT_DESC) {
+            listModel?.sortedByDescending { it.strMeal }
         } else {
-            listModel.sortedBy { it.strMeal }
+            listModel?.sortedBy { it.strMeal }
         }
 
-    fun setSortOrder(order: Sort) = disposable.add(setSort(order)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(
-            {
-                Log.i("Prefs", "Saved $order in prefs")
-            },
-            {
-                Log.e("Prefs", "Can't put $order in prefs", it)
-            }
+    fun setSortOrder(order: Sort) {
+        lastOrder = order
+        disposable.add(setSort(order)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    Log.i("Prefs", "Saved $order in prefs")
+                },
+                {
+                    Log.e("Prefs", "Can't put $order in prefs", it)
+                }
+            )
         )
-    )
+    }
 
     fun getSortOrder() {
-        disposable.add(
+        /*disposable.add(
             getSort()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -58,15 +64,17 @@ class SharedSettingsViewModel (
                         lastOrder = Sort.SORT_ASC
                     }
                 )
-        )
+        )*/
+        lastOrder = getSort()
     }
 
 
     fun apply() {
-        sortBy.value = lastOrder
+        sortBy.value = getSort()
     }
 
     override fun onCleared() {
+        sortBy.value = lastOrder
         disposable.dispose()
         super.onCleared()
     }

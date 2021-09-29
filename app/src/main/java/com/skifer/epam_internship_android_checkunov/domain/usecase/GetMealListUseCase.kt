@@ -4,5 +4,5 @@ import com.skifer.epam_internship_android_checkunov.domain.repository.MealListRe
 import javax.inject.Inject
 
 class GetMealListUseCase @Inject constructor(private val repository: MealListRepository) {
-    operator fun invoke(category: String) = repository.loadDishList(category)
+    operator fun invoke(category: String) = repository.loadMealList(category)
 }

@@ -9,4 +9,6 @@ interface CategoryRepository {
     fun loadCategoryList(): Single<List<CategoryEntity>>
     fun setLastCategory(categoryName: String): Completable
     fun getLastCategory(): Observable<String>
+    fun setLastCategoryId(id: Long): Completable
+    fun getLastCategoryId(): Single<Long>
 }

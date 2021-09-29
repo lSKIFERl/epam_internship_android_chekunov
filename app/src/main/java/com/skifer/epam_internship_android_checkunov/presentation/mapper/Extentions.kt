@@ -25,4 +25,4 @@ fun MealEntity.toUi() = MealModel(
 
 fun MealListItemEntity.toUi() = MealListItemModel(idMeal, strMeal, strMealThumb)
 
-fun CategoryEntity.toUi() = CategoryModel(idCategory, strCategory, strCategoryThumb)
+fun CategoryEntity.toUi() = CategoryModel(idCategory, strCategory, strCategoryThumb, false)

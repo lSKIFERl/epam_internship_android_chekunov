@@ -15,8 +15,8 @@ import com.skifer.epam_internship_android_checkunov.presentation.feature.details
 import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.di.MealsComponent
 import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.viewmodel.MealListViewModel
 import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.viewmodel.SharedSettingsViewModel
-import com.skifer.epam_internship_android_checkunov.presentation.model.MealListItemModel
 import com.skifer.epam_internship_android_checkunov.presentation.model.CategoryModel
+import com.skifer.epam_internship_android_checkunov.presentation.model.MealListItemModel
 import javax.inject.Inject
 
 /**
@@ -24,19 +24,12 @@ import javax.inject.Inject
  */
 class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvider<MealsComponent>{
 
-    /**The dishes list on the screen*/
-    private lateinit var dishListView: RecyclerView
+    private var categoryListAdapter: ViewHolderAdapter<CategoryModel>? = null
 
     /**[dishListView] custom adapter*/
-    private lateinit var mealListAdapterModel: ViewHolderAdapter<MealListItemModel>
+    private var mealListAdapterModel: ViewHolderAdapter<MealListItemModel>? = null
 
-    /**The types list on the screen*/
-    private lateinit var typeListView: RecyclerView
-
-    /**[typeListView] custom adapter*/
-    private lateinit var categoryListAdapter: ViewHolderAdapter<CategoryModel>
-
-    private lateinit var itemListModel: List<MealListItemModel>
+    private var itemListModel: List<MealListItemModel>? = null
 
     @Inject
     lateinit var viewModel: MealListViewModel
@@ -59,8 +52,9 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
         loadTypes()
 
         sorterSharedView.sortBy.observe(viewLifecycleOwner, {
-            mealListAdapterModel.setList(sorterSharedView.sort(itemListModel))
+            mealListAdapterModel?.setList(sorterSharedView.sort(itemListModel))
         })
+
     }
 
     private fun initActionBar(view: View) {
@@ -75,37 +69,33 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
     }
 
     private fun initTypeListView() {
-        categoryListAdapter = ViewHolderAdapter()
+        val categoryListAdapter = ViewHolderAdapter<CategoryModel>()
         categoryListAdapter.setItemListener(object : ViewHolderAdapter.onItemListener<CategoryModel> {
-            override fun onItemClick(item: CategoryModel?) {
-                if (item != null) {
-                    viewModel.setCategory(item.strCategory)
-                }
+            override fun onItemClick(item: CategoryModel) {
+                viewModel.setCategory(item)
                 categoryListAdapter.notifyDataSetChanged()
             }
         })
-        typeListView = requireView().findViewById(R.id.typesListView)
-        typeListView.adapter = categoryListAdapter
+        requireView().findViewById<RecyclerView>(R.id.typesListView)
+            .adapter = categoryListAdapter
     }
 
     /**
      * View components initializing
      */
     private fun initMealListView() {
-        mealListAdapterModel = ViewHolderAdapter()
+        val mealListAdapterModel = ViewHolderAdapter<MealListItemModel>()
         mealListAdapterModel.setItemListener(object :
             ViewHolderAdapter.onItemListener<MealListItemModel> {
-            override fun onItemClick(itemModel: MealListItemModel?) {
-                if (itemModel != null) {
-                    findNavController().navigate(
-                        R.id.mealDetailsFragment,
-                        bundleOf(MealDetailsFragment.MEAL_ID_INTENT to itemModel.idMeal)
-                    )
-                }
+            override fun onItemClick(item: MealListItemModel) {
+                findNavController().navigate(
+                    R.id.mealDetailsFragment,
+                    bundleOf(MealDetailsFragment.MEAL_ID_INTENT to item.idMeal)
+                )
             }
         })
-        dishListView = requireView().findViewById(R.id.dishListView)
-        dishListView.adapter = mealListAdapterModel
+        requireView().findViewById<RecyclerView>(R.id.dishListView)
+            .adapter = mealListAdapterModel
     }
 
     private fun loadTypes() {
@@ -118,8 +108,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
             ).show()
         }
         viewModel.categoryList.observe(viewLifecycleOwner) {
-            categoryListAdapter.setList(it)
-            viewModel.setCategory(it.first().strCategory)
+            categoryListAdapter?.setList(it)
             loadMeals()
         }
     }
@@ -144,7 +133,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
              * @param dishesListModel loaded from network
              */
             private fun bind(dishesListModel: List<MealListItemModel>) {
-                mealListAdapterModel.setList(
+                mealListAdapterModel?.setList(
                     sorterSharedView.sort(
                         dishesListModel
                     )
@@ -152,7 +141,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
             }
 
             companion object {
-                const val TYPE = "TYPE"
+                const val TYPE = "CATEGORY"
 
                 /**
                  * Should be called instead instead of just instantiating the class

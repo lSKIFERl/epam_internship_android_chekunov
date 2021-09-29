@@ -8,14 +8,17 @@ import com.skifer.epam_internship_android_checkunov.data.network.mapper.toEntity
 import com.skifer.epam_internship_android_checkunov.domain.entity.MealEntity
 import com.skifer.epam_internship_android_checkunov.domain.repository.MealRepository
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 class MealRepositoryImpl @Inject constructor(
     private val mealApi: MealApi
 ): MealRepository {
 
-    override fun loadDishDetails(id: Int): Single<MealEntity> =
+    override fun loadMealDetails(id: Int): Single<MealEntity> =
         mealApi.getDetailsMeal(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
             .flatMap {
                 it.listMealModel.firstOrNull()?.toEntity()?.let {
                     Single.just(it)
