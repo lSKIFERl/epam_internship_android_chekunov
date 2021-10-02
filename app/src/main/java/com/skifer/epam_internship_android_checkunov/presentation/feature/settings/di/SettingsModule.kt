@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.skifer.epam_internship_android_checkunov.domain.usecase.GetSortUseCase
 import com.skifer.epam_internship_android_checkunov.domain.usecase.SetSortUseCase
-import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.viewmodel.SharedSettingsViewModel
+import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.viewmodel.SettingsViewModel
 import dagger.Module
 import dagger.Provides
 
@@ -12,18 +12,18 @@ import dagger.Provides
 class SettingsModule {
 
     @Provides
-    fun provideSharedSettingsViewModelFactory(
+    fun provideSettingsViewModelFactory(
         setSortUseCase: SetSortUseCase,
         getSortUseCase: GetSortUseCase
-    ): SharedSettingsViewModel = object : ViewModelProvider.Factory {
+    ): SettingsViewModel = object : ViewModelProvider.Factory {
 
         override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-            SharedSettingsViewModel(
+            SettingsViewModel(
                 setSortUseCase,
                 getSortUseCase
             )
             as T
 
     }
-        .create(SharedSettingsViewModel::class.java)
+        .create(SettingsViewModel::class.java)
 }

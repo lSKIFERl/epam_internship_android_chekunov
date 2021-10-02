@@ -40,12 +40,12 @@ class MealListViewModel (
     private val disposable = CompositeDisposable()
 
     init {
-        loadTypeList()
+        getCategory()
     }
 
-    fun loadMealList() {
+    private fun loadMealList(lastCategory: String) {
         disposable.add(
-            getMealListUseCase(getCategory())
+            getMealListUseCase(lastCategory)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
@@ -65,7 +65,7 @@ class MealListViewModel (
         )
     }
 
-    fun loadTypeList() {
+    fun loadTypeList(lastCategory: String) {
         disposable.add(
             getCategoryListUseCase()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -74,7 +74,7 @@ class MealListViewModel (
                         mutableCategoryList.value = it.map {
                             it.toUi()
                         }
-                        if (getCategory() == "") {
+                        if (lastCategory == "") {
                             setCategory(it.first().toUi())
                             setCategoryId(it.first().toUi().idCategory)
                         }
@@ -89,24 +89,26 @@ class MealListViewModel (
                     }
                 )
         )
-        loadMealList()
+        if (!lastCategory.equals("")) {
+            loadMealList(lastCategory)
+        }
     }
 
-    private fun getCategory(): String {
-        var lastCategory = ""
+    private fun getCategory() {
         disposable.add(
             getLastCategory()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
-                      lastCategory = it
+                        loadTypeList(it)
                     },
-                    {}
+                    {
+                        loadTypeList("")
+                    }
                 )
             )
         getCategoryId()
-        return lastCategory
     }
 
     fun setCategory(item: CategoryModel) {
@@ -125,8 +127,7 @@ class MealListViewModel (
                     }
                 )
         )
-        loadTypeList()
-        loadMealList()
+        loadMealList(item.strCategory)
         item.active = true
     }
 

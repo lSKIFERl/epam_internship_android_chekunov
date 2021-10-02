@@ -1,30 +1,21 @@
 package com.skifer.epam_internship_android_checkunov.presentation.feature.settings.di
 
+import com.skifer.epam_internship_android_checkunov.di.AppComponent
 import com.skifer.epam_internship_android_checkunov.di.annotations.FragmentScope
-import com.skifer.epam_internship_android_checkunov.getAppComponent
 import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.view.SettingsFragment
-import dagger.Subcomponent
+import dagger.Component
 
-@Subcomponent(
-    modules = [SettingsModule::class]
+@FragmentScope
+@Component(
+    modules = [SettingsModule::class],
+    dependencies = [AppComponent::class]
 )
 interface SettingsComponent {
 
-    @FragmentScope
-    @Subcomponent.Factory
+    @Component.Factory
     interface Factory {
-        fun create(): SettingsComponent
+        fun create(appComponent: AppComponent): SettingsComponent
     }
 
     fun inject(fragment: SettingsFragment)
-
-    companion object {
-
-        lateinit var fragment: SettingsFragment
-
-        fun create(fragment: SettingsFragment): SettingsComponent {
-            this.fragment = fragment
-            return fragment.requireContext().getAppComponent().createSharedSettings().create()
-        }
-    }
 }

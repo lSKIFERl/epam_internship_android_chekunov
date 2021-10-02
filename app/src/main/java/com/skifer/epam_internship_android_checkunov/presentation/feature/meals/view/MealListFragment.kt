@@ -8,10 +8,12 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.di.ComponentProvider
 import com.skifer.epam_internship_android_checkunov.presentation.feature.ViewHolderAdapter
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.view.MealDetailsFragment
+import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.di.DaggerMealsComponent
 import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.di.MealsComponent
 import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.viewmodel.MealListViewModel
 import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.viewmodel.SharedSettingsViewModel
@@ -22,14 +24,12 @@ import javax.inject.Inject
 /**
  * Class of food displayed on the screen
  */
-class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvider<MealsComponent>{
+class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvider<MealsComponent> {
 
-    private var categoryListAdapter: ViewHolderAdapter<CategoryModel>? = null
+    private val categoryListAdapter: ViewHolderAdapter<CategoryModel> = ViewHolderAdapter()
 
     /**[dishListView] custom adapter*/
-    private var mealListAdapterModel: ViewHolderAdapter<MealListItemModel>? = null
-
-    private var itemListModel: List<MealListItemModel>? = null
+    private val mealListAdapterModel: ViewHolderAdapter<MealListItemModel> = ViewHolderAdapter()
 
     @Inject
     lateinit var viewModel: MealListViewModel
@@ -38,22 +38,18 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
     lateinit var sorterSharedView: SharedSettingsViewModel
 
     override val component: MealsComponent by lazy {
-        MealsComponent.create(this)
+        DaggerMealsComponent.factory().create(App.instance.appComponent)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         component.inject(this)
-
         initTypeListView()
         initMealListView()
         initActionBar(view)
 
-        loadTypes()
-
-        sorterSharedView.sortBy.observe(viewLifecycleOwner, {
-            mealListAdapterModel?.setList(sorterSharedView.sort(itemListModel))
-        })
+        observeTypes()
+        observeMeals()
 
     }
 
@@ -69,11 +65,10 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
     }
 
     private fun initTypeListView() {
-        val categoryListAdapter = ViewHolderAdapter<CategoryModel>()
-        categoryListAdapter.setItemListener(object : ViewHolderAdapter.onItemListener<CategoryModel> {
+        categoryListAdapter.setItemListener(object :
+            ViewHolderAdapter.onItemListener<CategoryModel> {
             override fun onItemClick(item: CategoryModel) {
                 viewModel.setCategory(item)
-                categoryListAdapter.notifyDataSetChanged()
             }
         })
         requireView().findViewById<RecyclerView>(R.id.typesListView)
@@ -84,7 +79,6 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
      * View components initializing
      */
     private fun initMealListView() {
-        val mealListAdapterModel = ViewHolderAdapter<MealListItemModel>()
         mealListAdapterModel.setItemListener(object :
             ViewHolderAdapter.onItemListener<MealListItemModel> {
             override fun onItemClick(item: MealListItemModel) {
@@ -98,8 +92,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
             .adapter = mealListAdapterModel
     }
 
-    private fun loadTypes() {
-        viewModel.loadTypeList()
+    private fun observeTypes() {
         viewModel.errorLiveData.observe(viewLifecycleOwner) {
             Toast.makeText(
                 context,
@@ -108,13 +101,11 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
             ).show()
         }
         viewModel.categoryList.observe(viewLifecycleOwner) {
-            categoryListAdapter?.setList(it)
-            loadMeals()
+            categoryListAdapter.setList(it)
         }
     }
 
-    private fun loadMeals() {
-        viewModel.loadMealList()
+    private fun observeMeals() {
         viewModel.errorLiveData.observe(viewLifecycleOwner) {
             Toast.makeText(
                 context,
@@ -123,32 +114,29 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
             ).show()
         }
         viewModel.mealListModel.observe(viewLifecycleOwner) {
-            itemListModel = it
-            bind(it)
+            bindData(it)
         }
     }
 
-            /**
-             * Binding loaded list from network with recyclerview adapter
-             * @param dishesListModel loaded from network
-             */
-            private fun bind(dishesListModel: List<MealListItemModel>) {
-                mealListAdapterModel?.setList(
-                    sorterSharedView.sort(
-                        dishesListModel
-                    )
-                )
-            }
+    /**
+     * Binding loaded list from network with recyclerview adapter
+     * @param dishesListModel loaded from network
+     */
+    private fun bindData(dishesListModel: List<MealListItemModel>) {
+        sorterSharedView.sortBy.observe(viewLifecycleOwner, {
+            mealListAdapterModel.setList(sorterSharedView.sort(dishesListModel))
+        })
+    }
 
-            companion object {
-                const val TYPE = "CATEGORY"
+    companion object {
+        const val TYPE = "CATEGORY"
 
-                /**
-                 * Should be called instead instead of just instantiating the class
-                 */
-                fun newInstance(type: String) = MealListFragment().apply {
-                    //arguments = bundleOf(MEAL_LIST to ...) then get arguments somewhere
-                    arguments = bundleOf(TYPE to type)
-                }
-            }
+        /**
+         * Should be called instead instead of just instantiating the class
+         */
+        fun newInstance(type: String) = MealListFragment().apply {
+            //arguments = bundleOf(MEAL_LIST to ...) then get arguments somewhere
+            arguments = bundleOf(TYPE to type)
+        }
+    }
 }

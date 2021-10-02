@@ -1,37 +1,21 @@
 package com.skifer.epam_internship_android_checkunov.presentation.feature.meals.di
 
+import com.skifer.epam_internship_android_checkunov.di.AppComponent
 import com.skifer.epam_internship_android_checkunov.di.annotations.FragmentScope
-import com.skifer.epam_internship_android_checkunov.getAppComponent
 import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view.MealListFragment
-import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.di.SettingsModule
-import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.viewmodel.SharedSettingsViewModel
-import dagger.Subcomponent
+import dagger.Component
 
-@Subcomponent(
-    modules = [
-        MealsModule::class,
-        SettingsModule::class
-    ]
+@FragmentScope
+@Component(
+    modules = [MealsModule::class],
+    dependencies = [AppComponent::class]
 )
 interface MealsComponent {
 
-    @FragmentScope
-    @Subcomponent.Factory
+    @Component.Factory
     interface Factory {
-        fun create(): MealsComponent
+        fun create(appComponent: AppComponent): MealsComponent
     }
 
     fun inject(mealListFragment: MealListFragment)
-
-    fun sharedView(): SharedSettingsViewModel
-
-    companion object {
-
-        lateinit var fragment: MealListFragment
-
-        fun create(fragment: MealListFragment): MealsComponent {
-            this.fragment = fragment
-            return fragment.requireContext().getAppComponent().createMealsComponent().create()
-        }
-    }
 }

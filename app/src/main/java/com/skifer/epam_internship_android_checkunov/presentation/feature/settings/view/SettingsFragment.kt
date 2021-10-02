@@ -8,29 +8,27 @@ import android.widget.Button
 import androidx.appcompat.widget.Toolbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.data.preferences.Sort
 import com.skifer.epam_internship_android_checkunov.di.ComponentProvider
+import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.di.DaggerSettingsComponent
 import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.di.SettingsComponent
+import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.viewmodel.SettingsViewModel
 import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.viewmodel.SharedSettingsViewModel
 import javax.inject.Inject
 
 
 class SettingsFragment : BottomSheetDialogFragment(), ComponentProvider<SettingsComponent> {
 
-    private lateinit var ascSort: Button
-
-    private lateinit var descSort: Button
-
-    private lateinit var confirm: Button
-
-    private var mBehavior: BottomSheetBehavior<View>? = null
-
     @Inject
     lateinit var sorterSharedView: SharedSettingsViewModel
 
+    @Inject
+    lateinit var viewModel: SettingsViewModel
+
     override val component: SettingsComponent by lazy {
-        SettingsComponent.create(this)
+        DaggerSettingsComponent.factory().create(App.instance.appComponent)
     }
 
     override fun onCreateView(
@@ -43,44 +41,57 @@ class SettingsFragment : BottomSheetDialogFragment(), ComponentProvider<Settings
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView()
         component.inject(this)
-        bind()
-        mBehavior = BottomSheetBehavior.from(this.view?.parent as View)
-        mBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
+        initView()
+        val mBehavior = BottomSheetBehavior.from(this.view?.parent as View)
+        mBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun initView() {
+
+        var ascSort: Button? = null
+
+        var descSort: Button? = null
+
+        var order = Sort.SORT_ASC
+
         view?.let {
             ascSort = it.findViewById(R.id.ASCSort)
             descSort = it.findViewById(R.id.DESCSort)
-            confirm = it.findViewById(R.id.confirm)
+            it.findViewById<Button>(R.id.confirm).setOnClickListener {
+                viewModel.apply()
+                close(order)
+            }
             it.findViewById<Toolbar>(R.id.toolbar_settings).setNavigationOnClickListener {
                 dismiss()
             }
         }
-        ascSort.setOnClickListener {
-            it.setBackgroundColor(resources.getColor(R.color.selected_type))
-            descSort.setBackgroundColor(resources.getColor(R.color.slightly_gray))
-            sorterSharedView.setSortOrder(Sort.SORT_ASC)
+
+        viewModel.sortBy.observe(viewLifecycleOwner) {
+            order = it
+            if (order == Sort.SORT_ASC)
+                toggleColor(ascSort, descSort) else toggleColor(descSort, ascSort)
         }
-        descSort.setOnClickListener {
-            it.setBackgroundColor(resources.getColor(R.color.selected_type))
-            ascSort.setBackgroundColor(resources.getColor(R.color.slightly_gray))
-            sorterSharedView.setSortOrder(Sort.SORT_DESC)
+
+        ascSort?.setOnClickListener {
+            toggleColor(it, descSort)
+            viewModel.setSortOrder(Sort.SORT_ASC)
         }
-        confirm.setOnClickListener {
-            sorterSharedView.apply()
-            dismiss()
+
+        descSort?.setOnClickListener {
+            toggleColor(it, ascSort)
+            viewModel.setSortOrder(Sort.SORT_DESC)
         }
     }
 
-    private fun bind() {
-        if (sorterSharedView.lastOrder == Sort.SORT_ASC) {
-            ascSort.setBackgroundColor(resources.getColor(R.color.selected_type))
-        } else {
-            descSort.setBackgroundColor(resources.getColor(R.color.selected_type))
-        }
+    private fun toggleColor(pressedButton: View?, unPressedButton: View?) {
+        pressedButton?.setBackgroundColor(resources.getColor(R.color.selected_type))
+        unPressedButton?.setBackgroundColor(resources.getColor(R.color.slightly_gray))
+    }
+
+    private fun close(sort: Sort) {
+        sorterSharedView.setSort(sort)
+        dismiss()
     }
 
     companion object {

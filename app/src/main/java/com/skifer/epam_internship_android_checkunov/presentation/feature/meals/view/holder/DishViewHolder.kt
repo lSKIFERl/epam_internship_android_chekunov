@@ -49,6 +49,6 @@ class DishViewHolder(itemView: View, onItemModelListener: ViewHolderAdapter.onIt
      * @param v The view that was clicked.
      */
     override fun onClick(v: View?) {
-        this.onItemModelListener.onItemClick(mealModel)
+        mealModel?.let { this.onItemModelListener.onItemClick(it) }
     }
 }

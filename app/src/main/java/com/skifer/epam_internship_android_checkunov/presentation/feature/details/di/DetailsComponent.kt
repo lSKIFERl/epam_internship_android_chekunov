@@ -1,30 +1,22 @@
 package com.skifer.epam_internship_android_checkunov.presentation.feature.details.di
 
+import com.skifer.epam_internship_android_checkunov.di.AppComponent
 import com.skifer.epam_internship_android_checkunov.di.annotations.FragmentScope
-import com.skifer.epam_internship_android_checkunov.getAppComponent
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.view.MealDetailsFragment
-import dagger.Subcomponent
+import dagger.Component
 
-@Subcomponent(
-    modules = [DetailsModule::class]
+@FragmentScope
+@Component(
+    modules = [DetailsModule::class],
+    dependencies = [AppComponent::class]
 )
 interface DetailsComponent {
 
-    @FragmentScope
-    @Subcomponent.Factory
+    @Component.Factory
     interface Factory {
-        fun create(): DetailsComponent
+        fun create (appComponent: AppComponent): DetailsComponent
     }
 
     fun inject(mealDetailsFragment: MealDetailsFragment)
 
-    companion object {
-
-        lateinit var fragment: MealDetailsFragment
-
-        fun create(fragment: MealDetailsFragment): DetailsComponent {
-            this.fragment = fragment
-            return fragment.requireContext().getAppComponent().createDetailsComponent().create()
-        }
-    }
 }
