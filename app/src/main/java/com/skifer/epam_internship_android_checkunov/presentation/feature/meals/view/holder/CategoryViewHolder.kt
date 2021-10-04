@@ -14,7 +14,7 @@ import com.skifer.epam_internship_android_checkunov.presentation.model.CategoryM
  * @param itemView view of list item on the screen that was clicked
  * @param onItemListener Click listener for each list item
  */
-class TypeViewHolder(itemView: View, onItemListener: ViewHolderAdapter.onItemListener<CategoryModel>)
+class CategoryViewHolder(itemView: View, onItemListener: ViewHolderAdapter.onItemListener<CategoryModel>)
     : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
     /**Contained model*/

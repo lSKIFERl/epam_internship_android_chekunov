@@ -2,7 +2,10 @@ package com.skifer.epam_internship_android_checkunov.presentation.feature.meals.
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.skifer.epam_internship_android_checkunov.domain.usecase.*
+import com.skifer.epam_internship_android_checkunov.domain.usecase.GetCategoryListUseCase
+import com.skifer.epam_internship_android_checkunov.domain.usecase.GetLastCategoryIdUseCase
+import com.skifer.epam_internship_android_checkunov.domain.usecase.GetMealListUseCase
+import com.skifer.epam_internship_android_checkunov.domain.usecase.SetLastCategoryIdUseCase
 import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.viewmodel.MealListViewModel
 import dagger.Module
 import dagger.Provides
@@ -14,8 +17,6 @@ class MealsModule {
     fun provideMealListViewModelFactory(
         getMealListUseCase: GetMealListUseCase,
         getCategoryListUseCase: GetCategoryListUseCase,
-        setLastCategoryUseCase: SetLastCategoryUseCase,
-        getLastCategoryUseCase: GetLastCategoryUseCase,
         setLastCategoryIdUseCase: SetLastCategoryIdUseCase,
         getLastCategoryIdUseCase: GetLastCategoryIdUseCase
     ): MealListViewModel = object : ViewModelProvider.Factory {
@@ -24,8 +25,6 @@ class MealsModule {
             MealListViewModel(
                 getMealListUseCase,
                 getCategoryListUseCase,
-                setLastCategoryUseCase,
-                getLastCategoryUseCase,
                 setLastCategoryIdUseCase,
                 getLastCategoryIdUseCase
             ) as T

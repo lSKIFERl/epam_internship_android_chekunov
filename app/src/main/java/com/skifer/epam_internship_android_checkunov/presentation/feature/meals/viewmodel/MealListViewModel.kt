@@ -4,7 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.skifer.epam_internship_android_checkunov.domain.usecase.*
+import com.skifer.epam_internship_android_checkunov.domain.usecase.GetCategoryListUseCase
+import com.skifer.epam_internship_android_checkunov.domain.usecase.GetLastCategoryIdUseCase
+import com.skifer.epam_internship_android_checkunov.domain.usecase.GetMealListUseCase
+import com.skifer.epam_internship_android_checkunov.domain.usecase.SetLastCategoryIdUseCase
 import com.skifer.epam_internship_android_checkunov.presentation.feature.SingleLiveEvent
 import com.skifer.epam_internship_android_checkunov.presentation.mapper.toUi
 import com.skifer.epam_internship_android_checkunov.presentation.model.CategoryModel
@@ -16,8 +19,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 class MealListViewModel (
     private val getMealListUseCase: GetMealListUseCase,
     private val getCategoryListUseCase: GetCategoryListUseCase,
-    private val setLastCategory: SetLastCategoryUseCase,
-    private val getLastCategory: GetLastCategoryUseCase,
     private val setLastCategoryId: SetLastCategoryIdUseCase,
     private val getLastCategoryId: GetLastCategoryIdUseCase
     ): ViewModel() {
@@ -50,8 +51,8 @@ class MealListViewModel (
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
-                        mutableMealListModel.value = it.map {
-                            it.toUi()
+                        mutableMealListModel.value = it.map { entity ->
+                            entity.toUi()
                         }
                     },
                     { e ->
@@ -66,20 +67,18 @@ class MealListViewModel (
         )
     }
 
-    fun loadTypeList(lastCategory: String) {
+    private fun loadCategoryList(idCategory: Int) {
         disposable.add(
             getCategoryListUseCase()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
-                        mutableCategoryList.value = it.map {
-                            it.toUi()
+                        val categoryList = it.map { entity ->
+                            entity.toUi()
                         }
-                        if (lastCategory == "") {
-                            setCategory(it.first().toUi())
-                            setCategoryId(it.first().toUi().idCategory)
-                        }
+                        selectActive(categoryList, idCategory)
+                        mutableCategoryList.value = categoryList
                     },
                     { e ->
                         mutableError.value = e
@@ -91,34 +90,33 @@ class MealListViewModel (
                     }
                 )
         )
-        if (!lastCategory.equals("")) {
-            loadMealList(lastCategory)
-        }
     }
 
     private fun getCategory() {
         disposable.add(
-            getLastCategory()
+            getLastCategoryId()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
-                        loadTypeList(it)
+                        loadCategoryList(it.toInt())
                     },
                     {
-                        loadTypeList("")
+                        loadCategoryList(-1)
                     }
                 )
             )
-        getCategoryId()
     }
 
     fun setCategory(item: CategoryModel) {
         disposable.add(
-            setLastCategory(item.strCategory)
+            setLastCategoryId(item.idCategory)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({},
+                .subscribe(
+                    {
+                        loadCategoryList(item.idCategory.toInt())
+                    },
                     {
                         mutableError.value = it
                         Log.e(
@@ -129,40 +127,20 @@ class MealListViewModel (
                     }
                 )
         )
-        loadMealList(item.strCategory)
-        item.active = true
     }
 
-    private fun setCategoryId(id: Long) {
-        disposable.add(
-            setLastCategoryId(id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({},
-                    {
-                        mutableError.value = it
-                        Log.e(
-                            "Net",
-                            "Can't put category id in prefs",
-                            it
-                        )
-                    }
-                )
-        )
-    }
-
-    private fun getCategoryId() {
-        disposable.add(
-            getLastCategoryId()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    {
-                    },
-                    {
-                    }
-                )
-        )
+    private fun selectActive(categoryList: List<CategoryModel>, idCategory: Int) {
+        if (idCategory == -1) {
+            categoryList.first().active = true
+            setCategory(categoryList.first())
+        } else {
+            categoryList.forEach {
+                if (it.idCategory.toInt() == idCategory){
+                    it.active = true
+                    loadMealList(it.strCategory)
+                }
+            }
+        }
     }
 
     override fun onCleared() {

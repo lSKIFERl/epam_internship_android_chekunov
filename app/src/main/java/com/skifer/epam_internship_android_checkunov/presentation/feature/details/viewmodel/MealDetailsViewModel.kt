@@ -34,9 +34,9 @@ class MealDetailsViewModel(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                {
-                    if (it != null) {
-                        mutableMeal.value = it.toUi()
+                { entity ->
+                    if (entity != null) {
+                        mutableMeal.value = entity.toUi()
                     } else {
                         val error = MealsIsEmptyException("Loaded MealModel is empty")
                         mutableError.value = error

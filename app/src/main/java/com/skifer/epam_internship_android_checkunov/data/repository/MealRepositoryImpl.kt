@@ -17,8 +17,8 @@ class MealRepositoryImpl @Inject constructor(
     override fun loadMealDetails(id: Int): Single<MealEntity> =
         mealApi.getDetailsMeal(id)
             .flatMap {
-                it.listMealModel.firstOrNull()?.toEntity()?.let {
-                    Single.just(it)
+                it.listMealModel.firstOrNull()?.toEntity()?.let { entity ->
+                    Single.just(entity)
                 }?: Single.error(
                     MealsIsEmptyException(
                         App.instance.getString(R.string.error_empty_meal)

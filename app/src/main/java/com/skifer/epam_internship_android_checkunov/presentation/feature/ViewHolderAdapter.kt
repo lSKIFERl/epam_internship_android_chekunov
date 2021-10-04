@@ -10,8 +10,8 @@ import com.skifer.epam_internship_android_checkunov.domain.entity.MealEntity
 import com.skifer.epam_internship_android_checkunov.presentation.feature.ViewHolderAdapter.onItemListener
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.view.holder.FoodTypeHolder
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.view.holder.IngredientsViewHolder
-import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view.holder.DishViewHolder
-import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view.holder.TypeViewHolder
+import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view.holder.MealViewHolder
+import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view.holder.CategoryViewHolder
 import com.skifer.epam_internship_android_checkunov.presentation.model.CategoryModel
 import com.skifer.epam_internship_android_checkunov.presentation.model.IngredientModel
 import com.skifer.epam_internship_android_checkunov.presentation.model.MealListItemModel
@@ -39,14 +39,14 @@ class ViewHolderAdapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var holder: RecyclerView.ViewHolder? = null
         context = parent.context
         when(items.elementAtOrNull(0)) {
-            is MealListItemModel -> holder = DishViewHolder(
+            is MealListItemModel -> holder = MealViewHolder(
                     LayoutInflater.from(context).inflate(
                             R.layout.recyclerview_item,
                             parent,
                             false),
                     itemListener as onItemListener<MealListItemModel>
             )
-            is CategoryModel -> holder = TypeViewHolder(
+            is CategoryModel -> holder = CategoryViewHolder(
                     LayoutInflater.from(context).inflate(
                             R.layout.type_item,
                             parent,
@@ -87,14 +87,14 @@ class ViewHolderAdapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
      * Binds some holders with item
      *
      * holder can be one of the following:
-     * [DishViewHolder], [TypeViewHolder], [FoodTypeHolder], [IngredientsViewHolder]
+     * [MealViewHolder], [CategoryViewHolder], [FoodTypeHolder], [IngredientsViewHolder]
      * @param item item that can be connected to the specific Holder:
      * [MealEntity], [CategoryModel], [FoodType], [IngredientModel]
      */
     private fun <T> RecyclerView.ViewHolder.bind(item: T?) {
         when(this) {
-            is DishViewHolder -> (item as? MealListItemModel)?.let{ bind(it) }
-            is TypeViewHolder -> (item as? CategoryModel)?.let{ bind(it) }
+            is MealViewHolder -> (item as? MealListItemModel)?.let{ bind(it) }
+            is CategoryViewHolder -> (item as? CategoryModel)?.let{ bind(it) }
             is FoodTypeHolder -> (item as? String)?.let { bind(it) }
             is IngredientsViewHolder -> (item as? IngredientModel)?.let { bind(it) }
         }

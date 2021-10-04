@@ -8,7 +8,6 @@ import com.skifer.epam_internship_android_checkunov.data.preferences.CategorySha
 import com.skifer.epam_internship_android_checkunov.domain.entity.CategoryEntity
 import com.skifer.epam_internship_android_checkunov.domain.repository.CategoryRepository
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
@@ -25,25 +24,18 @@ class CategoryRepositoryImpl @Inject constructor(
             .flatMap {
                 if (it.isEmpty()) {
                     mealApi.getCategory()
-                        .map {
-                            it.toDBList()
+                        .map { listCategoryModel ->
+                            listCategoryModel.toDBList()
                         }
-                        .flatMap {
-                            database.getTypeModelDao().insert(it)
-                            Single.just(it)
+                        .flatMap { list ->
+                            database.getTypeModelDao().insert(list)
+                            Single.just(list)
                         }
                 } else Single.just(it)
             }
             .map {
                 it.fromDBListToEntity()
             }
-
-    override fun getLastCategory(): Observable<String> =
-        Observable.just(prefs.getLastCategoryName())
-
-    override fun setLastCategory(categoryName: String): Completable = Completable.fromAction {
-        prefs.setLastCategoryName(categoryName)
-    }
 
     override fun getLastCategoryId(): Single<Long> =
         Single.just(prefs.getLastCategoryId())

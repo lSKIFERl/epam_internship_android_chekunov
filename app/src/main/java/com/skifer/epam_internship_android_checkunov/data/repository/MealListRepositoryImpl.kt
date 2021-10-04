@@ -12,5 +12,5 @@ class MealListRepositoryImpl @Inject constructor(
 
     override fun loadMealList(category: String) =
         mealApi.getMealByCategory(category)
-            .map { it.listMealModel.map { it.toEntity() } }
+            .map { it.listMealModel.map { modelDto -> modelDto.toEntity() } }
 }
