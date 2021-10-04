@@ -34,11 +34,11 @@ class SharedSettingsViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    Log.i("Prefs", "Got $it from prefs")
+                    Log.i(TAG, SUCCESS_LOAD + it)
                     mutableSort.value = it
                 },
                 {
-                    Log.e("Prefs", "Can't load prefs", it)
+                    Log.e(TAG, ERROR_LOAD, it)
                     mutableSort.value = Sort.SORT_ASC
                 }
             )
@@ -62,5 +62,11 @@ class SharedSettingsViewModel(
     override fun onCleared() {
         super.onCleared()
         disposable?.dispose()
+    }
+
+    companion object {
+        private const val TAG = "Net"
+        private const val ERROR_LOAD = "Can't load category in prefs"
+        private const val SUCCESS_LOAD = "Got from prefs: "
     }
 }

@@ -43,11 +43,11 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         component.inject(this)
-        initTypeListView()
+        initCategoryListView()
         initMealListView()
         initActionBar(view)
 
-        observeTypes()
+        observeCategories()
         observeMeals()
 
     }
@@ -63,7 +63,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
         }
     }
 
-    private fun initTypeListView() {
+    private fun initCategoryListView() {
         categoryListAdapter.setItemListener(object :
             ViewHolderAdapter.OnItemListener<CategoryModel> {
             override fun onItemClick(item: CategoryModel) {
@@ -91,11 +91,11 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
             .adapter = mealListAdapterModel
     }
 
-    private fun observeTypes() {
+    private fun observeCategories() {
         viewModel.errorLiveData.observe(viewLifecycleOwner) {
             Toast.makeText(
                 context,
-                getString(R.string.error_cant_load_types),
+                getString(R.string.error_cant_load_categories),
                 Toast.LENGTH_LONG
             ).show()
         }

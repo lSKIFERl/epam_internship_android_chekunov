@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.skifer.epam_internship_android_checkunov.App
+import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.domain.usecase.GetCategoryListUseCase
 import com.skifer.epam_internship_android_checkunov.domain.usecase.GetLastCategoryIdUseCase
 import com.skifer.epam_internship_android_checkunov.domain.usecase.GetMealListUseCase
@@ -58,8 +60,8 @@ class MealListViewModel (
                     { e ->
                         mutableError.value = e
                         Log.e(
-                            "Net",
-                            "Error: can't load dish list",
+                            TAG,
+                            ERROR_MEAL_LIST,
                             e
                         )
                     }
@@ -83,8 +85,8 @@ class MealListViewModel (
                     { e ->
                         mutableError.value = e
                         Log.e(
-                            "Net",
-                            "Can't load types",
+                            TAG,
+                            ERROR_CATEGORY_LIST,
                             e
                         )
                     }
@@ -120,8 +122,8 @@ class MealListViewModel (
                     {
                         mutableError.value = it
                         Log.e(
-                            "Net",
-                            "Can't put category in prefs",
+                            TAG,
+                            ERROR_PREFS,
                             it
                         )
                     }
@@ -146,5 +148,14 @@ class MealListViewModel (
     override fun onCleared() {
         disposable.dispose()
         super.onCleared()
+    }
+
+    companion object {
+        private const val TAG = "Net"
+        private const val ERROR_PREFS = "Can't put category in prefs"
+        private var ERROR_MEAL_LIST =
+            App.instance.applicationContext.getString(R.string.error_cant_load_meal_list)
+        private var ERROR_CATEGORY_LIST =
+            App.instance.applicationContext.getString(R.string.error_cant_load_categories)
     }
 }

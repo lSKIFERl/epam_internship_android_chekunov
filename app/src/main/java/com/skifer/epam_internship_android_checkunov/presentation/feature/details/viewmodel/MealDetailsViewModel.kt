@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.skifer.epam_internship_android_checkunov.App
+import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.data.network.exception.MealsIsEmptyException
 import com.skifer.epam_internship_android_checkunov.domain.usecase.GetMealUseCase
 import com.skifer.epam_internship_android_checkunov.presentation.feature.SingleLiveEvent
@@ -41,8 +43,8 @@ class MealDetailsViewModel(
                         val error = MealsIsEmptyException("Loaded MealModel is empty")
                         mutableError.value = error
                         Log.e(
-                            "Net",
-                            "Error: Can't load meal model",
+                            TAG,
+                            ERROR,
                             error
                         )
                     }
@@ -50,8 +52,8 @@ class MealDetailsViewModel(
                 { e ->
                     mutableError.value = e
                     Log.e(
-                        "Net",
-                        "Error: Can't load meal model",
+                        TAG,
+                        ERROR,
                         e
                     )
                 }
@@ -61,5 +63,11 @@ class MealDetailsViewModel(
     override fun onCleared() {
         disposable?.dispose()
         super.onCleared()
+    }
+
+    companion object {
+        private const val TAG = "Net"
+        private var ERROR =
+            App.instance.applicationContext.getString(R.string.error_cant_load_meal)
     }
 }

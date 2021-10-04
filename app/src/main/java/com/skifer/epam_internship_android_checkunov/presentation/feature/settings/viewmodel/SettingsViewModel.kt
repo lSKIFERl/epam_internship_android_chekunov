@@ -36,10 +36,10 @@ class SettingsViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    Log.i("Prefs", "Saved $order in prefs")
+                    Log.i(TAG, SUCCESS_PUT + order)
                 },
                 {
-                    Log.e("Prefs", "Can't put $order in prefs", it)
+                    Log.e(TAG, ERROR_PUT, it)
                 }
             )
         )
@@ -51,11 +51,11 @@ class SettingsViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    Log.i("Prefs", "Got $it from prefs")
+                    Log.i(TAG, SUCCESS_LOAD + it)
                     mutableSort.value = it
                 },
                 {
-                    Log.e("Prefs", "Can't load prefs", it)
+                    Log.e(TAG, ERROR_LOAD, it)
                     mutableSort.value = Sort.SORT_ASC
                 }
             )
@@ -75,5 +75,13 @@ class SettingsViewModel(
     override fun onCleared() {
         disposable.dispose()
         super.onCleared()
+    }
+
+    companion object {
+        private const val TAG = "Net"
+        private const val ERROR_LOAD = "Can't load category in prefs"
+        private const val ERROR_PUT = "Can't put category in prefs"
+        private const val SUCCESS_PUT = "Saved in prefs: "
+        private const val SUCCESS_LOAD = "Got from prefs: "
     }
 }

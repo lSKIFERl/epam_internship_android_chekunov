@@ -10,10 +10,11 @@ class CategorySharedPreferencesSource @Inject constructor(private val prefs: Sha
     }
 
     fun getLastCategoryId(): Long {
-        return prefs.getLong(LAST_CATEGORY_ID, 0)
+        return prefs.getLong(LAST_CATEGORY_ID, DEFAULT_ID)
     }
 
     companion object {
         const val LAST_CATEGORY_ID = "LAST_CATEGORY_ID"
+        private const val DEFAULT_ID = 0L
     }
 }

@@ -27,8 +27,9 @@
     <string name="error_empty_meal">There is nothing to see here</string>
     <string name="error_wrong_id">Wrong id of dish</string>
     <string name="error_cant_load_meal">Error: Can\'t load meal model</string>
-    <string name="error_cant_load_types">Error: Can\'t load types</string>
-    <string name="error_cant_load_meal_list">Error: Can\'t load dish list</string>
+    <string name="error_cant_load_categories">Error: Can\'t load categories</string>
+    <string name="error_cant_load_meal_list">Error: Can\'t load meal list</string>
     <string name="empty">Unknown</string>
     <string name="empty_instructions">No instructions</string>
+    <string name="ingredient">%s - %s</string>
 </resources>

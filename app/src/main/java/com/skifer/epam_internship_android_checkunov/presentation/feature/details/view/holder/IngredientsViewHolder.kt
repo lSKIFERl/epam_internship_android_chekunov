@@ -21,6 +21,9 @@ class IngredientsViewHolder(itemView: View)
      */
     fun bind(ingredientModel: IngredientModel) {
         itemView.findViewById<TextView>(R.id.ingredient_item).text =
-            StringBuilder("${ingredientModel.name} - ${ingredientModel.measure}")
+            String.format(itemView.context.getString(R.string.ingredient),
+                ingredientModel.name,
+                ingredientModel.measure
+            )
     }
 }
