@@ -10,7 +10,6 @@ import com.skifer.epam_internship_android_checkunov.domain.repository.CategoryRe
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 class CategoryRepositoryImpl @Inject constructor(
@@ -23,8 +22,6 @@ class CategoryRepositoryImpl @Inject constructor(
         database
             .getTypeModelDao()
             .getAll()
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.computation())
             .flatMap {
                 if (it.isEmpty()) {
                     mealApi.getCategory()

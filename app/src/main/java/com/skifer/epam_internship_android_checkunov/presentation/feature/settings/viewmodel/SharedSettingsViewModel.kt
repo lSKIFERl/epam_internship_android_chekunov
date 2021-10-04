@@ -3,7 +3,7 @@ package com.skifer.epam_internship_android_checkunov.presentation.feature.settin
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.skifer.epam_internship_android_checkunov.data.preferences.Sort
+import com.skifer.epam_internship_android_checkunov.domain.entity.Sort
 import com.skifer.epam_internship_android_checkunov.domain.usecase.GetSortUseCase
 import com.skifer.epam_internship_android_checkunov.presentation.model.MealListItemModel
 
@@ -15,6 +15,8 @@ class SharedSettingsViewModel(
 
     val sortBy: LiveData<Sort>
         get() = mutableSort
+
+    var lastOrder = Sort.SORT_ASC
 
     init {
         getOrder()
@@ -32,6 +34,10 @@ class SharedSettingsViewModel(
         }
 
     fun setSort(sort: Sort) {
-        mutableSort.value = sort
+        lastOrder = sort
+    }
+
+    fun apply() {
+        mutableSort.value = lastOrder
     }
 }

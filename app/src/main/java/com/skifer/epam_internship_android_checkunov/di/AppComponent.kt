@@ -5,6 +5,7 @@ import com.skifer.epam_internship_android_checkunov.di.modules.*
 import com.skifer.epam_internship_android_checkunov.domain.repository.CategoryRepository
 import com.skifer.epam_internship_android_checkunov.domain.repository.MealListRepository
 import com.skifer.epam_internship_android_checkunov.domain.repository.MealRepository
+import com.skifer.epam_internship_android_checkunov.domain.repository.SortingRepository
 import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.viewmodel.SharedSettingsViewModel
 import dagger.BindsInstance
 import dagger.Component
@@ -37,5 +38,7 @@ interface AppComponent {
     fun provideMealModelRepository(): MealRepository
 
     fun provideTypeModelRepository(): CategoryRepository
+
+    fun provideSortingRepository(): SortingRepository
 
 }

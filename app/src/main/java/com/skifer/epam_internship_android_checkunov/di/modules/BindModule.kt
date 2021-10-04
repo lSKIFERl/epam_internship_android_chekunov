@@ -3,9 +3,11 @@ package com.skifer.epam_internship_android_checkunov.di.modules
 import com.skifer.epam_internship_android_checkunov.data.repository.CategoryRepositoryImpl
 import com.skifer.epam_internship_android_checkunov.data.repository.MealListRepositoryImpl
 import com.skifer.epam_internship_android_checkunov.data.repository.MealRepositoryImpl
+import com.skifer.epam_internship_android_checkunov.data.repository.SortingRepositoryImpl
+import com.skifer.epam_internship_android_checkunov.domain.repository.CategoryRepository
 import com.skifer.epam_internship_android_checkunov.domain.repository.MealListRepository
 import com.skifer.epam_internship_android_checkunov.domain.repository.MealRepository
-import com.skifer.epam_internship_android_checkunov.domain.repository.CategoryRepository
+import com.skifer.epam_internship_android_checkunov.domain.repository.SortingRepository
 import dagger.Binds
 import dagger.Module
 import javax.inject.Singleton
@@ -30,4 +32,10 @@ interface BindModule {
     fun provideTypeRepository(
         repository: CategoryRepositoryImpl
     ): CategoryRepository
+
+    @Binds
+    @Singleton
+    fun provideSortingRepository(
+        repository: SortingRepositoryImpl
+    ): SortingRepository
 }

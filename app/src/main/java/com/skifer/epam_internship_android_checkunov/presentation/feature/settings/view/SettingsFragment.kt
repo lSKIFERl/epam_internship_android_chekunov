@@ -10,7 +10,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
-import com.skifer.epam_internship_android_checkunov.data.preferences.Sort
 import com.skifer.epam_internship_android_checkunov.di.ComponentProvider
 import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.di.DaggerSettingsComponent
 import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.di.SettingsComponent
@@ -43,6 +42,7 @@ class SettingsFragment : BottomSheetDialogFragment(), ComponentProvider<Settings
         super.onViewCreated(view, savedInstanceState)
         component.inject(this)
         initView()
+        observeOrder()
         val mBehavior = BottomSheetBehavior.from(this.view?.parent as View)
         mBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
@@ -53,34 +53,30 @@ class SettingsFragment : BottomSheetDialogFragment(), ComponentProvider<Settings
 
         var descSort: Button? = null
 
-        var order = Sort.SORT_ASC
-
         view?.let {
             ascSort = it.findViewById(R.id.ASCSort)
             descSort = it.findViewById(R.id.DESCSort)
             it.findViewById<Button>(R.id.confirm).setOnClickListener {
                 viewModel.apply()
-                close(order)
+                sorterSharedView.apply()
+                dismiss()
             }
             it.findViewById<Toolbar>(R.id.toolbar_settings).setNavigationOnClickListener {
                 dismiss()
             }
         }
 
-        viewModel.sortBy.observe(viewLifecycleOwner) {
-            order = it
-            if (order == Sort.SORT_ASC)
-                toggleColor(ascSort, descSort) else toggleColor(descSort, ascSort)
-        }
+        if (viewModel.isSortAsc())
+            toggleColor(ascSort, descSort) else toggleColor(descSort, ascSort)
 
         ascSort?.setOnClickListener {
             toggleColor(it, descSort)
-            viewModel.setSortOrder(Sort.SORT_ASC)
+            viewModel.setAsc()
         }
 
         descSort?.setOnClickListener {
             toggleColor(it, ascSort)
-            viewModel.setSortOrder(Sort.SORT_DESC)
+            viewModel.setDesc()
         }
     }
 
@@ -89,15 +85,16 @@ class SettingsFragment : BottomSheetDialogFragment(), ComponentProvider<Settings
         unPressedButton?.setBackgroundColor(resources.getColor(R.color.slightly_gray))
     }
 
-    private fun close(sort: Sort) {
-        sorterSharedView.setSort(sort)
-        dismiss()
+    private fun observeOrder() {
+        viewModel.sortBy.observe(viewLifecycleOwner) {
+            sorterSharedView.setSort(it)
+        }
     }
 
     companion object {
 
         /**
-         * Should be called instead instead of just instantiating the class
+         * Should be called instead of just instantiating the class
          */
         fun newInstance() = SettingsFragment().apply {
             //arguments = bundleOf(PREVIOUS_SETTINGS to ...) then get arguments somewhere

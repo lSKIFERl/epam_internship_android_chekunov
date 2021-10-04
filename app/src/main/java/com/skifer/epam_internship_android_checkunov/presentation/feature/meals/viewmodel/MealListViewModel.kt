@@ -46,6 +46,7 @@ class MealListViewModel (
     private fun loadMealList(lastCategory: String) {
         disposable.add(
             getMealListUseCase(lastCategory)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
@@ -68,6 +69,7 @@ class MealListViewModel (
     fun loadTypeList(lastCategory: String) {
         disposable.add(
             getCategoryListUseCase()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {

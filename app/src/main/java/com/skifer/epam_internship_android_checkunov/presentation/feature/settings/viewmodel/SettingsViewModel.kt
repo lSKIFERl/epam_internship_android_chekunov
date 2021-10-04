@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.skifer.epam_internship_android_checkunov.data.preferences.Sort
+import com.skifer.epam_internship_android_checkunov.domain.entity.Sort
 import com.skifer.epam_internship_android_checkunov.domain.usecase.GetSortUseCase
 import com.skifer.epam_internship_android_checkunov.domain.usecase.SetSortUseCase
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -29,7 +29,7 @@ class SettingsViewModel (
         getSortOrder()
     }
 
-    fun setSortOrder(order: Sort) {
+    private fun setSortOrder(order: Sort) {
         lastOrder = order
         disposable.add(setSort(order)
             .subscribeOn(Schedulers.io())
@@ -61,16 +61,20 @@ class SettingsViewModel (
                     }
                 )
         )*/
-        mutableSort.value = getSort()
+        lastOrder = getSort()
     }
 
+    fun isSortAsc() = lastOrder == Sort.SORT_ASC
+
+    fun setAsc() = setSortOrder(Sort.SORT_ASC)
+
+    fun setDesc() = setSortOrder(Sort.SORT_DESC)
 
     fun apply() {
         mutableSort.value = lastOrder
     }
 
     override fun onCleared() {
-        mutableSort.value = lastOrder
         disposable.dispose()
         super.onCleared()
     }

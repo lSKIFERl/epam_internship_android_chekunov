@@ -30,7 +30,7 @@ class MealDetailsViewModel(
     private var disposable: Disposable? = null
 
     fun loadData(id: Int) {
-        disposable = useCaseGet.invoke(id)
+        disposable = useCaseGet(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
