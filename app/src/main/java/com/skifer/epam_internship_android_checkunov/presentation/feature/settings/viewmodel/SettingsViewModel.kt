@@ -11,10 +11,10 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class SettingsViewModel (
+class SettingsViewModel(
     private val setSort: SetSortUseCase,
     private val getSort: GetSortUseCase
-): ViewModel() {
+) : ViewModel() {
 
     private val mutableSort = MutableLiveData<Sort>()
 
@@ -46,25 +46,23 @@ class SettingsViewModel (
     }
 
     private fun getSortOrder() {
-        /*disposable.add(
-            getSort()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    {
-                        Log.i("Prefs", "Got $it from prefs")
-                        lastOrder = it
-                    },
-                    {
-                        Log.e("Prefs", "Can't load prefs", it)
-                        lastOrder = Sort.SORT_ASC
-                    }
-                )
-        )*/
-        lastOrder = getSort()
+        disposable.add(getSort()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    Log.i("Prefs", "Got $it from prefs")
+                    mutableSort.value = it
+                },
+                {
+                    Log.e("Prefs", "Can't load prefs", it)
+                    mutableSort.value = Sort.SORT_ASC
+                }
+            )
+        )
     }
 
-    fun isSortAsc() = lastOrder == Sort.SORT_ASC
+    fun isSortAsc() = mutableSort.value == Sort.SORT_ASC
 
     fun setAsc() = setSortOrder(Sort.SORT_ASC)
 

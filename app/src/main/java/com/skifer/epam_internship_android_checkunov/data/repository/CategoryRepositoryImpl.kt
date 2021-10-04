@@ -17,7 +17,7 @@ class CategoryRepositoryImpl @Inject constructor(
     private val prefs: CategorySharedPreferencesSource
 ) : CategoryRepository {
 
-    override fun loadCategoryList(): Single<List<CategoryEntity>> =
+    override fun getCategoryList(): Single<List<CategoryEntity>> =
         database
             .getTypeModelDao()
             .getAll()

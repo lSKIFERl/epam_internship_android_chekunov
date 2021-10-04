@@ -1,20 +1,26 @@
 package com.skifer.epam_internship_android_checkunov.presentation.feature.settings.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.skifer.epam_internship_android_checkunov.domain.entity.Sort
 import com.skifer.epam_internship_android_checkunov.domain.usecase.GetSortUseCase
 import com.skifer.epam_internship_android_checkunov.presentation.model.MealListItemModel
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class SharedSettingsViewModel(
     private val getSort: GetSortUseCase
-): ViewModel() {
+) : ViewModel() {
 
     private val mutableSort = MutableLiveData<Sort>()
 
     val sortBy: LiveData<Sort>
         get() = mutableSort
+
+    private var disposable: Disposable? = null
 
     private var lastOrder = Sort.SORT_ASC
 
@@ -23,7 +29,19 @@ class SharedSettingsViewModel(
     }
 
     private fun getOrder() {
-        mutableSort.value = getSort()
+        disposable = getSort()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    Log.i("Prefs", "Got $it from prefs")
+                    mutableSort.value = it
+                },
+                {
+                    Log.e("Prefs", "Can't load prefs", it)
+                    mutableSort.value = Sort.SORT_ASC
+                }
+            )
     }
 
     fun sort(listModel: List<MealListItemModel>?) =
@@ -39,5 +57,10 @@ class SharedSettingsViewModel(
 
     fun apply() {
         mutableSort.value = lastOrder
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        disposable?.dispose()
     }
 }

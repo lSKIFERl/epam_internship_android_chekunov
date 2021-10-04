@@ -6,5 +6,5 @@ import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class GetMealListUseCase @Inject constructor(private val repository: MealListRepository) {
-    operator fun invoke(category: String): Single<List<MealListItemEntity>> = repository.loadMealList(category)
+    operator fun invoke(category: String): Single<List<MealListItemEntity>> = repository.getMealList(category)
 }

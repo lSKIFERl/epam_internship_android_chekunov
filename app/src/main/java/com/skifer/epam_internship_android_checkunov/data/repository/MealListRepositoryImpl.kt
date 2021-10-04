@@ -12,7 +12,7 @@ class MealListRepositoryImpl @Inject constructor(
     private val mealApi: MealApi
 ) : MealListRepository {
 
-    override fun loadMealList(category: String): Single<List<MealListItemEntity>> =
+    override fun getMealList(category: String): Single<List<MealListItemEntity>> =
         mealApi.getMealByCategory(category)
             .map { it.listMealModel.map { modelDto -> modelDto.toEntity() } }
 }

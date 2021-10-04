@@ -6,5 +6,5 @@ import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class GetMealUseCase @Inject constructor(private val repository: MealRepository) {
-    operator fun invoke(id: Int): Single<MealEntity> = repository.loadMealDetails(id)
+    operator fun invoke(id: Int): Single<MealEntity> = repository.getMeal(id)
 }

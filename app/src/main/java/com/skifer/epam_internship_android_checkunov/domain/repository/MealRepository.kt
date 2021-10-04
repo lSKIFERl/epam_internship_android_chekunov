@@ -4,5 +4,5 @@ import com.skifer.epam_internship_android_checkunov.domain.entity.MealEntity
 import io.reactivex.rxjava3.core.Single
 
 interface MealRepository {
-    fun loadMealDetails(id: Int): Single<MealEntity>
+    fun getMeal(id: Int): Single<MealEntity>
 }

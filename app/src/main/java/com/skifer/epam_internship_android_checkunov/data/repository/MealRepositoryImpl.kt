@@ -14,7 +14,7 @@ class MealRepositoryImpl @Inject constructor(
     private val mealApi: MealApi
 ): MealRepository {
 
-    override fun loadMealDetails(id: Int): Single<MealEntity> =
+    override fun getMeal(id: Int): Single<MealEntity> =
         mealApi.getDetailsMeal(id)
             .flatMap {
                 it.listMealModel.firstOrNull()?.toEntity()?.let { entity ->

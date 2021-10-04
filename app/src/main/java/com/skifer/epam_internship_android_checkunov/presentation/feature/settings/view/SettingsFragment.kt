@@ -42,7 +42,6 @@ class SettingsFragment : BottomSheetDialogFragment(), ComponentProvider<Settings
         super.onViewCreated(view, savedInstanceState)
         component.inject(this)
         initView()
-        observeOrder()
         val mBehavior = BottomSheetBehavior.from(this.view?.parent as View)
         mBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
@@ -66,8 +65,11 @@ class SettingsFragment : BottomSheetDialogFragment(), ComponentProvider<Settings
             }
         }
 
-        if (viewModel.isSortAsc())
-            toggleColor(ascSort, descSort) else toggleColor(descSort, ascSort)
+        viewModel.sortBy.observe(viewLifecycleOwner){
+            if (viewModel.isSortAsc())
+                toggleColor(ascSort, descSort) else toggleColor(descSort, ascSort)
+            sorterSharedView.setSort(it)
+        }
 
         ascSort?.setOnClickListener {
             toggleColor(it, descSort)
@@ -83,12 +85,6 @@ class SettingsFragment : BottomSheetDialogFragment(), ComponentProvider<Settings
     private fun toggleColor(pressedButton: View?, unPressedButton: View?) {
         pressedButton?.setBackgroundColor(resources.getColor(R.color.selected_type))
         unPressedButton?.setBackgroundColor(resources.getColor(R.color.slightly_gray))
-    }
-
-    private fun observeOrder() {
-        viewModel.sortBy.observe(viewLifecycleOwner) {
-            sorterSharedView.setSort(it)
-        }
     }
 
     companion object {
