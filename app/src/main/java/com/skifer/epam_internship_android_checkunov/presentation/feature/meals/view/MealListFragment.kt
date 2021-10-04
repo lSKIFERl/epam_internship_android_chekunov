@@ -70,7 +70,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
                 viewModel.setCategory(item)
             }
         })
-        requireView().findViewById<RecyclerView>(R.id.typesListView)
+        requireView().findViewById<RecyclerView>(R.id.categoriesListView)
             .adapter = categoryListAdapter
     }
 

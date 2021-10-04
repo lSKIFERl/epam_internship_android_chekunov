@@ -41,14 +41,14 @@ class ViewHolderAdapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         when(items.elementAtOrNull(0)) {
             is MealListItemModel -> holder = MealViewHolder(
                     LayoutInflater.from(context).inflate(
-                            R.layout.recyclerview_item,
+                            R.layout.item_meal,
                             parent,
                             false),
                     itemListener as OnItemListener<MealListItemModel>
             )
             is CategoryModel -> holder = CategoryViewHolder(
                     LayoutInflater.from(context).inflate(
-                            R.layout.type_item,
+                            R.layout.item_categories,
                             parent,
                             false),
                     itemListener as OnItemListener<CategoryModel>
@@ -62,7 +62,7 @@ class ViewHolderAdapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             )
             is IngredientModel -> holder = IngredientsViewHolder (
                 LayoutInflater.from(parent.context).inflate(
-                    R.layout.ingredient_item,
+                    R.layout.item_ingredient,
                     parent,
                     false
                 )

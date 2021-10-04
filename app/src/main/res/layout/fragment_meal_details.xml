@@ -27,7 +27,7 @@
             android:scaleType="centerCrop" />
 
         <include
-                layout="@layout/meal_details_bottom_sheet"
+                layout="@layout/fragment_bottom_sheet_meal_details"
             />
 
 

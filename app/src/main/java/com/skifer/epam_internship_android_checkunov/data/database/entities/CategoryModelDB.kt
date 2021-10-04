@@ -7,10 +7,10 @@ import androidx.room.PrimaryKey
 @Entity
 data class CategoryModelDB(
     @PrimaryKey
-    @ColumnInfo(name = "idCategory")
+    @ColumnInfo(name = "ID_CATEGORY")
     val idCategory: Long,
-    @ColumnInfo(name = "strCategory")
+    @ColumnInfo(name = "STR_CATEGORY_NAME")
     val strCategory: String,
-    @ColumnInfo(name = "strCategoryThumb")
+    @ColumnInfo(name = "STR_CATEGORY_THUMB")
     val strCategoryThumb: String
 )

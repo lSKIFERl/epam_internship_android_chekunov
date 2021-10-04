@@ -5,11 +5,10 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/dishImage"
+        android:id="@+id/mealImage"
         android:layout_width="@dimen/item_image_width"
         android:layout_height="@dimen/item_height"
         android:layout_marginStart="@dimen/detail_margin"
-        android:layout_marginLeft="@dimen/detail_margin"
         android:layout_marginTop="@dimen/detail_margin"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"

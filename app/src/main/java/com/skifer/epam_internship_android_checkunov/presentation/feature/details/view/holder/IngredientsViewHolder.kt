@@ -20,7 +20,7 @@ class IngredientsViewHolder(itemView: View)
      * @param ingredientModel Model bound to this holder
      */
     fun bind(ingredientModel: IngredientModel) {
-        itemView.findViewById<TextView>(R.id.ingredient_item).text =
+        itemView.findViewById<TextView>(R.id.item_ingredient).text =
             String.format(itemView.context.getString(R.string.ingredient),
                 ingredientModel.name,
                 ingredientModel.measure

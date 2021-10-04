@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
     app:behavior_hideable="false"
     app:behavior_peekHeight="@dimen/detail_image_height"
+    app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="@dimen/corners_radius"
     app:cardPreventCornerOverlap="false"
-    app:cardBackgroundColor="@color/white">
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,9 +23,9 @@
             android:layout_height="@dimen/pick_stick_height"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/type_image_margin"
-            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/pick_stick"
             app:cardCornerRadius="@dimen/corner_radius_small"
-            app:cardBackgroundColor="@color/pick_stick" />
+            app:cardElevation="0dp" />
 
         <TextView
             android:id="@+id/Cuisine"
@@ -35,8 +34,8 @@
             android:layout_marginTop="@dimen/detail_margin"
             android:fontFamily="@font/roboto"
             android:text="@string/cuisine"
-            android:textSize="@dimen/medium_font_size"
-            android:textAllCaps="true" />
+            android:textAllCaps="true"
+            android:textSize="@dimen/medium_font_size" />
 
         <TextView
             android:id="@+id/detailTitle"
@@ -49,14 +48,13 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tag"
-            android:layout_marginTop="@dimen/details_marin_top_small"
-            android:layout_marginBottom="@dimen/details_margin_bottom"
             android:layout_width="match_parent"
             android:layout_height="@dimen/details_types_list_height"
-            tools:listitem="@layout/item_tag"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_marginTop="@dimen/details_marin_top_small"
+            android:layout_marginBottom="@dimen/details_margin_bottom"
             android:orientation="horizontal"
-            />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_tag" />
 
         <View
             android:layout_width="match_parent"
@@ -65,12 +63,13 @@
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:isScrollContainer="true">
+            android:layout_height="wrap_content"
+            android:isScrollContainer="true"
+            android:overScrollMode="ifContentScrolls">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <TextView
@@ -88,9 +87,7 @@
                     android:layout_marginTop="@dimen/detail_margin"
                     android:orientation="vertical"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/ingredient_item">
-
-                </androidx.recyclerview.widget.RecyclerView>
+                    tools:listitem="@layout/item_ingredient" />
 
                 <TextView
                     android:id="@+id/instructions"

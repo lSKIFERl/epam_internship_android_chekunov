@@ -16,6 +16,6 @@ abstract class MealsModelsDataBase: RoomDatabase() {
 
     companion object {
         const val NAME = "MODELS_DATA_BASE"
-        const val VER = 2
+        const val VER = 3
     }
 }

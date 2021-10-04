@@ -25,13 +25,14 @@
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/typesListView"
+        android:id="@+id/categoriesListView"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_marginStart="@dimen/detail_types_list_margin_left"
-        android:layout_marginTop="@dimen/detail_margin_top"         tools:listitem="@layout/type_item" />
+        android:layout_marginTop="@dimen/detail_margin_top"
+        tools:listitem="@layout/item_categories" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/dishListView"
@@ -40,6 +41,6 @@
         android:layout_marginTop="@dimen/detail_margin_top"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/recyclerview_item" />
+        tools:listitem="@layout/item_meal" />
 
 </LinearLayout>

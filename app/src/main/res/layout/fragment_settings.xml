@@ -34,7 +34,7 @@
         android:text="@string/settingsLabel2"
         android:textSize="@dimen/medium_font_size" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/constraintLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,9 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sortItems1"
-            android:textAllCaps="false"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textAllCaps="false" />
 
         <Button
             android:id="@+id/DESCSort"
@@ -56,10 +54,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:text="@string/sortItems2"
-            android:textAllCaps="false"
-            app:layout_constraintStart_toEndOf="@+id/ASCSort"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:textAllCaps="false" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/confirm"

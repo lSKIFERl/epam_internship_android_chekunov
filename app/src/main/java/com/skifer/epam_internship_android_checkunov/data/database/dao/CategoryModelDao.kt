@@ -11,7 +11,7 @@ interface CategoryModelDao {
     @Query("SELECT * FROM CategoryModelDB")
     fun getAll(): Single<List<CategoryModelDB>>
 
-    @Query("SELECT * FROM CategoryModelDB WHERE idCategory = :id")
+    @Query("SELECT * FROM CategoryModelDB WHERE ID_CATEGORY = :id")
     fun getById(id: Long): Single<CategoryModelDB>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

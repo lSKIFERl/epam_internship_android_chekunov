@@ -39,7 +39,7 @@ class MealViewHolder(
         Glide
             .with(itemView)
             .load(mealModel.strMealThumb)
-            .into(itemView.findViewById(R.id.dishImage))
+            .into(itemView.findViewById(R.id.mealImage))
     }
 
     /**
