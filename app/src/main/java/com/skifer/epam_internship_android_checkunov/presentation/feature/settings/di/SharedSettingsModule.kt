@@ -1,4 +1,4 @@
-package com.skifer.epam_internship_android_checkunov.di.modules
+package com.skifer.epam_internship_android_checkunov.presentation.feature.settings.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

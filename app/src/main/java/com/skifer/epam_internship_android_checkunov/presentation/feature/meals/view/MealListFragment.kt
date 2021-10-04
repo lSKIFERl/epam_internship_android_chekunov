@@ -28,7 +28,6 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
 
     private val categoryListAdapter: ViewHolderAdapter<CategoryModel> = ViewHolderAdapter()
 
-    /**[dishListView] custom adapter*/
     private val mealListAdapterModel: ViewHolderAdapter<MealListItemModel> = ViewHolderAdapter()
 
     @Inject
@@ -66,7 +65,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
 
     private fun initTypeListView() {
         categoryListAdapter.setItemListener(object :
-            ViewHolderAdapter.onItemListener<CategoryModel> {
+            ViewHolderAdapter.OnItemListener<CategoryModel> {
             override fun onItemClick(item: CategoryModel) {
                 viewModel.setCategory(item)
             }
@@ -80,7 +79,7 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
      */
     private fun initMealListView() {
         mealListAdapterModel.setItemListener(object :
-            ViewHolderAdapter.onItemListener<MealListItemModel> {
+            ViewHolderAdapter.OnItemListener<MealListItemModel> {
             override fun onItemClick(item: MealListItemModel) {
                 findNavController().navigate(
                     R.id.mealDetailsFragment,

@@ -11,7 +11,7 @@ import com.skifer.epam_internship_android_checkunov.R
  */
 class HostActivity: AppCompatActivity(){
 
-    lateinit var navController: NavController
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

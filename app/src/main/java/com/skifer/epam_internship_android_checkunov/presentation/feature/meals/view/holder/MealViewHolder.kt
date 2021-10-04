@@ -16,17 +16,16 @@ import com.skifer.epam_internship_android_checkunov.presentation.model.MealListI
  * @param itemView view of list item on the screen that was clicked
  * @param onItemModelListener Click listener for each list item
  */
-class MealViewHolder(itemView: View, onItemModelListener: ViewHolderAdapter.onItemListener<MealListItemModel>)
+class MealViewHolder(
+    itemView: View,
+    private val onItemModelListener: ViewHolderAdapter.OnItemListener<MealListItemModel>
+)
     : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
     /**model of containment dish*/
-    var mealModel: MealListItemModel? = null
-
-    /**click listener*/
-    val onItemModelListener: ViewHolderAdapter.onItemListener<MealListItemModel>
+    private var mealModel: MealListItemModel? = null
 
     init {
-        this.onItemModelListener = onItemModelListener
         itemView.setOnClickListener(this)
     }
 

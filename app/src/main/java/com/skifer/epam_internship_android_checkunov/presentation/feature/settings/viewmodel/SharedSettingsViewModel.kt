@@ -16,7 +16,7 @@ class SharedSettingsViewModel(
     val sortBy: LiveData<Sort>
         get() = mutableSort
 
-    var lastOrder = Sort.SORT_ASC
+    private var lastOrder = Sort.SORT_ASC
 
     init {
         getOrder()

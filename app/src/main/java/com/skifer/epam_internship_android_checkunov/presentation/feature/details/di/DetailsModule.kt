@@ -11,11 +11,11 @@ import dagger.Provides
 class DetailsModule {
     @Provides
     fun provideMealModelViewModelFactory(
-        useCaseGet: GetMealUseCase
+        getMealUseCase: GetMealUseCase
     ): MealDetailsViewModel = object : ViewModelProvider.Factory {
 
         override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-            MealDetailsViewModel(useCaseGet) as T
+            MealDetailsViewModel(getMealUseCase) as T
 
     }
         .create(MealDetailsViewModel::class.java)

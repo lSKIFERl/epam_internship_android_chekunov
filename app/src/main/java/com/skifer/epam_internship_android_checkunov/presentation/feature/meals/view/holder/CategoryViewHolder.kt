@@ -12,19 +12,18 @@ import com.skifer.epam_internship_android_checkunov.presentation.model.CategoryM
  *
  * Provides logic to display for each list item
  * @param itemView view of list item on the screen that was clicked
- * @param onItemListener Click listener for each list item
+ * @param OnItemListener Click listener for each list item
  */
-class CategoryViewHolder(itemView: View, onItemListener: ViewHolderAdapter.onItemListener<CategoryModel>)
+class CategoryViewHolder(
+    itemView: View,
+    private val OnItemListener: ViewHolderAdapter.OnItemListener<CategoryModel>
+)
     : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
     /**Contained model*/
-    lateinit var category: CategoryModel
-
-    /**Click listener*/
-    val onItemListener: ViewHolderAdapter.onItemListener<CategoryModel>
+    private lateinit var category: CategoryModel
 
     init{
-        this.onItemListener = onItemListener
         itemView.setOnClickListener(this)
     }
 
@@ -47,6 +46,6 @@ class CategoryViewHolder(itemView: View, onItemListener: ViewHolderAdapter.onIte
      * @param v The view that was clicked.
      */
     override fun onClick(v: View?) {
-        this.onItemListener.onItemClick(category)
+        this.OnItemListener.onItemClick(category)
     }
 }

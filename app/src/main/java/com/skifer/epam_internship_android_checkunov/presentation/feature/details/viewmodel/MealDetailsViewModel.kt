@@ -14,7 +14,7 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class MealDetailsViewModel(
-    private val useCaseGet: GetMealUseCase,
+    private val getMeal: GetMealUseCase,
 ): ViewModel() {
 
     private val mutableMeal: MutableLiveData<MealModel> = MutableLiveData()
@@ -30,7 +30,7 @@ class MealDetailsViewModel(
     private var disposable: Disposable? = null
 
     fun loadData(id: Int) {
-        disposable = useCaseGet(id)
+        disposable = getMeal(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(

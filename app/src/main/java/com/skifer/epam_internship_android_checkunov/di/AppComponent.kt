@@ -1,11 +1,15 @@
 package com.skifer.epam_internship_android_checkunov.di
 
 import android.content.Context
-import com.skifer.epam_internship_android_checkunov.di.modules.*
+import com.skifer.epam_internship_android_checkunov.di.modules.BindModule
+import com.skifer.epam_internship_android_checkunov.di.modules.DataBaseModule
+import com.skifer.epam_internship_android_checkunov.di.modules.NetworkModule
+import com.skifer.epam_internship_android_checkunov.di.modules.PrefsModule
 import com.skifer.epam_internship_android_checkunov.domain.repository.CategoryRepository
 import com.skifer.epam_internship_android_checkunov.domain.repository.MealListRepository
 import com.skifer.epam_internship_android_checkunov.domain.repository.MealRepository
 import com.skifer.epam_internship_android_checkunov.domain.repository.SortingRepository
+import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.di.SharedSettingsModule
 import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.viewmodel.SharedSettingsViewModel
 import dagger.BindsInstance
 import dagger.Component

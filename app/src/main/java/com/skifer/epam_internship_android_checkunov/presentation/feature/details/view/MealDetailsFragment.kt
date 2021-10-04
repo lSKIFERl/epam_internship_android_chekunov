@@ -23,7 +23,7 @@ import com.skifer.epam_internship_android_checkunov.presentation.model.MealModel
 import javax.inject.Inject
 
 /**
- * Displays detailed information about selected dish in [MealListFragment]
+ * Displays detailed information about selected dish in main fragment
  */
 class MealDetailsFragment : Fragment(R.layout.fragment_meal_details),
     ComponentProvider<DetailsComponent> {
@@ -39,7 +39,6 @@ class MealDetailsFragment : Fragment(R.layout.fragment_meal_details),
         super.onViewCreated(view, savedInstanceState)
         component.inject(this)
         observeMeal()
-
     }
 
     private fun observeMeal() {
