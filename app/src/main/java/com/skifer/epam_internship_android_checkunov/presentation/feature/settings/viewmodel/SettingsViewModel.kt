@@ -18,10 +18,8 @@ class SettingsViewModel(
 
     private val mutableSort = MutableLiveData<Sort>()
 
-    val sortBy: LiveData<Sort>
+    val sortByData: LiveData<Sort>
         get() = mutableSort
-
-    private var lastOrder: Sort = Sort.SORT_ASC
 
     private val disposable = CompositeDisposable()
 
@@ -29,14 +27,14 @@ class SettingsViewModel(
         getSortOrder()
     }
 
-    private fun setSortOrder(order: Sort) {
-        lastOrder = order
+    fun setSortOrder(order: Sort) {
         disposable.add(setSort(order)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
                     Log.i(TAG, SUCCESS_PUT + order)
+                    mutableSort.value = order
                 },
                 {
                     Log.e(TAG, ERROR_PUT, it)
@@ -63,14 +61,6 @@ class SettingsViewModel(
     }
 
     fun isSortAsc() = mutableSort.value == Sort.SORT_ASC
-
-    fun setAsc() = setSortOrder(Sort.SORT_ASC)
-
-    fun setDesc() = setSortOrder(Sort.SORT_DESC)
-
-    fun apply() {
-        mutableSort.value = lastOrder
-    }
 
     override fun onCleared() {
         disposable.dispose()

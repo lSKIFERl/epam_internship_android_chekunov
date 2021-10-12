@@ -21,12 +21,12 @@ class MealDetailsViewModel(
 
     private val mutableMeal: MutableLiveData<MealModel> = MutableLiveData()
 
-    private val mutableError: SingleLiveEvent<Throwable> = SingleLiveEvent()
+    private val mutableError: SingleLiveEvent<String> = SingleLiveEvent()
 
     val meal: LiveData<MealModel>
         get() = mutableMeal
 
-    val error: LiveData<Throwable>
+    val error: LiveData<String>
         get() = mutableError
 
     private var disposable: Disposable? = null
@@ -40,8 +40,8 @@ class MealDetailsViewModel(
                     if (entity != null) {
                         mutableMeal.value = entity.toUi()
                     } else {
-                        val error = MealsIsEmptyException("Loaded MealModel is empty")
-                        mutableError.value = error
+                        val error = MealsIsEmptyException(EMPTY_MEAL_LOG)
+                        mutableError.value = ERROR_EMPTY_MEAL
                         Log.e(
                             TAG,
                             ERROR,
@@ -50,7 +50,7 @@ class MealDetailsViewModel(
                     }
                 },
                 { e ->
-                    mutableError.value = e
+                    mutableError.value = ERROR
                     Log.e(
                         TAG,
                         ERROR,
@@ -69,5 +69,8 @@ class MealDetailsViewModel(
         private const val TAG = "Net"
         private var ERROR =
             App.instance.applicationContext.getString(R.string.error_cant_load_meal)
+        private var ERROR_EMPTY_MEAL =
+            App.instance.applicationContext.getString(R.string.error_empty_meal)
+        private var EMPTY_MEAL_LOG = "Loaded MealModel is empty"
     }
 }

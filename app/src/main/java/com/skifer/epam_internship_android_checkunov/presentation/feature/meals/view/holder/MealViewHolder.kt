@@ -35,11 +35,11 @@ class MealViewHolder(
      */
     fun bind(mealModel: MealListItemModel) {
         this.mealModel = mealModel
-        itemView.findViewById<TextView>(R.id.dishLabel).text = mealModel.strMeal
+        itemView.findViewById<TextView>(R.id.dish_label).text = mealModel.strMeal
         Glide
             .with(itemView)
             .load(mealModel.strMealThumb)
-            .into(itemView.findViewById(R.id.mealImage))
+            .into(itemView.findViewById(R.id.meal_image))
     }
 
     /**

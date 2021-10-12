@@ -17,7 +17,7 @@ class SharedSettingsViewModel(
 
     private val mutableSort = MutableLiveData<Sort>()
 
-    val sortBy: LiveData<Sort>
+    val sortByData: LiveData<Sort>
         get() = mutableSort
 
     private var disposable: Disposable? = null

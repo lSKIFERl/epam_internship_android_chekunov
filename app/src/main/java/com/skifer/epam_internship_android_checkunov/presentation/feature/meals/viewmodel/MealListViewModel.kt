@@ -27,7 +27,7 @@ class MealListViewModel (
 
     private val mutableMealListModel: MutableLiveData<List<MealListItemModel>> = MutableLiveData()
 
-    private val mutableError: SingleLiveEvent<Throwable> = SingleLiveEvent()
+    private val mutableError: SingleLiveEvent<String> = SingleLiveEvent()
 
     private val mutableCategoryList: MutableLiveData<List<CategoryModel>> = MutableLiveData()
 
@@ -37,7 +37,7 @@ class MealListViewModel (
     val categoryList: LiveData<List<CategoryModel>>
         get() = mutableCategoryList
 
-    val errorLiveData: LiveData<Throwable>
+    val errorLiveData: LiveData<String>
         get() = mutableError
 
     private val disposable = CompositeDisposable()
@@ -58,7 +58,7 @@ class MealListViewModel (
                         }
                     },
                     { e ->
-                        mutableError.value = e
+                        mutableError.value = ERROR_MEAL_LIST
                         Log.e(
                             TAG,
                             ERROR_MEAL_LIST,
@@ -83,7 +83,7 @@ class MealListViewModel (
                         mutableCategoryList.value = categoryList
                     },
                     { e ->
-                        mutableError.value = e
+                        mutableError.value = ERROR_CATEGORY_LIST
                         Log.e(
                             TAG,
                             ERROR_CATEGORY_LIST,
@@ -120,7 +120,7 @@ class MealListViewModel (
                         loadCategoryList(item.idCategory.toInt())
                     },
                     {
-                        mutableError.value = it
+                        mutableError.value = ERROR_PREFS
                         Log.e(
                             TAG,
                             ERROR_PREFS,
@@ -154,8 +154,14 @@ class MealListViewModel (
         private const val TAG = "Net"
         private const val ERROR_PREFS = "Can't put category in prefs"
         private var ERROR_MEAL_LIST =
-            App.instance.applicationContext.getString(R.string.error_cant_load_meal_list)
+            String.format(
+                App.instance.applicationContext.getString(R.string.error_cant_load),
+                "meals"
+            )
         private var ERROR_CATEGORY_LIST =
-            App.instance.applicationContext.getString(R.string.error_cant_load_categories)
+            String.format(
+                App.instance.applicationContext.getString(R.string.error_cant_load),
+                "categories"
+            )
     }
 }

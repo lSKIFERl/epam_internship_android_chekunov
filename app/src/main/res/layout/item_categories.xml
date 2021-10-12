@@ -7,7 +7,7 @@
     android:background="@drawable/round_corner_selector">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/categoryImage"
+        android:id="@+id/category_image"
         android:layout_width="@dimen/type_image_wh"
         android:layout_height="@dimen/type_image_wh"
         android:layout_margin="@dimen/type_image_margin"

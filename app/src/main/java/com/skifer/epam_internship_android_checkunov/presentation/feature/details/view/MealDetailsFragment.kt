@@ -1,18 +1,17 @@
 package com.skifer.epam_internship_android_checkunov.presentation.feature.details.view
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.TextView
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
-import com.skifer.epam_internship_android_checkunov.data.network.exception.MealsIsEmptyException
+import com.skifer.epam_internship_android_checkunov.databinding.FragmentMealDetailsBinding
 import com.skifer.epam_internship_android_checkunov.di.ComponentProvider
 import com.skifer.epam_internship_android_checkunov.presentation.feature.ViewHolderAdapter
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.di.DaggerDetailsComponent
@@ -28,6 +27,8 @@ import javax.inject.Inject
 class MealDetailsFragment : Fragment(R.layout.fragment_meal_details),
     ComponentProvider<DetailsComponent> {
 
+    private lateinit var binding: FragmentMealDetailsBinding
+
     @Inject
     lateinit var viewModel: MealDetailsViewModel
 
@@ -35,9 +36,19 @@ class MealDetailsFragment : Fragment(R.layout.fragment_meal_details),
         DaggerDetailsComponent.factory().create(App.instance.appComponent)
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentMealDetailsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         component.inject(this)
+
         observeMeal()
     }
 
@@ -45,26 +56,19 @@ class MealDetailsFragment : Fragment(R.layout.fragment_meal_details),
         val id = arguments?.getInt(MEAL_ID_INTENT) ?: error(
             getString(R.string.error_wrong_id)
         )
-        viewModel.loadData(id)
-        viewModel.error.observe(viewLifecycleOwner) {
-            when (it) {
-                is MealsIsEmptyException ->
-                    Toast.makeText(
-                        context,
-                        it.message,
-                        Toast.LENGTH_LONG
-                    ).show()
-                is Throwable ->
-                    Toast.makeText(
-                        context,
-                        getString(R.string.error_cant_load_meal),
-                        Toast.LENGTH_LONG
-                    ).show()
+        viewModel.run {
+            loadData(id)
+            error.observe(viewLifecycleOwner) {
+                Toast.makeText(
+                    context,
+                    it,
+                    Toast.LENGTH_LONG
+                ).show()
+                findNavController().popBackStack()
             }
-            findNavController().popBackStack()
-        }
-        viewModel.meal.observe(viewLifecycleOwner) {
-            bindData(it)
+            meal.observe(viewLifecycleOwner) {
+                bindData(it)
+            }
         }
     }
 
@@ -78,34 +82,32 @@ class MealDetailsFragment : Fragment(R.layout.fragment_meal_details),
         tagsAdapter.setList(meal?.tags)
         ingredientModelAdapter.setList(meal?.ingredientModels)
 
-        view?.let {
-            Glide
-                .with(it)
-                .load(
-                    meal?.strMealThumb
-                        ?: R.drawable.heheboi
-                )
-                .into(
-                    requireView()
-                        .findViewById(
-                            R.id.detailMealImage
-                        )
-                )
-            it.findViewById<TextView>(R.id.detailTitle).text =
-                meal?.strMeal
-                    ?: getString(R.string.empty)
-            it.findViewById<TextView>(R.id.Cuisine).text =
-                meal?.strArea
-                    ?: getString(R.string.empty)
-            it.findViewById<TextView>(R.id.instructions).text =
-                meal?.strInstructions
-                    ?: getString(R.string.empty_instructions)
-            it.findViewById<RecyclerView>(R.id.tag)?.adapter =
-                tagsAdapter
-            it.findViewById<RecyclerView>(R.id.ingredients_list)?.adapter =
-                ingredientModelAdapter
-            it.findViewById<Toolbar>(R.id.toolbarMealDetails).setNavigationOnClickListener {
+        binding.apply {
+            view?.let {
+                Glide.with(it)
+                    .load(
+                        meal?.strMealThumb
+                            ?: R.drawable.heheboi
+                    )
+                    .into(detailMealImage)
+            }
+            toolbarMealDetails.setNavigationOnClickListener {
                 findNavController().popBackStack()
+            }
+            bottomSheet.apply {
+                detailTitle.text =
+                    meal?.strMeal
+                        ?: getString(R.string.empty)
+                cuisine.text =
+                    meal?.strArea
+                        ?: getString(R.string.empty)
+                instructions.text =
+                    meal?.strInstructions
+                        ?: getString(R.string.empty_instructions)
+                tagList.adapter =
+                    tagsAdapter
+                ingredientsList.adapter =
+                    ingredientModelAdapter
             }
         }
     }
@@ -121,4 +123,4 @@ class MealDetailsFragment : Fragment(R.layout.fragment_meal_details),
             arguments = bundleOf(MEAL_ID_INTENT to dishId)
         }
     }
-    }
+}

@@ -1,15 +1,16 @@
 package com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
+import com.skifer.epam_internship_android_checkunov.databinding.FragmentMealListBinding
 import com.skifer.epam_internship_android_checkunov.di.ComponentProvider
 import com.skifer.epam_internship_android_checkunov.presentation.feature.ViewHolderAdapter
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.view.MealDetailsFragment
@@ -28,7 +29,9 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
 
     private val categoryListAdapter: ViewHolderAdapter<CategoryModel> = ViewHolderAdapter()
 
-    private val mealListAdapterModel: ViewHolderAdapter<MealListItemModel> = ViewHolderAdapter()
+    private val mealListAdapter: ViewHolderAdapter<MealListItemModel> = ViewHolderAdapter()
+
+    private lateinit var binding: FragmentMealListBinding
 
     @Inject
     lateinit var viewModel: MealListViewModel
@@ -40,80 +43,76 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
         DaggerMealsComponent.factory().create(App.instance.appComponent)
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentMealListBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         component.inject(this)
-        initCategoryListView()
-        initMealListView()
-        initActionBar(view)
 
-        observeCategories()
-        observeMeals()
+        observeLiveData()
 
+        initView()
     }
 
-    private fun initActionBar(view: View) {
-        val actionBarToolBar: Toolbar = view.findViewById(R.id.toolbar_home) as Toolbar
-        actionBarToolBar.inflateMenu(R.menu.menu_host)
-        actionBarToolBar.setOnMenuItemClickListener {
-            findNavController().navigate(
-                MealListFragmentDirections.actionMealListFragmentToSettingsFragment()
-            )
-            return@setOnMenuItemClickListener true
-        }
-    }
-
-    private fun initCategoryListView() {
-        categoryListAdapter.setItemListener(object :
-            ViewHolderAdapter.OnItemListener<CategoryModel> {
-            override fun onItemClick(item: CategoryModel) {
-                viewModel.setCategory(item)
+    private fun observeLiveData() =
+        viewModel.run {
+            errorLiveData.observe(viewLifecycleOwner) {
+                Toast.makeText(
+                    context,
+                    it,
+                    Toast.LENGTH_LONG
+                ).show()
             }
-        })
-        requireView().findViewById<RecyclerView>(R.id.categoriesListView)
-            .adapter = categoryListAdapter
-    }
+            categoryList.observe(viewLifecycleOwner) {
+                categoryListAdapter.setList(it)
+            }
+            mealListModel.observe(viewLifecycleOwner) {
+                bindData(it)
+            }
+        }
 
-    /**
-     * View components initializing
-     */
-    private fun initMealListView() {
-        mealListAdapterModel.setItemListener(object :
-            ViewHolderAdapter.OnItemListener<MealListItemModel> {
-            override fun onItemClick(item: MealListItemModel) {
+    private fun initView() {
+        // Initializing toolbar
+        binding.toolbarHome.apply {
+            inflateMenu(R.menu.menu_host)
+            setOnMenuItemClickListener {
                 findNavController().navigate(
-                    R.id.mealDetailsFragment,
-                    bundleOf(MealDetailsFragment.MEAL_ID_INTENT to item.idMeal)
+                    MealListFragmentDirections.actionMealListFragmentToSettingsFragment()
                 )
+                return@setOnMenuItemClickListener true
             }
-        })
-        requireView().findViewById<RecyclerView>(R.id.dishListView)
-            .adapter = mealListAdapterModel
-    }
+        }
 
-    private fun observeCategories() {
-        viewModel.errorLiveData.observe(viewLifecycleOwner) {
-            Toast.makeText(
-                context,
-                getString(R.string.error_cant_load_categories),
-                Toast.LENGTH_LONG
-            ).show()
+        // Initializing categories list
+        categoryListAdapter.let {
+            it.setItemListener(object :
+                ViewHolderAdapter.OnItemListener<CategoryModel> {
+                override fun onItemClick(item: CategoryModel) {
+                    viewModel.setCategory(item)
+                }
+            })
+            binding.categoriesListView.adapter = it
         }
-        viewModel.categoryList.observe(viewLifecycleOwner) {
-            categoryListAdapter.setList(it)
-        }
-    }
 
-    private fun observeMeals() {
-        viewModel.errorLiveData.observe(viewLifecycleOwner) {
-            Toast.makeText(
-                context,
-                getString(R.string.error_cant_load_meal_list),
-                Toast.LENGTH_LONG
-            ).show()
-        }
-        viewModel.mealListModel.observe(viewLifecycleOwner) {
-            bindData(it)
+        // Initializing categories list
+        mealListAdapter.let {
+            it.setItemListener(object :
+                ViewHolderAdapter.OnItemListener<MealListItemModel> {
+                override fun onItemClick(item: MealListItemModel) {
+                    findNavController().navigate(
+                        R.id.mealDetailsFragment,
+                        bundleOf(MealDetailsFragment.MEAL_ID_INTENT to item.idMeal)
+                    )
+                }
+            })
+            binding.mealListView.adapter = it
         }
     }
 
@@ -122,8 +121,9 @@ class MealListFragment : Fragment(R.layout.fragment_meal_list), ComponentProvide
      * @param dishesListModel loaded from network
      */
     private fun bindData(dishesListModel: List<MealListItemModel>) {
-        sorterSharedView.sortBy.observe(viewLifecycleOwner, {
-            mealListAdapterModel.setList(sorterSharedView.sort(dishesListModel))
+        sorterSharedView.sortByData.observe(viewLifecycleOwner, {
+            mealListAdapter.setList(sorterSharedView.sort(dishesListModel))
+            binding.mealListView.smoothScrollToPosition(0)
         })
     }
 

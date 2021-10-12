@@ -4,32 +4,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mealDetailsFragment"
-    android:layout_height="match_parent" android:layout_width="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".presentation.feature.details.view.MealDetailsFragment">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/transparent">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_meal_details"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:fitsSystemWindows="true"
+        style="@style/ActionBar.Transparent"
+        app:navigationIcon="?attr/homeAsUpIndicator" />
 
-                <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/toolbarMealDetails"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="@android:color/transparent"
-                    app:navigationIcon="?attr/homeAsUpIndicator" />
-        </com.google.android.material.appbar.AppBarLayout>
+    <ImageView
+        android:id="@+id/detail_meal_image"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/image_height_large"
+        android:scaleType="centerCrop" />
 
-        <ImageView
-            android:id="@+id/detailMealImage"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/image_height_large"
-            android:scaleType="centerCrop" />
-
-        <include
-                layout="@layout/fragment_bottom_sheet_meal_details"
-            />
-
+    <include
+        android:id="@+id/bottom_sheet"
+        layout="@layout/fragment_bottom_sheet_meal_details" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

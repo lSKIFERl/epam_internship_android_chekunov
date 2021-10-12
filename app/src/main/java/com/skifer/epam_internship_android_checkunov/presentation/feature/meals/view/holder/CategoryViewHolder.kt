@@ -36,7 +36,7 @@ class CategoryViewHolder(
         Glide
             .with(itemView)
             .load(category.strCategoryThumb)
-            .into(itemView.findViewById(R.id.categoryImage))
+            .into(itemView.findViewById(R.id.category_image))
         itemView.isSelected = category.active
     }
 
