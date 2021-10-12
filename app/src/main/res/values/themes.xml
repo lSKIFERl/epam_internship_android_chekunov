@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Epaminternshipandroidcheckunov" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.Epaminternshipandroidcheckunov" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/slightly_gray</item>
         <item name="colorPrimaryVariant">@color/selected_type</item>
@@ -12,7 +12,9 @@
         <!-- Font -->
         <item name="android:textSize">@dimen/small_font_size</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowLightStatusBar">true</item>
         <!-- Customize your theme here. -->
     </style>
 
@@ -25,12 +27,6 @@
     <style name="selected_button" parent="Base.Widget.AppCompat.Button">
         <item name="android:backgroundTint">?attr/colorPrimaryVariant</item>
         <item name="colorOnPrimary">?attr/colorOnSecondary</item>
-    </style>
-
-    <style name="ActionBar.Transparent" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="windowActionBarOverlay">true</item>
-        <item name="colorPrimary">@android:color/transparent</item>
     </style>
 
 </resources>

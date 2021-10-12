@@ -18,7 +18,7 @@ fun MealEntity.toUi() = MealModel(
     tags,
     strArea,
     strMealThumb,
-    strYoutube,
+    strYoutube?.let { it.substring(it.lastIndexOf("=") + 1) },
     ingredients?.map { it.toUi() },
     strInstructions
 )

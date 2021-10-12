@@ -6,9 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
 import com.skifer.epam_internship_android_checkunov.databinding.FragmentMealDetailsBinding
@@ -17,6 +20,7 @@ import com.skifer.epam_internship_android_checkunov.presentation.feature.ViewHol
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.di.DaggerDetailsComponent
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.di.DetailsComponent
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.viewmodel.MealDetailsViewModel
+import com.skifer.epam_internship_android_checkunov.presentation.feature.host.view.showStatusBar
 import com.skifer.epam_internship_android_checkunov.presentation.model.IngredientModel
 import com.skifer.epam_internship_android_checkunov.presentation.model.MealModel
 import javax.inject.Inject
@@ -34,6 +38,16 @@ class MealDetailsFragment : Fragment(R.layout.fragment_meal_details),
 
     override val component: DetailsComponent by lazy {
         DaggerDetailsComponent.factory().create(App.instance.appComponent)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().showStatusBar(false)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        requireActivity().showStatusBar(true)
     }
 
     override fun onCreateView(
@@ -94,6 +108,7 @@ class MealDetailsFragment : Fragment(R.layout.fragment_meal_details),
             toolbarMealDetails.setNavigationOnClickListener {
                 findNavController().popBackStack()
             }
+
             bottomSheet.apply {
                 detailTitle.text =
                     meal?.strMeal
@@ -108,8 +123,19 @@ class MealDetailsFragment : Fragment(R.layout.fragment_meal_details),
                     tagsAdapter
                 ingredientsList.adapter =
                     ingredientModelAdapter
+
+                if (meal?.strYoutube != null) {
+                    youTube.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+                        override fun onReady(youTubePlayer: YouTubePlayer) {
+                            youTubePlayer.loadVideo(meal.strYoutube, 0F)
+                            youTubePlayer.pause()
+                        }
+                    })
+                } else youTube.isVisible = false
             }
         }
+
+
     }
 
     companion object {

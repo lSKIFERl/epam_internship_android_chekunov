@@ -3,18 +3,27 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mealDetailsFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.feature.details.view.MealDetailsFragment">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_meal_details"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar_layout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
+        app:elevation="0dp"
+        android:translationZ="0.1dp"
         android:fitsSystemWindows="true"
-        style="@style/ActionBar.Transparent"
-        app:navigationIcon="?attr/homeAsUpIndicator" />
+        android:background="@android:color/transparent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_meal_details"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/transparent"
+            app:navigationIcon="?attr/homeAsUpIndicator" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <ImageView
         android:id="@+id/detail_meal_image"
