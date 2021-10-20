@@ -90,53 +90,57 @@ class MealDetailsFragment : Fragment(R.layout.fragment_meal_details),
      * Binding data with view components
      * @param meal [MealModel] to bindData with components
      */
-    private fun bindData(meal: MealModel?) {
-        val tagsAdapter = ViewHolderAdapter<String>()
-        val ingredientModelAdapter = ViewHolderAdapter<IngredientModel>()
-        tagsAdapter.setList(meal?.tags)
-        ingredientModelAdapter.setList(meal?.ingredientModels)
-
+    private fun bindData(meal: MealModel?) =
         binding.apply {
-            view?.let {
-                Glide.with(it)
-                    .load(
-                        meal?.strMealThumb
-                            ?: R.drawable.heheboi
-                    )
-                    .into(detailMealImage)
-            }
-            toolbarMealDetails.setNavigationOnClickListener {
-                findNavController().popBackStack()
-            }
+            meal?.let {
+                view?.let { view ->
+                    Glide.with(view)
+                        .load(
+                            it.strMealThumb
+                                ?: R.drawable.heheboi
+                        )
+                        .into(detailMealImage)
+                }
+                toolbarMealDetails.setNavigationOnClickListener {
+                    findNavController().popBackStack()
+                }
 
-            bottomSheet.apply {
-                detailTitle.text =
-                    meal?.strMeal
-                        ?: getString(R.string.empty)
-                cuisine.text =
-                    meal?.strArea
-                        ?: getString(R.string.empty)
-                instructions.text =
-                    meal?.strInstructions
-                        ?: getString(R.string.empty_instructions)
-                tagList.adapter =
-                    tagsAdapter
-                ingredientsList.adapter =
-                    ingredientModelAdapter
+                bottomSheet.apply {
+                    detailTitle.text =
+                        it.strMeal
+                            ?: getString(R.string.empty)
+                    cuisine.text =
+                        it.strArea
+                            ?: getString(R.string.empty)
+                    instructions.text =
+                        it.strInstructions
+                            ?: getString(R.string.empty_instructions)
+                    if (it.tags != null) {
+                        tagList.adapter =
+                            ViewHolderAdapter<String>()
+                                .setList(it.tags)
+                    } else {
+                        tagList.isVisible = false
+                    }
+                    if (it.ingredientModels != null) {
+                        ingredientsList.adapter =
+                            ViewHolderAdapter<IngredientModel>()
+                                .setList(it.ingredientModels)
+                    } else {
+                        ingredientsList.isVisible = false
+                    }
 
-                if (meal?.strYoutube != null) {
-                    youTube.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
-                        override fun onReady(youTubePlayer: YouTubePlayer) {
-                            youTubePlayer.loadVideo(meal.strYoutube, 0F)
-                            youTubePlayer.pause()
-                        }
-                    })
-                } else youTube.isVisible = false
+                    if (it.strYoutube != null) {
+                        youTube.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+                            override fun onReady(youTubePlayer: YouTubePlayer) {
+                                youTubePlayer.loadVideo(it.strYoutube, 0F)
+                                youTubePlayer.pause()
+                            }
+                        })
+                    } else youTube.isVisible = false
+                }
             }
         }
-
-
-    }
 
     companion object {
         const val MEAL_ID_INTENT = "MEAL_ID_INTENT"

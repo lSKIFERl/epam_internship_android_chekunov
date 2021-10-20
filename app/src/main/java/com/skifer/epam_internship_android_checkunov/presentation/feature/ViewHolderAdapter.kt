@@ -103,7 +103,7 @@ class ViewHolderAdapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     /**
      * Sets list of items
      */
-    fun setList(list: List<T>?) {
+    fun setList(list: List<T>?): ViewHolderAdapter<T> {
         items.clear()
         if (list != null) {
             items.addAll(list)
@@ -115,6 +115,7 @@ class ViewHolderAdapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             ).show()
         }
         notifyDataSetChanged()
+        return this
     }
 
     /**
