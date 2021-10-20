@@ -6,28 +6,28 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.skifer.epam_internship_android_checkunov.R
-import com.skifer.epam_internship_android_checkunov.domain.entity.MealModelEntity
-import com.skifer.epam_internship_android_checkunov.presentation.feature.ViewHolderAdapter.onItemListener
+import com.skifer.epam_internship_android_checkunov.domain.entity.MealEntity
+import com.skifer.epam_internship_android_checkunov.presentation.feature.ViewHolderAdapter.OnItemListener
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.view.holder.FoodTypeHolder
 import com.skifer.epam_internship_android_checkunov.presentation.feature.details.view.holder.IngredientsViewHolder
-import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view.holder.DishViewHolder
-import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view.holder.TypeViewHolder
-import com.skifer.epam_internship_android_checkunov.presentation.model.Ingredient
-import com.skifer.epam_internship_android_checkunov.presentation.model.MealModelListItem
-import com.skifer.epam_internship_android_checkunov.presentation.model.TypeModel
+import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view.holder.CategoryViewHolder
+import com.skifer.epam_internship_android_checkunov.presentation.feature.meals.view.holder.MealViewHolder
+import com.skifer.epam_internship_android_checkunov.presentation.model.CategoryModel
+import com.skifer.epam_internship_android_checkunov.presentation.model.IngredientModel
+import com.skifer.epam_internship_android_checkunov.presentation.model.MealListItemModel
 
 /**
  * List Adapter class for recyclerview.
  *
  * NOTE: recyclerview may have empty list and haven't click listener for items of list.
  *
- * So set [List] and [onItemListener] by [setList] and [setItemListener] if necessary
+ * So set [List] and [OnItemListener] by [setList] and [setItemListener] if necessary
  * @param T model class
  */
 class ViewHolderAdapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     /**Item listener for list [items]*/
-    private lateinit var itemListener: onItemListener<T>
+    private lateinit var itemListener: OnItemListener<T>
 
     /**List of items on the screen */
     private var items: MutableSet<T> = mutableSetOf()
@@ -39,19 +39,19 @@ class ViewHolderAdapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var holder: RecyclerView.ViewHolder? = null
         context = parent.context
         when(items.elementAtOrNull(0)) {
-            is MealModelListItem -> holder = DishViewHolder(
+            is MealListItemModel -> holder = MealViewHolder(
                     LayoutInflater.from(context).inflate(
-                            R.layout.recyclerview_item,
+                            R.layout.item_meal,
                             parent,
                             false),
-                    itemListener as onItemListener<MealModelListItem>
+                    itemListener as OnItemListener<MealListItemModel>
             )
-            is TypeModel -> holder = TypeViewHolder(
+            is CategoryModel -> holder = CategoryViewHolder(
                     LayoutInflater.from(context).inflate(
-                            R.layout.type_item,
+                            R.layout.item_categories,
                             parent,
                             false),
-                    itemListener as onItemListener<TypeModel>
+                    itemListener as OnItemListener<CategoryModel>
                     )
             is String -> holder = FoodTypeHolder(
                 LayoutInflater.from(context).inflate(
@@ -60,9 +60,9 @@ class ViewHolderAdapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     false
                 )
             )
-            is Ingredient -> holder = IngredientsViewHolder (
+            is IngredientModel -> holder = IngredientsViewHolder (
                 LayoutInflater.from(parent.context).inflate(
-                    R.layout.ingredient_item,
+                    R.layout.item_ingredient,
                     parent,
                     false
                 )
@@ -87,23 +87,23 @@ class ViewHolderAdapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
      * Binds some holders with item
      *
      * holder can be one of the following:
-     * [DishViewHolder], [TypeViewHolder], [FoodTypeHolder], [IngredientsViewHolder]
+     * [MealViewHolder], [CategoryViewHolder], [FoodTypeHolder], [IngredientsViewHolder]
      * @param item item that can be connected to the specific Holder:
-     * [MealModelEntity], [TypeModel], [FoodType], [Ingredient]
+     * [MealEntity], [CategoryModel], [String], [IngredientModel]
      */
     private fun <T> RecyclerView.ViewHolder.bind(item: T?) {
         when(this) {
-            is DishViewHolder -> (item as? MealModelListItem)?.let{ bind(it) }
-            is TypeViewHolder -> (item as? TypeModel)?.let{ bind(it) }
+            is MealViewHolder -> (item as? MealListItemModel)?.let{ bind(it) }
+            is CategoryViewHolder -> (item as? CategoryModel)?.let{ bind(it) }
             is FoodTypeHolder -> (item as? String)?.let { bind(it) }
-            is IngredientsViewHolder -> (item as? Ingredient)?.let { bind(it) }
+            is IngredientsViewHolder -> (item as? IngredientModel)?.let { bind(it) }
         }
     }
 
     /**
      * Sets list of items
      */
-    fun setList(list: List<T>?) {
+    fun setList(list: List<T>?): ViewHolderAdapter<T> {
         items.clear()
         if (list != null) {
             items.addAll(list)
@@ -115,19 +115,20 @@ class ViewHolderAdapter<T>: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             ).show()
         }
         notifyDataSetChanged()
+        return this
     }
 
     /**
      * Sets listener for each item of recyclerview
      */
-    fun setItemListener(itemListener: onItemListener<T>) {
+    fun setItemListener(itemListener: OnItemListener<T>) {
         itemListener.also { this.itemListener = it }
     }
 
     /**
      * Click listener for each item of recyclerview
      */
-    interface onItemListener <T> {
+    interface OnItemListener <T> {
         fun onItemClick(item: T)
     }
 }

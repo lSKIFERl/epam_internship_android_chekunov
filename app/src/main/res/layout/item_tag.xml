@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-
-    <TextView
-        android:id="@+id/small_tag_item"
-        android:layout_width="@dimen/details_types_item_width"
-        android:layout_height="@dimen/details_types_list_height"
-        android:background="@drawable/rounded_corners"
-        android:fontFamily="@font/roboto"
-        android:gravity="center_horizontal|center_vertical"
-        android:layout_marginRight="@dimen/type_image_margin" />
-
-</FrameLayout>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/small_tag_item"
+    android:layout_width="@dimen/details_types_item_width"
+    android:layout_height="@dimen/details_types_list_height"
+    android:layout_marginEnd="@dimen/type_image_margin"
+    android:background="@drawable/rounded_corners"
+    android:fontFamily="@font/roboto"
+    android:gravity="center_horizontal|center_vertical" />

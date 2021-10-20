@@ -12,18 +12,18 @@ import kotlinx.parcelize.Parcelize
  * @param strArea where it from
  * @param strMealThumb link to image of the dish
  * @param strYoutube link to video guide on YouTube
- * @param ingredients all what we need to cook
+ * @param ingredientModels all what we need to cook
  * @param strInstructions cook guide
  */
 @Parcelize
 data class MealModel(
-        val idMeal: Int,
-        val strMeal: String?,
-        val strCategory: String?,
-        val tags: List<String>?,
-        val strArea: String?,
-        val strMealThumb: String?,
-        val strYoutube: String?,
-        val ingredients: List<Ingredient>?,
-        val strInstructions: String?
+    val idMeal: Int,
+    val strMeal: String?,
+    val strCategory: String?,
+    val tags: List<String>?,
+    val strArea: String?,
+    val strMealThumb: String?,
+    val strYoutube: String?,
+    val ingredientModels: List<IngredientModel>?,
+    val strInstructions: String?
 ) : Parcelable

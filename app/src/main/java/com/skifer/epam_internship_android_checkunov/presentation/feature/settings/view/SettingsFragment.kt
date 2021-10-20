@@ -4,101 +4,94 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.skifer.epam_internship_android_checkunov.App
 import com.skifer.epam_internship_android_checkunov.R
-import com.skifer.epam_internship_android_checkunov.presentation.base.ShareViewModel
+import com.skifer.epam_internship_android_checkunov.databinding.FragmentSettingsBinding
+import com.skifer.epam_internship_android_checkunov.di.ComponentProvider
+import com.skifer.epam_internship_android_checkunov.domain.entity.Sort
+import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.di.DaggerSettingsComponent
+import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.di.SettingsComponent
+import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.viewmodel.SettingsViewModel
+import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.viewmodel.SharedSettingsViewModel
+import javax.inject.Inject
 
 
-class SettingsFragment : BottomSheetDialogFragment() {
+class SettingsFragment : BottomSheetDialogFragment(), ComponentProvider<SettingsComponent> {
 
-    private lateinit var ascSort: Button
+    private lateinit var binding: FragmentSettingsBinding
 
-    private lateinit var descSort: Button
+    @Inject
+    lateinit var sorterSharedView: SharedSettingsViewModel
 
-    private lateinit var confirm: Button
+    @Inject
+    lateinit var viewModel: SettingsViewModel
 
-    private val newSettings = mutableMapOf<String, String>()
-
-    private var mBehavior: BottomSheetBehavior<View>? = null
-
-    private val sorterSharedView: ShareViewModel by activityViewModels()
+    override val component: SettingsComponent by lazy {
+        DaggerSettingsComponent.factory().create(App.instance.appComponent)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_settings, container, false)
+    ): View {
+        binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        component.inject(this)
+
+        observeLiveData()
+
         initView()
-        bind()
-        mBehavior = BottomSheetBehavior.from(this.view?.parent as View)
-        mBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
+
+        val mBehavior = BottomSheetBehavior.from(this.view?.parent as View)
+        mBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    private fun initView() {
-        view?.let {
-            ascSort = it.findViewById(R.id.ASCSort)
-            descSort = it.findViewById(R.id.DESCSort)
-            confirm = it.findViewById(R.id.confirm)
-            it.findViewById<Toolbar>(R.id.toolbar_settings).setNavigationOnClickListener {
+    private fun initView() =
+        binding.apply {
+            toolbarSettings.setNavigationOnClickListener {
+                dismiss()
+            }
+
+            ascSort.setOnClickListener {
+                viewModel.setSortOrder(Sort.SORT_ASC)
+            }
+
+            descSort.setOnClickListener {
+                viewModel.setSortOrder(Sort.SORT_DESC)
+            }
+
+            apply.setOnClickListener {
+                sorterSharedView.apply()
                 dismiss()
             }
         }
-        ascSort.setOnClickListener {
-            it.setBackgroundColor(resources.getColor(R.color.selected_type))
-            descSort.setBackgroundColor(resources.getColor(R.color.slightly_gray))
-            newSettings[SORT_MEALS_LIST] = SORT_ASC
-        }
-        descSort.setOnClickListener {
-            it.setBackgroundColor(resources.getColor(R.color.selected_type))
-            ascSort.setBackgroundColor(resources.getColor(R.color.slightly_gray))
-            newSettings[SORT_MEALS_LIST] = SORT_DESC
-        }
-        confirm.setOnClickListener {
-            App.instance.sharedPreferences
-                .edit()
-                .putString(
-                    SORT_MEALS_LIST,
-                    newSettings[SORT_MEALS_LIST]
-                        ?:App.instance.sharedPreferences.getString(
-                            SORT_MEALS_LIST,
-                            SORT_ASC
-                        )
-                )
-                .apply()
-            sorterSharedView.setSortOrder(
-                newSettings[SORT_MEALS_LIST] ?: SORT_ASC
-            )
-            dismiss()
-        }
-    }
 
-    private fun bind() {
-        if (App.instance.sharedPreferences.getString(SORT_MEALS_LIST, SORT_ASC) == SORT_ASC) {
-            ascSort.setBackgroundColor(resources.getColor(R.color.selected_type))
-        } else {
-            descSort.setBackgroundColor(resources.getColor(R.color.selected_type))
+    private fun observeLiveData() =
+        viewModel.sortByData.observe(viewLifecycleOwner) {
+            toggleColor(viewModel.isSortAsc())
+            sorterSharedView.setSort(it)
         }
-    }
+
+    private fun toggleColor(isOrderAsc: Boolean) =
+        if (isOrderAsc) {
+            binding.ascSort.setBackgroundColor(resources.getColor(R.color.selected_type))
+            binding.descSort.setBackgroundColor(resources.getColor(R.color.slightly_gray))
+        } else {
+            binding.ascSort.setBackgroundColor(resources.getColor(R.color.slightly_gray))
+            binding.descSort.setBackgroundColor(resources.getColor(R.color.selected_type))
+        }
 
     companion object {
-        private const val SORT_ASC = "SORT_ASC"
-        private const val SORT_DESC = "SORT_DESC"
-        const val SORT_MEALS_LIST = "SORT_MEALS_LIST"
-
-        private const val PREVIOUS_SETTINGS = "PREVIOUS_SETTINGS"
 
         /**
-         * Should be called instead instead of just instantiating the class
+         * Should be called instead of just instantiating the class
          */
         fun newInstance() = SettingsFragment().apply {
             //arguments = bundleOf(PREVIOUS_SETTINGS to ...) then get arguments somewhere

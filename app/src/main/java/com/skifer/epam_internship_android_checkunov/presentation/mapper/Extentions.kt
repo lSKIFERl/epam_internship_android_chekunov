@@ -1,28 +1,28 @@
 package com.skifer.epam_internship_android_checkunov.presentation.mapper
 
+import com.skifer.epam_internship_android_checkunov.domain.entity.CategoryEntity
 import com.skifer.epam_internship_android_checkunov.domain.entity.IngredientEntity
-import com.skifer.epam_internship_android_checkunov.domain.entity.MealModelEntity
-import com.skifer.epam_internship_android_checkunov.domain.entity.MealModelListItemEntity
-import com.skifer.epam_internship_android_checkunov.domain.entity.TypeModelEntity
-import com.skifer.epam_internship_android_checkunov.presentation.model.Ingredient
+import com.skifer.epam_internship_android_checkunov.domain.entity.MealEntity
+import com.skifer.epam_internship_android_checkunov.domain.entity.MealListItemEntity
+import com.skifer.epam_internship_android_checkunov.presentation.model.CategoryModel
+import com.skifer.epam_internship_android_checkunov.presentation.model.IngredientModel
+import com.skifer.epam_internship_android_checkunov.presentation.model.MealListItemModel
 import com.skifer.epam_internship_android_checkunov.presentation.model.MealModel
-import com.skifer.epam_internship_android_checkunov.presentation.model.MealModelListItem
-import com.skifer.epam_internship_android_checkunov.presentation.model.TypeModel
 
-fun IngredientEntity.toUi() = Ingredient(name, measure)
+fun IngredientEntity.toUi() = IngredientModel(name, measure)
 
-fun MealModelEntity.toUi() = MealModel(
+fun MealEntity.toUi() = MealModel(
     idMeal,
     strMeal,
     strCategory,
     tags,
     strArea,
     strMealThumb,
-    strYoutube,
+    strYoutube?.let { it.substring(it.lastIndexOf("=") + 1) },
     ingredients?.map { it.toUi() },
     strInstructions
 )
 
-fun MealModelListItemEntity.toUi() = MealModelListItem(idMeal, strMeal, strMealThumb)
+fun MealListItemEntity.toUi() = MealListItemModel(idMeal, strMeal, strMealThumb)
 
-fun TypeModelEntity.toUi() = TypeModel(idCategory, strCategory, strCategoryThumb)
+fun CategoryEntity.toUi() = CategoryModel(idCategory, strCategory, strCategoryThumb, false)

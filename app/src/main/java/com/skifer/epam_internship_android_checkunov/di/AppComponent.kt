@@ -1,23 +1,31 @@
 package com.skifer.epam_internship_android_checkunov.di
 
 import android.content.Context
-import com.skifer.epam_internship_android_checkunov.di.modules.UseCaseModule
-import com.skifer.epam_internship_android_checkunov.domain.usecase.MealListUseCase
-import com.skifer.epam_internship_android_checkunov.domain.usecase.MealModelUseCase
-import com.skifer.epam_internship_android_checkunov.domain.usecase.TypeListUseCase
+import com.skifer.epam_internship_android_checkunov.di.modules.BindModule
+import com.skifer.epam_internship_android_checkunov.di.modules.DataBaseModule
+import com.skifer.epam_internship_android_checkunov.di.modules.NetworkModule
+import com.skifer.epam_internship_android_checkunov.di.modules.PrefsModule
+import com.skifer.epam_internship_android_checkunov.domain.repository.CategoryRepository
+import com.skifer.epam_internship_android_checkunov.domain.repository.MealListRepository
+import com.skifer.epam_internship_android_checkunov.domain.repository.MealRepository
+import com.skifer.epam_internship_android_checkunov.domain.repository.SortingRepository
+import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.di.SharedSettingsModule
+import com.skifer.epam_internship_android_checkunov.presentation.feature.settings.viewmodel.SharedSettingsViewModel
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [UseCaseModule::class])
+@Component(
+    modules = [
+        BindModule::class,
+        DataBaseModule::class,
+        NetworkModule::class,
+        PrefsModule::class,
+        SharedSettingsModule::class
+    ]
+)
 interface AppComponent {
-
-    val mealListUseCase: MealListUseCase
-
-    val mealModelUseCase: MealModelUseCase
-
-    val typeListUseCase: TypeListUseCase
 
     @Component.Builder
     abstract class Builder {
@@ -26,5 +34,15 @@ interface AppComponent {
         abstract fun bindContext(context: Context): Builder
         abstract fun build(): AppComponent
     }
+
+    fun provideSharedSettings(): SharedSettingsViewModel
+
+    fun provideMealListRepository(): MealListRepository
+
+    fun provideMealModelRepository(): MealRepository
+
+    fun provideTypeModelRepository(): CategoryRepository
+
+    fun provideSortingRepository(): SortingRepository
 
 }

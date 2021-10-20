@@ -1,6 +1,6 @@
 package com.skifer.epam_internship_android_checkunov.di.modules
 
-import com.skifer.epam_internship_android_checkunov.data.network.DishApi
+import com.skifer.epam_internship_android_checkunov.data.network.MealApi
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -13,13 +13,13 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideDishApi(): DishApi =
+    fun provideMealApi(): MealApi =
         Retrofit.Builder()
-            .baseUrl("https://www.themealdb.com/api/json/v1/1/")
+            .baseUrl(MealApi.BASE_URL)
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(DishApi::class.java)
+            .create(MealApi::class.java)
 
 
 }

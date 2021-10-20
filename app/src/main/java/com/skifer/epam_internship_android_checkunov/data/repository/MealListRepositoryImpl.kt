@@ -1,14 +1,18 @@
 package com.skifer.epam_internship_android_checkunov.data.repository
 
-import com.skifer.epam_internship_android_checkunov.data.network.DishApi
+import com.skifer.epam_internship_android_checkunov.data.network.MealApi
 import com.skifer.epam_internship_android_checkunov.data.network.mapper.toEntity
+import com.skifer.epam_internship_android_checkunov.domain.entity.MealListItemEntity
 import com.skifer.epam_internship_android_checkunov.domain.repository.MealListRepository
+import io.reactivex.rxjava3.core.Single
+import javax.inject.Inject
 
-class MealListRepositoryImpl(
-    private val dishApi: DishApi
-): MealListRepository {
-  
-    override fun loadDishList(category: String) =
-        dishApi.getDishByCategory(category)
-            .map { it.listMealModel.map { it.toEntity() } }
+
+class MealListRepositoryImpl @Inject constructor(
+    private val mealApi: MealApi
+) : MealListRepository {
+
+    override fun getMealList(category: String): Single<List<MealListItemEntity>> =
+        mealApi.getMealByCategory(category)
+            .map { it.listMealModel.map { modelDto -> modelDto.toEntity() } }
 }

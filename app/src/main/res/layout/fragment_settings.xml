@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -26,7 +25,6 @@
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
-        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/detail_margin"
@@ -34,35 +32,30 @@
         android:text="@string/settingsLabel2"
         android:textSize="@dimen/medium_font_size" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/detail_margin"
         android:layout_marginTop="@dimen/small_margin_top">
 
         <Button
-            android:id="@+id/ASCSort"
+            android:id="@+id/asc_sort"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sortItems1"
-            android:textAllCaps="false"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textAllCaps="false" />
 
         <Button
-            android:id="@+id/DESCSort"
+            android:id="@+id/desc_sort"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:text="@string/sortItems2"
-            android:textAllCaps="false"
-            app:layout_constraintStart_toEndOf="@+id/ASCSort"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:textAllCaps="false" />
+    </LinearLayout>
 
     <Button
-        android:id="@+id/confirm"
+        android:id="@+id/apply"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/detail_margin"

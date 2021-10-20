@@ -1,7 +1,7 @@
 <resources>
     <string name="cuisine">Cuisine</string>
     <string name="title">Title</string>
-    <string name="ingrediens">INGREDIENS</string>
+    <string name="ingredients">INGREDIENS</string>
     <string name="app_label">Delicious dishes</string>
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
@@ -22,4 +22,13 @@
     <string name="sortItems1">Ascending</string>
     <string name="sortItems2">Descending</string>
     <string name="apply">Apply</string>
+
+    <!-- Strings in application -->
+    <string name="error_empty_meal">There is nothing to see here</string>
+    <string name="error_wrong_id">Wrong id of dish</string>
+    <string name="error_cant_load_meal">Error: Can\'t load meal model</string>
+    <string name="error_cant_load">Error: Can\'t load %s list</string>
+    <string name="empty">Unknown</string>
+    <string name="empty_instructions">No instructions</string>
+    <string name="ingredient">%s - %s</string>
 </resources>
